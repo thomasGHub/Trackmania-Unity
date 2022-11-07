@@ -13,11 +13,6 @@ public class Car : MonoBehaviour
 
     [Header("Vehicle Stats")]
     [SerializeField] private int _speed = 10;
-    [SerializeField] private Vector3 _offSetTireFrontRotation = new Vector3(0, 45, 0);
-
-    // DefaultValue // 
-    private Vector3 _defaultTireFrontLRotation;
-    private Vector3 _defaultTireFrontRRotation;
 
     private PlayerMap _playerMap;
     private Rigidbody _rigidbody;
@@ -33,9 +28,6 @@ public class Car : MonoBehaviour
     {
         _playerMap.PlayerMovement.Movement.performed += MoveAction;
         _playerMap.PlayerMovement.Movement.canceled += MoveAction;
-
-        _defaultTireFrontLRotation = _tireFrontL.rotation.eulerAngles;
-        _defaultTireFrontRRotation = _tireFrontR.rotation.eulerAngles;
     }
 
     private void OnEnable()
