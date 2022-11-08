@@ -29,7 +29,10 @@ public class EditorManager : MonoBehaviour
             if (!_preview)
             {
                 _preview = true;
-                _goPreview = Instantiate(_selectedBlock);
+                if(_goPreview == null)
+                {
+                    _goPreview = Instantiate(_selectedBlock);
+                }
             }
             if (_preview)
             {
@@ -55,6 +58,11 @@ public class EditorManager : MonoBehaviour
             if (_deleteMode)
             {
                 Destroy(getObjectInEditor());
+            }
+            else if (_editMode)
+            {
+                _goPreview = getObjectInEditor();
+                _selectedBlock = getObjectInEditor();
             }
         }
         if(Mouse.current.middleButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject())
