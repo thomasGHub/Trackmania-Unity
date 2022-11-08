@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using Vector3 = UnityEngine.Vector3;
 
@@ -33,9 +34,18 @@ public class EditorManager : MonoBehaviour
                 _goPreview.transform.position = GetPos();
                 if (Mouse.current.leftButton.wasPressedThisFrame)
                 {
-                    Instantiate(_goPreview);
-                    _selectedBlock = null;
-                    _preview = false;
+                    if (EventSystem.current.IsPointerOverGameObject())
+                    {
+                        Destroy(_goPreview);
+                        _preview = false;
+                        _selectedBlock = null;
+                    }
+                    else
+                    {
+                        _selectedBlock = null;
+                        _preview = false;
+                        print(GetPos());
+                    }
                 }
             }
         }

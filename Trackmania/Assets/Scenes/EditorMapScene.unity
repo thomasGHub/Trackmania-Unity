@@ -576,7 +576,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 525518429}
-  speedCam: 15
+  speedCam: 30
   speedZoom: 0.1
   speedRota: 0.3
 --- !u!1 &483166708

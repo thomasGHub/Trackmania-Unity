@@ -57,6 +57,8 @@ public class Controller : MonoBehaviour
     {
         _vector2ZQSD = context.ReadValue<Vector2>();
         _vector3ZQSD = new Vector3(_vector2ZQSD.x, 0, _vector2ZQSD.y);
+        //_vector3ZQSD = new Vector3(_camera.transform.forward.x, 0, _camera.transform.forward.z);
+
     }
 
     public void Zoom(InputAction.CallbackContext context)
