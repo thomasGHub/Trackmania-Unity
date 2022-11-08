@@ -4,6 +4,7 @@ using System.Numerics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.HID;
 using Vector3 = UnityEngine.Vector3;
 
 public class EditorManager : MonoBehaviour
@@ -13,8 +14,9 @@ public class EditorManager : MonoBehaviour
     private UnityEngine.Plane _plane;
     private bool _preview = false;
     private GameObject _goPreview;
-
-
+    private bool _editMode = true;
+    private bool _deleteMode = false;
+    private bool _selectorMode = false;
 
     private void Start()
     {
@@ -22,7 +24,7 @@ public class EditorManager : MonoBehaviour
     }
     private void Update()
     {
-        if (!_freePos && _selectedBlock != null)
+        if (!_freePos && _selectedBlock != null && _editMode)
         {
             if (!_preview)
             {
@@ -44,10 +46,21 @@ public class EditorManager : MonoBehaviour
                     {
                         _selectedBlock = null;
                         _preview = false;
-                        print(GetPos());
                     }
                 }
             }
+        }
+        if(_selectedBlock == null && Mouse.current.leftButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject())
+        {
+            if (_deleteMode)
+            {
+                Destroy(getObjectInEditor());
+            }
+        }
+        if(Mouse.current.middleButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject())
+        {
+            _selectedBlock = getObjectInEditor();
+            editMode();
         }
     }
     public void Hello()
@@ -55,15 +68,39 @@ public class EditorManager : MonoBehaviour
         print(_selectedBlock);
     }
 
+    private GameObject getObjectInEditor()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.transform.gameObject.name != "Plane")
+            {
+                print(hit.transform.root.gameObject.name);
+                return hit.transform.root.gameObject;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public void SelectOnUI(GameObject gameObject)
     {
-        _selectedBlock = gameObject;
-        print(_selectedBlock);
+        if (_editMode == true)
+        {
+            _selectedBlock = gameObject;
+        }
     }
 
     private UnityEngine.Vector3 GetPos()
     {
-        Ray ray = Camera.main.ScreenPointToRay((Mouse.current.position.ReadValue()));
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
         float enter = 0.0f;
 
         if (_plane.Raycast(ray, out enter))
@@ -87,5 +124,20 @@ public class EditorManager : MonoBehaviour
         pos.y = 0;
 
         return pos;
+    }
+
+    public void editMode()
+    {
+        print("EditMode");
+        _editMode = true;
+        _deleteMode = false;
+        _selectorMode = false;
+    }
+    public void deleteMode()
+    {
+        print("DeleteMode");
+        _editMode = false;
+        _deleteMode = true;
+        _selectorMode = false;
     }
 }
