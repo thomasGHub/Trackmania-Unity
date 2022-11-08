@@ -15,13 +15,10 @@ public class Controller : MonoBehaviour
     private Vector2 _vector2Zoom;
     private Vector3 _vector3Zoom;
 
-    private Vector2 _vector2Rotation;
-    private bool _rotation = false;
-
     [SerializeField] private Camera _camera;
     [SerializeField] private float speedCam = 15f;
     [SerializeField] private float speedZoom = 0.1f;
-    [SerializeField] private float speedRota = 0.1f;
+    [SerializeField] private float speedRota = 0.3f;
 
     private Trackmania _trackmania;
     private void Awake()
@@ -45,11 +42,6 @@ public class Controller : MonoBehaviour
     {
         _camera.transform.position += _vector3ZQSD * speedCam * Time.deltaTime;
         _camera.transform.position += _vector3Zoom * speedZoom * Time.deltaTime;
-
-        if (_rotation)
-        {
-            Rotation();
-        }
     }
 
     private void OnEnable()
@@ -75,18 +67,11 @@ public class Controller : MonoBehaviour
 
     public void InputRotation(InputAction.CallbackContext context)
     {
-        if (!_rotation)
-        {
-            _rotation = true;
-        }
-        else _rotation = false;
-    }
+        if (!Mouse.current.rightButton.isPressed)
+            return;
 
-    private void Rotation()
-    {
-        print(Mouse.current.position.ReadValue());
-        //_vector2Rotation.x += Mouse.current.position.ReadValue().x * 0.1f;
-        //_vector2Rotation.y += Mouse.current.position.ReadValue().y * 0.1f;
-        _camera.transform.rotation = Quaternion.Euler(-_vector2Rotation.y * speedRota * Time.deltaTime, _vector2Rotation.x * speedRota * Time.deltaTime, 0);
+        float valueX = context.ReadValue<Vector2>().x;
+        float valueY = context.ReadValue<Vector2>().y;
+        _camera.transform.rotation = Quaternion.Euler(-valueY * speedRota + _camera.transform.rotation.eulerAngles.x, valueX * speedRota + _camera.transform.rotation.eulerAngles.y, 0f);
     }
 }

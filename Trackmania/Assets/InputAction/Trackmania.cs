@@ -49,7 +49,7 @@ public partial class @Trackmania : IInputActionCollection2, IDisposable
                     ""name"": ""Rotation"",
                     ""type"": ""Value"",
                     ""id"": ""ef575f1a-f08d-40a1-8850-3f3c5ac1d13f"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -202,7 +202,7 @@ public partial class @Trackmania : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""27be38cd-1309-4601-a960-ccbfaa4723b8"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
