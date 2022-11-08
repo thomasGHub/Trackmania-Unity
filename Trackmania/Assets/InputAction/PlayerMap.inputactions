@@ -6,10 +6,19 @@
             "id": "1c8b1290-72d2-4bc3-b9dd-c5e471f07cdf",
             "actions": [
                 {
-                    "name": "Movement",
+                    "name": "Forward/Backward",
                     "type": "Value",
-                    "id": "14827a8c-c87b-45c0-a1cf-276e187574ff",
-                    "expectedControlType": "Vector2",
+                    "id": "79769d11-3efa-4c05-ab08-a52332471262",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Left/Rigth",
+                    "type": "Value",
+                    "id": "e54e65bd-a0f1-48b7-bb0e-9042d2880ef7",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -17,62 +26,228 @@
             ],
             "bindings": [
                 {
-                    "name": "2D Vector",
-                    "id": "45b181c0-42d9-4d88-bd5f-0edbc54d977d",
-                    "path": "2DVector(mode=1)",
+                    "name": "1D Axis PC",
+                    "id": "c61c7cb3-1940-402b-b5e3-5fa4e7a39074",
+                    "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Movement",
+                    "action": "Forward/Backward",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
-                    "id": "1e93d8ba-79d9-4837-968a-86f7ef12efec",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "00445d53-762a-4453-9516-2aa3398a3b1a",
+                    "name": "negative",
+                    "id": "f48fcae1-9b28-440a-a7d1-617cc22a481d",
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Movement",
+                    "groups": "PC",
+                    "action": "Forward/Backward",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "left",
-                    "id": "523994ae-04f7-457f-849e-6ed9059daaf9",
+                    "name": "positive",
+                    "id": "e0f7c6bf-e8b9-4d4a-ab16-cd04f6f9a637",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Forward/Backward",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis PC Arrow",
+                    "id": "240b0b47-9b0f-421c-bc1b-49f4fdfdce1b",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Forward/Backward",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "115f366d-6bd2-40d4-9a7c-16d8ec827efd",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Forward/Backward",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "f3d3fe62-5aa2-4715-bc92-1a687753acb9",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Forward/Backward",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis Controller",
+                    "id": "cac1be87-7359-4df4-9fd1-49c8d9b81fe9",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Forward/Backward",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "2a4d3d69-1021-4696-bbee-6aad4a294924",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Forward/Backward",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "a570c11b-780a-4b7c-a6ce-86966ce7beca",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Forward/Backward",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis PC",
+                    "id": "81f24944-fb5e-4d62-927a-22e71b545484",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left/Rigth",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "02e3cfbf-58a6-4221-a012-ea1631b0402f",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Movement",
+                    "groups": "PC",
+                    "action": "Left/Rigth",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "right",
-                    "id": "4a536875-79ed-4595-a9ed-7f6c2838b1bf",
+                    "name": "positive",
+                    "id": "6ca81655-6dc7-4c0b-9b10-9a69c6c68d23",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
+                    "groups": "PC",
+                    "action": "Left/Rigth",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis PC Arrow",
+                    "id": "dc43140f-353c-4c6d-bf4f-362929076ff9",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
                     "groups": "",
-                    "action": "Movement",
+                    "action": "Left/Rigth",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "28c3a5c1-f5a7-4627-866a-3604cbfc4089",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Left/Rigth",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "8aaf28bf-199b-4791-ab86-54b9ab2824e5",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Left/Rigth",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis Controller",
+                    "id": "73e80d43-6879-4a2f-ab5a-b4b79ee91172",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left/Rigth",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "bcb2ee71-73f8-4cb5-b8c2-03c0a702b9f4",
+                    "path": "<Gamepad>/leftStick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Left/Rigth",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "29bc8fbc-f887-41f8-bf0b-2070ed33a63a",
+                    "path": "<Gamepad>/leftStick/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Left/Rigth",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }
             ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "PC",
+            "bindingGroup": "PC",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Controller",
+            "bindingGroup": "Controller",
+            "devices": [
+                {
+                    "devicePath": "<Gamepad>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
 }

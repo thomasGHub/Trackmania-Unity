@@ -333,7 +333,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1050941151}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.03238356, y: -1, z: -4.3498745}
+  m_LocalPosition: {x: 0.03238356, y: -0.7, z: -4.3498745}
   m_LocalScale: {x: 100, y: 1, z: 100}
   m_Children: []
   m_Father: {fileID: 0}
@@ -552,7 +552,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6026250356140766300}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 4.48, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 815978584}
@@ -643,13 +643,33 @@ GameObject:
   - component: {fileID: 6026250356140337256}
   - component: {fileID: 6026250356141631560}
   - component: {fileID: 6026250356142762632}
+  - component: {fileID: 6026250356140766281}
   m_Layer: 0
-  m_Name: tire_back_R
+  m_Name: tire_Back_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &6026250356140766281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6026250356140766280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81343729ae52266458f9d659881329f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _carRigidbody: {fileID: 6026250356140766301}
+  _car: {fileID: 6026250356140766302}
+  _canRotate: 0
+  _isFront: 0
+  _isLeft: 0
+  _steerTime: 8
+  SteerAngle: 0
 --- !u!1 &6026250356140766282
 GameObject:
   m_ObjectHideFlags: 0
@@ -661,13 +681,33 @@ GameObject:
   - component: {fileID: 6026250356140337258}
   - component: {fileID: 6026250356141631562}
   - component: {fileID: 6026250356142762634}
+  - component: {fileID: 6026250356140766283}
   m_Layer: 0
-  m_Name: tire_back_L
+  m_Name: tire_Back_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &6026250356140766283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6026250356140766282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81343729ae52266458f9d659881329f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _carRigidbody: {fileID: 6026250356140766301}
+  _car: {fileID: 6026250356140766302}
+  _canRotate: 0
+  _isFront: 0
+  _isLeft: 1
+  _steerTime: 8
+  SteerAngle: 0
 --- !u!1 &6026250356140766284
 GameObject:
   m_ObjectHideFlags: 0
@@ -679,6 +719,7 @@ GameObject:
   - component: {fileID: 6026250356140337260}
   - component: {fileID: 6026250356141631564}
   - component: {fileID: 6026250356142762636}
+  - component: {fileID: 6026250356140766285}
   m_Layer: 0
   m_Name: tire_Front_R
   m_TagString: Untagged
@@ -686,6 +727,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &6026250356140766285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6026250356140766284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81343729ae52266458f9d659881329f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _carRigidbody: {fileID: 6026250356140766301}
+  _car: {fileID: 6026250356140766302}
+  _canRotate: 1
+  _isFront: 1
+  _isLeft: 0
+  _steerTime: 8
+  SteerAngle: 0
 --- !u!1 &6026250356140766286
 GameObject:
   m_ObjectHideFlags: 0
@@ -697,13 +757,33 @@ GameObject:
   - component: {fileID: 6026250356140337262}
   - component: {fileID: 6026250356141631566}
   - component: {fileID: 6026250356142762638}
+  - component: {fileID: 6026250356140766287}
   m_Layer: 0
-  m_Name: tire_front_L
+  m_Name: tire_Front_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &6026250356140766287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6026250356140766286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81343729ae52266458f9d659881329f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _carRigidbody: {fileID: 6026250356140766301}
+  _car: {fileID: 6026250356140766302}
+  _canRotate: 1
+  _isFront: 1
+  _isLeft: 1
+  _steerTime: 8
+  SteerAngle: 0
 --- !u!1 &6026250356140766300
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,11 +832,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee3bce1ea90bf5d4a95ac09693be8c57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tireFrontL: {fileID: 6026250356140337262}
-  _tireFrontR: {fileID: 6026250356140337260}
-  _tireBackL: {fileID: 6026250356140337258}
-  _tireBackR: {fileID: 6026250356140337256}
-  _speed: 5
+  _allTires:
+  - {fileID: 6026250356140766283}
+  - {fileID: 6026250356140766281}
+  - {fileID: 6026250356140766287}
+  - {fileID: 6026250356140766285}
+  _frontLeftTire: {fileID: 6026250356140337262}
+  _rearRigthTire: {fileID: 6026250356140337256}
+  _speed: 10
+  _whellBase: 0
+  _rearTrack: 0
+  _turnRadius: 8
 --- !u!65 &6026250356140766303
 BoxCollider:
   m_ObjectHideFlags: 0
