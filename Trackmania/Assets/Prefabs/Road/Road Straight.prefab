@@ -900,6 +900,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5148981338891007615}
+  - component: {fileID: -4440047056794672867}
   m_Layer: 0
   m_Name: Road Straight
   m_TagString: Untagged
@@ -923,6 +924,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-4440047056794672867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5148981338891007614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10301b0ab3f2f394da0e0c61b52ef21d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameObjects:
+  - {fileID: 5148981337938343374}
+  - {fileID: 5148981338461021989}
+  - {fileID: 5148981338431388597}
+  - {fileID: 5148981339458983381}
+  - {fileID: 5148981337808646738}
+  - {fileID: 5148981338903298660}
+  - {fileID: 5148981337787153473}
+  - {fileID: 5148981338711557868}
 --- !u!1 &5148981338903298660
 GameObject:
   m_ObjectHideFlags: 0

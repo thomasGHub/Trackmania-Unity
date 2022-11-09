@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
+using UnityEngine.UI;
 using Vector3 = UnityEngine.Vector3;
 
 public class EditorManager : MonoBehaviour
@@ -16,11 +17,15 @@ public class EditorManager : MonoBehaviour
     private GameObject _goPreview;
     private bool _editMode = true;
     private bool _deleteMode = false;
-    private bool _selectorMode = false;
+    private bool _canBeSelected = true;
+    private int _height = 0;
+    [SerializeField] private Image _editorSelected;
+    [SerializeField] private Image _deleteSelected;
 
     private void Start()
     {
         _plane = new UnityEngine.Plane(UnityEngine.Vector3.forward, new Vector3(0, 0, 0));
+        _deleteSelected.enabled = false;
     }
     private void Update()
     {
@@ -37,6 +42,18 @@ public class EditorManager : MonoBehaviour
             if (_preview)
             {
                 _goPreview.transform.position = GetPos();
+                if (Keyboard.current[Key.R].wasPressedThisFrame)
+                {
+                    _goPreview.transform.Rotate(0, 45f, 0);
+                }
+                else if (Keyboard.current[Key.Q].wasPressedThisFrame && _height > 0)
+                {
+                    _height--;
+                }
+                else if (Keyboard.current[Key.E].wasPressedThisFrame)
+                {
+                    _height++;
+                }
                 if (Mouse.current.leftButton.wasPressedThisFrame)
                 {
                     if (EventSystem.current.IsPointerOverGameObject())
@@ -49,6 +66,8 @@ public class EditorManager : MonoBehaviour
                     {
                         _selectedBlock = null;
                         _preview = false;
+                        _goPreview = null;
+                        StartCoroutine(TimerCanBeSelected());
                     }
                 }
             }
@@ -59,10 +78,11 @@ public class EditorManager : MonoBehaviour
             {
                 Destroy(getObjectInEditor());
             }
-            else if (_editMode)
+            else if (_editMode && _canBeSelected)
             {
                 _goPreview = getObjectInEditor();
                 _selectedBlock = getObjectInEditor();
+                StartCoroutine(TimerCanBeSelected());
             }
         }
         if(Mouse.current.middleButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject())
@@ -84,7 +104,6 @@ public class EditorManager : MonoBehaviour
         {
             if (hit.transform.gameObject.name != "Plane")
             {
-                print(hit.transform.root.gameObject.name);
                 return hit.transform.root.gameObject;
             }
             else
@@ -103,6 +122,7 @@ public class EditorManager : MonoBehaviour
         if (_editMode == true)
         {
             _selectedBlock = gameObject;
+            //_selectedBlock.GetComponent<Highlight>().Outline();
         }
     }
 
@@ -114,6 +134,10 @@ public class EditorManager : MonoBehaviour
         if (_plane.Raycast(ray, out enter))
         {
             UnityEngine.Vector3 hitPoint = ray.GetPoint(enter);
+            if (Keyboard.current[Key.T].wasPressedThisFrame)
+            {
+                print(hitPoint + "convertit en : " + NearPos(hitPoint));
+            }
             return NearPos(hitPoint);
         }
         else return new UnityEngine.Vector3(0, 0, 0);
@@ -129,7 +153,7 @@ public class EditorManager : MonoBehaviour
         pos.z = Mathf.FloorToInt(pos.z);
         pos.z = pos.z * 10;
 
-        pos.y = 0;
+        pos.y = _height;
 
         return pos;
     }
@@ -138,14 +162,25 @@ public class EditorManager : MonoBehaviour
     {
         print("EditMode");
         _editMode = true;
+        _editorSelected.enabled = true;
         _deleteMode = false;
-        _selectorMode = false;
+        _deleteSelected.enabled = false;
     }
     public void deleteMode()
     {
         print("DeleteMode");
         _editMode = false;
+        _editorSelected.enabled = false;
         _deleteMode = true;
-        _selectorMode = false;
+        _deleteSelected.enabled = true;
+    }
+
+    private IEnumerator TimerCanBeSelected()
+    {
+        _canBeSelected = false;
+
+        yield return new WaitForSeconds(.1f);
+
+        _canBeSelected = true;
     }
 }

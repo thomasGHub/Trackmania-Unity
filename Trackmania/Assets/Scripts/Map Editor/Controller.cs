@@ -40,7 +40,9 @@ public class Controller : MonoBehaviour
 
     private void Update()
     {
-        _camera.transform.position += _vector3ZQSD * speedCam * Time.deltaTime;
+        Vector3 _moveX = new Vector3(_camera.transform.right.x, 0, _camera.transform.right.z);
+        Vector3 _moveZ = new Vector3(_camera.transform.forward.x, 0, _camera.transform.forward.z);
+        _camera.transform.position += (_vector3ZQSD.x * _moveX + _vector3ZQSD.z * _moveZ) * speedCam * Time.deltaTime;
         _camera.transform.position += _vector3Zoom * speedZoom * Time.deltaTime;
     }
 
@@ -64,7 +66,7 @@ public class Controller : MonoBehaviour
     public void Zoom(InputAction.CallbackContext context)
     {
         _vector2Zoom = context.ReadValue<Vector2>();
-        _vector3Zoom = new Vector3(_camera.transform.position.x, _camera.transform.position.y, _camera.transform.position.z)*-(_vector2Zoom.y);
+        _vector3Zoom = new Vector3(_camera.transform.position.x, _camera.transform.position.y, _camera.transform.position.z) * -(_vector2Zoom.y);
     }
 
     public void InputRotation(InputAction.CallbackContext context)
