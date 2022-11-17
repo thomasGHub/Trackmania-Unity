@@ -24,7 +24,7 @@ public class EditorManager : MonoBehaviour
 
     private void Start()
     {
-        _plane = new UnityEngine.Plane(UnityEngine.Vector3.forward, new Vector3(0, 0, 0));
+        _plane = new UnityEngine.Plane(UnityEngine.Vector3.up, new Vector3(0, 0, 0));
         _deleteSelected.enabled = false;
     }
     private void Update()
@@ -34,7 +34,7 @@ public class EditorManager : MonoBehaviour
             if (!_preview)
             {
                 _preview = true;
-                if(_goPreview == null)
+                if (_goPreview == null)
                 {
                     _goPreview = Instantiate(_selectedBlock);
                 }
@@ -72,7 +72,7 @@ public class EditorManager : MonoBehaviour
                 }
             }
         }
-        if(_selectedBlock == null && Mouse.current.leftButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject())
+        if (_selectedBlock == null && Mouse.current.leftButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject())
         {
             if (_deleteMode)
             {
@@ -85,7 +85,7 @@ public class EditorManager : MonoBehaviour
                 StartCoroutine(TimerCanBeSelected());
             }
         }
-        if(Mouse.current.middleButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject())
+        if (Mouse.current.middleButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject())
         {
             _selectedBlock = getObjectInEditor();
             editMode();
@@ -145,14 +145,8 @@ public class EditorManager : MonoBehaviour
 
     private Vector3 NearPos(Vector3 pos)
     {
-        pos.x = pos.x / 10;
-        pos.x = Mathf.FloorToInt(pos.x);
-        pos.x = pos.x * 10;
-
-        pos.z = pos.y / 10;
-        pos.z = Mathf.FloorToInt(pos.z);
-        pos.z = pos.z * 10;
-
+        pos.x = Mathf.FloorToInt(pos.x / 10) * 10;
+        pos.z = Mathf.FloorToInt(pos.z / 10) * 10;
         pos.y = _height;
 
         return pos;
