@@ -24,6 +24,10 @@ public class Wheel : MonoBehaviour
     [SerializeField] private float _springStiffness;
     [SerializeField] private float _damperStiffness;
 
+    [Space(10)]
+    [Header("Grip")]
+    [SerializeField] private float _gripFactor = 1.0f;
+
     private float _restLength;
     private float _springLength;
     private float _minLength;
@@ -41,6 +45,7 @@ public class Wheel : MonoBehaviour
     private Vector3 _wheelVelocityLS; // Local space velociy
     private float _engineForce;
     private float _gripForce;
+
 
     [System.NonSerialized] public float PlayerInputFB = 0; // Forward / Backward
     [System.NonSerialized] public float SteerAngle = 0f;
@@ -70,7 +75,7 @@ public class Wheel : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit,_maxLength + _wheelRadius))
+        if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, _maxLength + _wheelRadius))
         {
             #region Calc Suspension Force
             _lastLength = _springLength;
@@ -84,18 +89,27 @@ public class Wheel : MonoBehaviour
             _suspensionForce = (_springForce + _damperForce) * transform.up;
 
             #endregion
+            Vector3 globalVel = _carRigidbody.GetPointVelocity(hit.point);
+            _wheelVelocityLS = transform.InverseTransformDirection(globalVel);
 
-            _wheelVelocityLS = transform.InverseTransformDirection(_carRigidbody.GetPointVelocity(hit.point));
+            //_engineForce = PlayerInputFB * _carRigidbody.mass * 5;
+            //_gripForce = _wheelVelocityLS.x * _gripFactor * _carRigidbody.mass;
 
-            _engineForce = PlayerInputFB * 10000;
-            _gripForce = _wheelVelocityLS.x * 1000;
+            _engineForce = PlayerInputFB * _springForce * 100;
+            _gripForce = _wheelVelocityLS.x * _springForce * 30;
 
-            _carRigidbody.AddForceAtPosition(_suspensionForce + (transform.forward * _engineForce) + (_gripForce * transform.right), hit.point);
+            Vector3 totalForce = _suspensionForce + (transform.forward * _engineForce) + (_gripForce * -transform.right);
+            _carRigidbody.AddForceAtPosition(totalForce, hit.point);
+
+            DrawArrow.ForDebug(transform.position, _wheelVelocityLS, Color.blue);
+            DrawArrow.ForDebug(transform.position, totalForce, Color.red);
+
+            //if (IsFront && IsLeft)
+            //{
+            //    Debug.Log("Invert : " + transform.InverseTransformDirection(_carRigidbody.GetPointVelocity(hit.point)).y);
+            //    Debug.Log("Dot Product : " + Vector3.Dot(_carRigidbody.GetPointVelocity(hit.point), transform.up));
+            //}
         }
-
-        DrawArrow.ForDebug(transform.position, _suspensionForce, Color.black);
-        DrawArrow.ForDebug(transform.position, _gripForce * transform.right, Color.green);
-        DrawArrow.ForDebug(transform.position, _engineForce * transform.forward, Color.blue);
     }
 
 
