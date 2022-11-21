@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class CarController : Car
 {
     [Header("Tire Script")]
-    [SerializeField] private Tire[] _allTires;
+    [SerializeField] private Wheel[] _allTires;
 
     [Space(10)]
     [Header("Tire Position")]
@@ -56,10 +56,11 @@ public class CarController : Car
 
     public void ForwardBackward(InputAction.CallbackContext context)
     {
-       float playerInput = context.ReadValue<float>();
+        float playerInput = context.ReadValue<float>();
 
         for (int i = 0; i < numberOfTire; i++)
-            _allTires[i]._playerInputFB = playerInput;
+            if(_allTires[i].IsDrivingWheel)
+                _allTires[i].PlayerInputFB = playerInput;
 
     }
 
@@ -88,7 +89,7 @@ public class CarController : Car
         }
 
         for (int i = 0; i < numberOfTire; i++)
-            if (_allTires[i].IsFront)
+            if (_allTires[i].CanRotate)
             {
                 if (_allTires[i].IsLeft)
                     _allTires[i].SteerAngle = ackermannAngleLeft;
