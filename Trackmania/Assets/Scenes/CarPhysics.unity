@@ -173,11 +173,7 @@ MonoBehaviour:
   _canRotate: 1
   _isFront: 1
   _isLeft: 1
-  _steerTime: 8
-  _springTravel: 0.1
-  _springStiffness: 30
-  _damperStiffness: 10
-  _gripFactor: 0.8
+  _wheelData: {fileID: 11400000, guid: 42d823bd8cd3d9543aefa84817e5766b, type: 2}
 --- !u!1 &257108120
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,11 +262,7 @@ MonoBehaviour:
   _canRotate: 0
   _isFront: 0
   _isLeft: 1
-  _steerTime: 8
-  _springTravel: 0.1
-  _springStiffness: 30
-  _damperStiffness: 10
-  _gripFactor: 0.8
+  _wheelData: {fileID: 11400000, guid: 42d823bd8cd3d9543aefa84817e5766b, type: 2}
 --- !u!1 &780459057
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,11 +313,7 @@ MonoBehaviour:
   _canRotate: 1
   _isFront: 1
   _isLeft: 0
-  _steerTime: 8
-  _springTravel: 0.1
-  _springStiffness: 30
-  _damperStiffness: 10
-  _gripFactor: 0.8
+  _wheelData: {fileID: 11400000, guid: 42d823bd8cd3d9543aefa84817e5766b, type: 2}
 --- !u!1 &815978581
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,11 +639,7 @@ MonoBehaviour:
   _canRotate: 0
   _isFront: 0
   _isLeft: 0
-  _steerTime: 8
-  _springTravel: 0.1
-  _springStiffness: 30
-  _damperStiffness: 10
-  _gripFactor: 0.8
+  _wheelData: {fileID: 11400000, guid: 42d823bd8cd3d9543aefa84817e5766b, type: 2}
 --- !u!1 &1801603233
 GameObject:
   m_ObjectHideFlags: 0
@@ -1078,11 +1062,9 @@ MonoBehaviour:
   - {fileID: 1169957018}
   - {fileID: 72281381}
   - {fileID: 780459059}
-  _frontLeftTire: {fileID: 6026250356140337262}
-  _rearRigthTire: {fileID: 6026250356140337256}
-  _speed: 2
-  _whellBase: 0
-  _rearTrack: 0
+  _frontLeftTire: {fileID: 72281380}
+  _rearRigthTire: {fileID: 1169957017}
+  _speed: 1
   _turnRadius: 3
 --- !u!65 &6026250356140766303
 BoxCollider:
