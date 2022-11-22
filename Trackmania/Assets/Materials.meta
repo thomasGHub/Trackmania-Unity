@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: bd176fe88346dcf47a70dbd172bdee6d
+=======
+guid: e6095bba43f2f104bb9f42c78e7822c7
+>>>>>>> MapEditor
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
