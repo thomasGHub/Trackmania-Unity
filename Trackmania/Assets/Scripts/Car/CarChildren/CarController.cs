@@ -17,6 +17,7 @@ namespace Car
         [Header("Vehicle Stats")]
         [SerializeField] private float _speed = 2;
         [SerializeField] private float _turnRadius = 3; //in UnityUnits point around the car will rotate
+        [SerializeField] private Transform _centerOfMass;
 
         private float _whellBase; //in UnityUnits distance between frontTire and rearTire
         private float _rearTrack; //in UnityUnits distance between leftTire and RigthTire
@@ -36,6 +37,7 @@ namespace Car
 
         void Start()
         {
+            _rigidbody.centerOfMass = _centerOfMass.localPosition;
 
             numberOfTire = _allTires.Length;
 

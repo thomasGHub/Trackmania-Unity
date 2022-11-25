@@ -127,14 +127,16 @@ namespace Car
                 //_engineForce = PlayerInputFB * _carRigidbody.mass * 5;
                 //_gripForce = _wheelVelocityLS.x * _gripFactor * _carRigidbody.mass;
 
-                _engineForce = EnginePower * _springForce * 100;
-                _gripForce = _wheelVelocityLS.x * _springForce * 30 * _gripFactor;
+                _engineForce = EnginePower * _springForce * 25;// * 100;
+                _gripForce = _wheelVelocityLS.x * _springForce * _gripFactor;// * 30;
 
                 Vector3 totalForce = (_suspensionForce * transform.up) + (_engineForce * transform.forward) + (_gripForce * -transform.right);
                 _carRigidbody.AddForceAtPosition(totalForce, hit.point);
 
-                /*DrawArrow.ForDebug(transform.position, _wheelVelocityLS, Color.blue);
-                DrawArrow.ForDebug(transform.position, totalForce, Color.red);*/
+                DrawArrow.ForDebug(transform.position, _suspensionForce * transform.up, Color.green);
+                DrawArrow.ForDebug(transform.position, _gripForce * transform.right, Color.red);
+                DrawArrow.ForDebug(transform.position, _engineForce * transform.forward, Color.blue);
+                //DrawArrow.ForDebug(transform.position, totalForce, Color.red);
             }
         }
 
