@@ -22,6 +22,7 @@ namespace Car
         private float _rearTrack; //in UnityUnits distance between leftTire and RigthTire
 
         private PlayerMap _playerMap;
+        private Rigidbody _rigidbody;
 
         public float Speed => _speed;
 
@@ -30,10 +31,12 @@ namespace Car
         private void Awake()
         {
             _playerMap = new PlayerMap();
+            _rigidbody = GetComponent<Rigidbody>();
         }
 
         void Start()
         {
+
             numberOfTire = _allTires.Length;
 
             _whellBase = Mathf.Abs(_frontLeftTire.transform.position.x - _rearRigthTire.transform.position.x);
