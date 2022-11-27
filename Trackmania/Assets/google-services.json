@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "152143179435",
+    "project_id": "trackmaniaisen",
+    "storage_bucket": "trackmaniaisen.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:152143179435:android:5ebe0128ecd6587aeb51ee",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.Trackmania"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "152143179435-9gbnhbivuioeifm00bep5tcnb9rpnugi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-Ws43hKdjOeTDej1cAcsQkJhFpH54yB4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "152143179435-9gbnhbivuioeifm00bep5tcnb9rpnugi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
