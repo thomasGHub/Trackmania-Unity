@@ -105,10 +105,42 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2063471081393756320, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: 2063471081558597648, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: 2115388405952901591, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: 2115388406386002279, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: 6764270153460137733, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: 6764270153557854133, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
     - target: {fileID: 7531903613947036660, guid: b6032967240922c4489442db54f1350b, type: 3}
       propertyPath: m_Name
       value: Road Turn
       objectReference: {fileID: 0}
+    - target: {fileID: 8981776167081476405, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: 8981776167512406405, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6032967240922c4489442db54f1350b, type: 3}
 --- !u!4 &3212390543261089362 stripped

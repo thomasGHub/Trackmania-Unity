@@ -87,6 +87,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7828619722563157202, guid: 41e1be6ba5896634480cf17974c68e47, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: -5611192818042124882, guid: 41e1be6ba5896634480cf17974c68e47, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
     - target: {fileID: -4570888915116111697, guid: 41e1be6ba5896634480cf17974c68e47, type: 3}
       propertyPath: m_StaticShadowCaster
       value: 1
@@ -135,6 +143,14 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 23d994e252c11c54a9c6861544d4d208, type: 2}
+    - target: {fileID: 8261242793859150796, guid: 41e1be6ba5896634480cf17974c68e47, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: 8312631184507068939, guid: 41e1be6ba5896634480cf17974c68e47, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
     - target: {fileID: 8913082053635059393, guid: 41e1be6ba5896634480cf17974c68e47, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 1
@@ -197,6 +213,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7828619722563157202, guid: 41e1be6ba5896634480cf17974c68e47, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: -5611192818042124882, guid: 41e1be6ba5896634480cf17974c68e47, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
     - target: {fileID: -4570888915116111697, guid: 41e1be6ba5896634480cf17974c68e47, type: 3}
       propertyPath: m_StaticShadowCaster
       value: 1
@@ -245,6 +269,14 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 23d994e252c11c54a9c6861544d4d208, type: 2}
+    - target: {fileID: 8261242793859150796, guid: 41e1be6ba5896634480cf17974c68e47, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: 8312631184507068939, guid: 41e1be6ba5896634480cf17974c68e47, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
     - target: {fileID: 8913082053635059393, guid: 41e1be6ba5896634480cf17974c68e47, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 1
