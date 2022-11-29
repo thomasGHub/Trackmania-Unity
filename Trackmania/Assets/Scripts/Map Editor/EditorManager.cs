@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Numerics;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Vector3 = UnityEngine.Vector3;
 
@@ -22,6 +25,15 @@ public class EditorManager : MonoBehaviour
     [SerializeField] private Image _editorSelected;
     [SerializeField] private Image _deleteSelected;
 
+    [SerializeField] private GameObject _map;
+
+    private string _json;
+
+    public class jsonData
+    {
+        public string id;
+        public Vector3 position;
+    }
     private void Start()
     {
         _plane = new UnityEngine.Plane(UnityEngine.Vector3.up, new Vector3(0, 0, 0));
@@ -29,6 +41,10 @@ public class EditorManager : MonoBehaviour
     }
     private void Update()
     {
+        if (Keyboard.current[Key.T].wasPressedThisFrame)
+        {
+            print("debug");
+        }
         if (!_freePos && _selectedBlock != null && _editMode)
         {
             if (!_preview)
@@ -176,5 +192,58 @@ public class EditorManager : MonoBehaviour
         yield return new WaitForSeconds(.1f);
 
         _canBeSelected = true;
+    }
+
+    public void save()
+    {
+        GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+        foreach (GameObject go in allObjects)
+        {
+            if (go.GetComponent<RoadCurve>() != null)
+            {
+                jsonData saveObject = new jsonData();
+                saveObject.id = go.GetComponent<RoadCurve>()._id;
+                saveObject.position = go.transform.position;
+                _json = JsonUtility.ToJson(go);
+            }
+            else if (go.GetComponent<RoadRampCurve>() != null)
+            {
+                jsonData saveObject = new jsonData();
+                saveObject.id = go.GetComponent<RoadRampCurve>()._id;
+                saveObject.position = go.transform.position;
+                _json = JsonUtility.ToJson(go);
+            }
+            else if (go.GetComponent<RoadRampStraight>() != null)
+            {
+                jsonData saveObject = new jsonData();
+                saveObject.id = go.GetComponent<RoadRampStraight>()._id;
+                saveObject.position = go.transform.position;
+                _json = JsonUtility.ToJson(go);
+            }
+            else if (go.GetComponent<RoadRampTurn>() != null)
+            {
+                jsonData saveObject = new jsonData();
+                saveObject.id = go.GetComponent<RoadRampTurn>()._id;
+                saveObject.position = go.transform.position;
+                _json = JsonUtility.ToJson(go);
+            }
+            else if (go.GetComponent<RoadStraight>() != null)
+            {
+                jsonData saveObject = new jsonData();
+                saveObject.id = go.GetComponent<RoadStraight>()._id;
+                saveObject.position = go.transform.position;
+                _json = JsonUtility.ToJson(go);
+            }
+            else if (go.GetComponent<RoadTurn>() != null)
+            {
+                jsonData saveObject = new jsonData();
+                saveObject.id = go.GetComponent<RoadTurn>()._id;
+                saveObject.position = go.transform.position;
+                _json = JsonUtility.ToJson(go);
+            }
+        }
+        print(_json);
+
+                
     }
 }
