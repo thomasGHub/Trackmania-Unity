@@ -6,12 +6,21 @@ using UnityEngine.InputSystem.HID;
 
 public class F1Controller : MonoBehaviour
 {
+    [Header("Visual")]
+    [SerializeField] private Transform[] _allTiresMesh;
+    [SerializeField] private Transform[] _rotatingTiresMesh;
+    [Tooltip("Factor that reduce the rotation speed of wheel")]
+    [SerializeField] private float _rotatingFactor = 3f;
+    [SerializeField] private float _turnAngle = 30f;
+    [SerializeField] private float _turnDuration = 0.2f;
+
     [Header("Car stats")]
     [SerializeField] private Transform _centerOfMass;
     [SerializeField] private Transform _frictionPoint;
     [SerializeField] private float _speed = 2000f;
     [SerializeField] private float _turn = 3000f;
     [SerializeField] private float _friction = 6000f;
+    [SerializeField] private float _dragAmount = 5f;
 
     [Space(10)]
     [Header("Ground Check")]
@@ -22,6 +31,8 @@ public class F1Controller : MonoBehaviour
     [Header("Threshold")]
     [SerializeField] private float _inputThreshold = 0.1f;
     [SerializeField] private float _carVelocityThreshold = 0.1f;
+
+
 
     private Rigidbody _rigidbody;
     private PlayerMap _playerMap;
@@ -69,6 +80,11 @@ public class F1Controller : MonoBehaviour
         _playerMap.PlayerMovement.Disable();
     }
 
+    private void Update()
+    {
+        TireVisual();
+    }
+
     private void FixedUpdate()
     {
         RaycastHit hit;
@@ -81,6 +97,8 @@ public class F1Controller : MonoBehaviour
             AccelerationLogic();
             TurningLogic();
             FrictionLogic();
+            
+
             Debug.DrawLine(_groundRayPoint.position, hit.point, Color.green);
 
             _rigidbody.centerOfMass = Vector3.zero;
@@ -110,6 +128,8 @@ public class F1Controller : MonoBehaviour
         {
             _rigidbody.AddTorque(transform.up * _turnValue);
         }
+
+        _rigidbody.angularDrag = _dragAmount * 1;
     }
 
     private void FrictionLogic()
@@ -123,13 +143,31 @@ public class F1Controller : MonoBehaviour
         }
     }
 
+    private void TireVisual()
+    {
+        /*foreach(Transform tire in _allTiresMesh)
+        {
+            tire.RotateAround(tire.position, tire.right, _carVelocity.z / _rotatingFactor);
+            tire.localPosition = Vector3.zero;
+        }*/
+
+        foreach(Transform tire in _rotatingTiresMesh)
+        {
+            tire.localRotation = Quaternion.Slerp(tire.localRotation, 
+                                                  Quaternion.Euler(tire.localRotation.eulerAngles.x, _turnAngle * _turnInput, tire.localRotation.eulerAngles.z), 
+                                                  _turnDuration);
+        }
+    }
+
     private void ForwardBackward(InputAction.CallbackContext context)
     {
         _speedInput = context.ReadValue<float>();
+        
     }
 
     private void LeftRigth(InputAction.CallbackContext context)
     {
         _turnInput = context.ReadValue<float>();
+        Debug.Log(_turnInput);
     }
 }
