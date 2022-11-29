@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
@@ -22,17 +24,20 @@ public class F1Controller : MonoBehaviour
     [SerializeField] private float _friction = 6000f;
     [SerializeField] private float _dragAmount = 5f;
 
-    [Space(10)]
     [Header("Ground Check")]
     [SerializeField] private Transform _groundRayPoint;
     [SerializeField] private float _maxRayLenght = 0.25f;
 
-    [Space(10)]
     [Header("Threshold")]
     [SerializeField] private float _inputThreshold = 0.1f;
     [SerializeField] private float _carVelocityThreshold = 0.1f;
 
-
+    [Header("Curve")]
+    [SerializeField] private AnimationCurve _frictionCurve;
+    [SerializeField] private AnimationCurve _speedCurve;
+    [SerializeField] private AnimationCurve _turnCurve;
+    [SerializeField] private AnimationCurve _driftCurve;
+    [SerializeField] private AnimationCurve _engineCurve;
 
     private Rigidbody _rigidbody;
     private PlayerMap _playerMap;
@@ -40,10 +45,13 @@ public class F1Controller : MonoBehaviour
     private float _speedValue;
     private float _fricValue;
     private float _turnValue;
-    private float _curveVelocity;
     private float _frictionAngle;
 
+    private float _scaleValue = 100f; // Value that divide the car Velocity to pass it in 100 Unit per hour
+    private float _multiplicatorValue = 1000f; // Value that multiply the speed, turn and friction value
+
     private Vector3 _carVelocity;
+    private float _carSpeed; // limitate the call "_carVelocity.magnitude" 
 
     #region Input Variable
 
@@ -56,7 +64,6 @@ public class F1Controller : MonoBehaviour
     {
         _playerMap = new PlayerMap();
         _rigidbody = GetComponent<Rigidbody>();
-
     }
 
     private void Start()
@@ -80,9 +87,9 @@ public class F1Controller : MonoBehaviour
         _playerMap.PlayerMovement.Disable();
     }
 
-    private void Update()
-    {
-        TireVisual();
+    private void Update()
+    {
+        TireVisual();
     }
 
     private void FixedUpdate()
@@ -91,23 +98,30 @@ public class F1Controller : MonoBehaviour
         Physics.Raycast(_groundRayPoint.position, -transform.up, out hit, _maxRayLenght);
 
         _carVelocity = transform.InverseTransformDirection(_rigidbody.velocity);
+        _carSpeed = _carVelocity.magnitude;
 
         if(hit.collider)
         {
             AccelerationLogic();
             TurningLogic();
             FrictionLogic();
-            
+            BrakeLogic();
 
             Debug.DrawLine(_groundRayPoint.position, hit.point, Color.green);
 
             _rigidbody.centerOfMass = Vector3.zero;
         }
+        else
+        {
+            _rigidbody.drag = 0.1f;
+            _rigidbody.centerOfMass = _centerOfMass.localPosition;
+            _rigidbody.angularDrag = 0.1f;
+        }
     }
 
     private void AccelerationLogic()
     {
-        _speedValue = _speed * _speedInput * Time.fixedDeltaTime * 100;
+        _speedValue = _speed * _speedInput * Time.fixedDeltaTime * _multiplicatorValue * _speedCurve.Evaluate(Mathf.Abs(_carVelocity.z) / _scaleValue);
 
         if(_speedInput > _inputThreshold)
         {
@@ -122,52 +136,65 @@ public class F1Controller : MonoBehaviour
 
     private void TurningLogic()
     {
-        _turnValue = _turn * _turnInput * Time.fixedDeltaTime * 100;
+        _turnValue = _turn * _turnInput * Time.fixedDeltaTime * _multiplicatorValue * _turnCurve.Evaluate(_carVelocity.magnitude / _scaleValue);
 
-        if(Mathf.Abs(_carVelocity.z) > _carVelocityThreshold)
+        if (Mathf.Abs(_carVelocity.z) > _carVelocityThreshold)
         {
             _rigidbody.AddTorque(transform.up * _turnValue);
         }
 
-        _rigidbody.angularDrag = _dragAmount * 1;
+        //Debug.Log(_turnValue);
+
+        _rigidbody.angularDrag = _dragAmount * _driftCurve.Evaluate(Mathf.Abs(_carVelocity.z) / 70);
     }
 
     private void FrictionLogic()
     {
-        _fricValue = _friction;
+        _fricValue = _friction * _frictionCurve.Evaluate(_carSpeed / _scaleValue);
 
-        if(_carVelocity.magnitude > 1)
+        if(_carSpeed > 1)
         {
             _frictionAngle = (-Vector3.Angle(transform.up, Vector3.up) / 90f) + 1;
-            _rigidbody.AddForceAtPosition(transform.right * _fricValue * _frictionAngle * 100 * -_carVelocity.normalized.x, _frictionPoint.position);
+            _rigidbody.AddForceAtPosition(transform.right * _fricValue * _frictionAngle * _multiplicatorValue/10 * -_carVelocity.normalized.x, _frictionPoint.position);
         }
     }
 
-    private void TireVisual()
+    private void BrakeLogic()
     {
-        /*foreach(Transform tire in _allTiresMesh)
+        if (_carSpeed < 1)
         {
-            tire.RotateAround(tire.position, tire.right, _carVelocity.z / _rotatingFactor);
-            tire.localPosition = Vector3.zero;
-        }*/
-
-        foreach(Transform tire in _rotatingTiresMesh)
-        {
-            tire.localRotation = Quaternion.Slerp(tire.localRotation, 
-                                                  Quaternion.Euler(tire.localRotation.eulerAngles.x, _turnAngle * _turnInput, tire.localRotation.eulerAngles.z), 
-                                                  _turnDuration);
+            _rigidbody.drag = 5f;
         }
+        else
+        {
+            _rigidbody.drag = 0.1f;
+        }
+    }
+
+    private void TireVisual()
+    {
+        /*foreach(Transform tire in _allTiresMesh)
+        {
+            tire.RotateAround(tire.position, tire.right, _carVelocity.z / _rotatingFactor);
+            tire.localPosition = Vector3.zero;
+        }*/
+
+        foreach(Transform tire in _rotatingTiresMesh)
+        {
+            tire.localRotation = Quaternion.Slerp(tire.localRotation, 
+                                                  Quaternion.Euler(tire.localRotation.eulerAngles.x, _turnAngle * _turnInput, tire.localRotation.eulerAngles.z), 
+                                                  _turnDuration);
+        }
     }
 
     private void ForwardBackward(InputAction.CallbackContext context)
     {
-        _speedInput = context.ReadValue<float>();
+        _speedInput = context.ReadValue<float>();
         
     }
 
     private void LeftRigth(InputAction.CallbackContext context)
     {
         _turnInput = context.ReadValue<float>();
-        Debug.Log(_turnInput);
     }
 }
