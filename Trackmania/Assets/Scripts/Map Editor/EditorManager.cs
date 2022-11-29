@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Numerics;
+using System.Runtime.InteropServices.ComTypes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -29,6 +31,7 @@ public class EditorManager : MonoBehaviour
     [SerializeField] private GameObject _map;
 
     private string _json;
+    private string _path = "D:/UnityProject/Trackmania-Unity/Trackmania/Assets/Json";
 
     public class jsonData
     {
@@ -211,7 +214,6 @@ public class EditorManager : MonoBehaviour
             }
         }
         print(_json);
-
-                
+        File.WriteAllText(_path, _json);
     }
 }
