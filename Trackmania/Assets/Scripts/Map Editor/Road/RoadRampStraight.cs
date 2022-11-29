@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoadRampStraight : MonoBehaviour
+public class RoadRampStraight : Road
 {
-    public string _id = "3";
+    private void Start()
+    {
+        id = "3";
+    }
 }

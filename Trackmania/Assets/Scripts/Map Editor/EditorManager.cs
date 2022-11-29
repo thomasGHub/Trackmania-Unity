@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
 public class EditorManager : MonoBehaviour
@@ -33,6 +34,7 @@ public class EditorManager : MonoBehaviour
     {
         public string id;
         public Vector3 position;
+        public Quaternion rotation;
     }
     private void Start()
     {
@@ -199,47 +201,13 @@ public class EditorManager : MonoBehaviour
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
         foreach (GameObject go in allObjects)
         {
-            if (go.GetComponent<RoadCurve>() != null)
+            if (go.GetComponent<Road>() != null)
             {
                 jsonData saveObject = new jsonData();
-                saveObject.id = go.GetComponent<RoadCurve>()._id;
+                saveObject.id = go.GetComponent<Road>().id;
                 saveObject.position = go.transform.position;
-                _json = JsonUtility.ToJson(go);
-            }
-            else if (go.GetComponent<RoadRampCurve>() != null)
-            {
-                jsonData saveObject = new jsonData();
-                saveObject.id = go.GetComponent<RoadRampCurve>()._id;
-                saveObject.position = go.transform.position;
-                _json = JsonUtility.ToJson(go);
-            }
-            else if (go.GetComponent<RoadRampStraight>() != null)
-            {
-                jsonData saveObject = new jsonData();
-                saveObject.id = go.GetComponent<RoadRampStraight>()._id;
-                saveObject.position = go.transform.position;
-                _json = JsonUtility.ToJson(go);
-            }
-            else if (go.GetComponent<RoadRampTurn>() != null)
-            {
-                jsonData saveObject = new jsonData();
-                saveObject.id = go.GetComponent<RoadRampTurn>()._id;
-                saveObject.position = go.transform.position;
-                _json = JsonUtility.ToJson(go);
-            }
-            else if (go.GetComponent<RoadStraight>() != null)
-            {
-                jsonData saveObject = new jsonData();
-                saveObject.id = go.GetComponent<RoadStraight>()._id;
-                saveObject.position = go.transform.position;
-                _json = JsonUtility.ToJson(go);
-            }
-            else if (go.GetComponent<RoadTurn>() != null)
-            {
-                jsonData saveObject = new jsonData();
-                saveObject.id = go.GetComponent<RoadTurn>()._id;
-                saveObject.position = go.transform.position;
-                _json = JsonUtility.ToJson(go);
+                saveObject.rotation = go.transform.rotation;
+                _json += JsonUtility.ToJson(saveObject);
             }
         }
         print(_json);

@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoadRampCurve : MonoBehaviour
+public class RoadRampCurve : Road
 {
-    public string _id = "2";
+    private void Start()
+    {
+        id = "2";
+    }
 }

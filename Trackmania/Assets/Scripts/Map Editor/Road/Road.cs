@@ -2,10 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoadTurn : Road
+public class Road : MonoBehaviour
 {
-    private void Start()
-    {
-        id = "6";
-    }
+    public string id;
 }

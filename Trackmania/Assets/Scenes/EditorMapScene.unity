@@ -1948,6 +1948,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _editorSelected: {fileID: 736205548}
   _deleteSelected: {fileID: 1310266523}
+  _map: {fileID: 1837778725}
 --- !u!1 &1533785692
 GameObject:
   m_ObjectHideFlags: 0
