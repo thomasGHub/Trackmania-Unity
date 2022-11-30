@@ -6,6 +6,6 @@ public class RoadCurve : Road
 {
     private void Start()
     {
-        id = "1";
+        id = 1;
     }
 }

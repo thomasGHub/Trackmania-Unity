@@ -6,6 +6,6 @@ public class RoadRampStraight : Road
 {
     private void Start()
     {
-        id = "3";
+        id = 3;
     }
 }

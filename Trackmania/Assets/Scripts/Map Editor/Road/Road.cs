@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class Road : MonoBehaviour
 {
-    public string id;
+    public int id;
+    public GameObject redBlock;
 }

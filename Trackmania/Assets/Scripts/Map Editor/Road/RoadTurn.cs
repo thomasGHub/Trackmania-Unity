@@ -6,6 +6,6 @@ public class RoadTurn : Road
 {
     private void Start()
     {
-        id = "6";
+        id = 6;
     }
 }

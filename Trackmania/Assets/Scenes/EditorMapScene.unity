@@ -1259,7 +1259,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1532523341}
         m_TargetAssemblyTypeName: EditorManager, Assembly-CSharp
-        m_MethodName: save
+        m_MethodName: saveMap
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1949,6 +1949,13 @@ MonoBehaviour:
   _editorSelected: {fileID: 736205548}
   _deleteSelected: {fileID: 1310266523}
   _map: {fileID: 1837778725}
+  _blockList:
+  - {fileID: 7601277967104519908, guid: 29884fe1ebf2ede49b55abf169538190, type: 3}
+  - {fileID: 4499017539903316006, guid: e739fea626b68e34f8e83dd00cfc83e8, type: 3}
+  - {fileID: 4272035851541268703, guid: 81d360ce5d7a70e4dbb124591b0dc1d4, type: 3}
+  - {fileID: 1114550890722514681, guid: 3eeb26f3b10b60d469621a7fd89d639a, type: 3}
+  - {fileID: 5148981338891007614, guid: a2a15e5cff4db4e448369f8214a79b90, type: 3}
+  - {fileID: 7531903613947036660, guid: b6032967240922c4489442db54f1350b, type: 3}
 --- !u!1 &1533785692
 GameObject:
   m_ObjectHideFlags: 0
