@@ -105,6 +105,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3417804127929840132, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3417804127929840132, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: dc0a58970694dd54ba2a1292c213c18b, type: 2}
     - target: {fileID: 7531903613947036660, guid: b6032967240922c4489442db54f1350b, type: 3}
       propertyPath: m_Name
       value: Road Turn

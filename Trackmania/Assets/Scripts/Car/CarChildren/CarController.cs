@@ -4,30 +4,83 @@ using UnityEngine.InputSystem;
 
 namespace Car
 {
-    public class CarController : Car
+
+    public class CarController : MonoBehaviour
     {
-        [Header("Tire Script")]
-        [SerializeField] private Wheel[] _allTires;
+        [System.Serializable]
+        class Skid
+        {
+            public TrailRenderer trailRenderer;
+            public ParticleSystem particleSystem;
+        }
+
+
+        [Header("Visual")]
+        [SerializeField] private Transform[] _allTiresMesh;
+        [SerializeField] private Transform[] _rotatingTiresMesh;
 
         [Space(10)]
-        [Header("Tire Position")]
-        [SerializeField] private Transform _frontLeftTire;
-        [SerializeField] private Transform _rearRigthTire;
+        [Tooltip("Factor that reduce the rotation speed of wheel")]
+        [SerializeField] private float _rotatingFactor = 3f;
+        [SerializeField] private float _turnAngle = 30f;
+        [SerializeField] private float _turnDuration = 0.2f;
 
-        [Header("Vehicle Stats")]
-        [SerializeField] private float _speed = 2;
-        [SerializeField] private float _turnRadius = 3; //in UnityUnits point around the car will rotate
+        [Space(10)]
+        [SerializeField] private Skid[] _skids;
+        [SerializeField] private float _skidWidth = 0.3f;
+
+        [Header("Car stats")]
         [SerializeField] private Transform _centerOfMass;
+        [SerializeField] private Transform _frictionPoint;
+        [SerializeField] private float _speed = 2000f;
+        [SerializeField] private float _turn = 3000f;
+        [SerializeField] private float _friction = 6000f;
+        [SerializeField] private float _dragAmount = 5f;
 
-        private float _whellBase; //in UnityUnits distance between frontTire and rearTire
-        private float _rearTrack; //in UnityUnits distance between leftTire and RigthTire
+        [Header("Ground Check")]
+        [SerializeField] private Transform _groundRayPoint;
+        [SerializeField] private float _maxRayLenght = 0.25f;
 
-        private PlayerMap _playerMap;
+        [Header("Threshold")]
+        [SerializeField] private float _inputThreshold = 0.1f;
+        [SerializeField] private float _carVelocityThreshold = 0.1f;
+        [SerializeField] private float _skidThreshold = 20f;
+
+
+        [Header("Curve")]
+        [SerializeField] private AnimationCurve _frictionCurve;
+        [SerializeField] private AnimationCurve _speedCurve;
+        [SerializeField] private AnimationCurve _turnCurve;
+        [SerializeField] private AnimationCurve _driftCurve;
+        [SerializeField] private AnimationCurve _engineCurve;
+
+        [Header("Audio")]
+        [SerializeField] private AudioSource _engineSoundHighPitched;
+        [SerializeField] private AudioSource _engineSoundLowPitched;
+        [SerializeField] private AudioSource _skidSound;
+
         private Rigidbody _rigidbody;
+        private PlayerMap _playerMap;
 
-        public float Speed => _speed;
+        private float _speedValue;
+        private float _fricValue;
+        private float _turnValue;
+        private float _frictionAngle;
 
-        private float numberOfTire;
+        private bool _grounded;
+
+        private float _scaleValue = 100f; // Value that divide the car Velocity to pass it in 100 Unit per hour
+        private float _multiplicatorValue = 1000f; // Value that multiply the speed, turn and friction value
+
+        private Vector3 _carVelocity;
+        private float _carSpeed; // limitate the call "_carVelocity.magnitude"
+
+        #region Input Variable
+
+        private float _speedInput;
+        private float _turnInput;
+
+        #endregion
 
         private void Awake()
         {
@@ -35,14 +88,12 @@ namespace Car
             _rigidbody = GetComponent<Rigidbody>();
         }
 
-        void Start()
+        private void Start()
         {
             _rigidbody.centerOfMass = _centerOfMass.localPosition;
 
-            numberOfTire = _allTires.Length;
-
-            _whellBase = Mathf.Abs(_frontLeftTire.transform.position.x - _rearRigthTire.transform.position.x);
-            _rearTrack = Mathf.Abs(_frontLeftTire.transform.position.z - _rearRigthTire.transform.position.z);
+            for (int index = 0; index < _skids.Length; index++)
+                _skids[index].trailRenderer.startWidth = _skidWidth;
 
             _playerMap.PlayerMovement.ForwardBackward.performed += ForwardBackward;
             _playerMap.PlayerMovement.ForwardBackward.canceled += ForwardBackward;
@@ -61,51 +112,155 @@ namespace Car
             _playerMap.PlayerMovement.Disable();
         }
 
-        public void ForwardBackward(InputAction.CallbackContext context)
+        private void Update()
         {
-            float playerInput = context.ReadValue<float>();
-
-            for (int i = 0; i < numberOfTire; i++)
-                if (_allTires[i].IsDrivingWheel)
-                    _allTires[i].EnginePower = playerInput * _speed;
-
+            TireVisual();
+            AudioControl();
+            SkidVisual();
         }
 
-        public void LeftRigth(InputAction.CallbackContext context)
+        private void FixedUpdate()
         {
-            float playerInput = context.ReadValue<float>();
-            float ackermannAngleLeft;
-            float ackermannAngleRight;
+            RaycastHit hit;
+            Physics.Raycast(_groundRayPoint.position, -transform.up, out hit, _maxRayLenght);
 
-            // Use ackermann formula
+            _carVelocity = transform.InverseTransformDirection(_rigidbody.velocity);
+            _carSpeed = _carVelocity.magnitude;
 
-            if (playerInput > 0) // turning left
+            if (hit.collider)
             {
-                ackermannAngleLeft = Mathf.Rad2Deg * Mathf.Atan(_whellBase / (_turnRadius + (_rearTrack / 2))) * playerInput; //inter Wheel
-                ackermannAngleRight = Mathf.Rad2Deg * Mathf.Atan(_whellBase / (_turnRadius - (_rearTrack / 2))) * playerInput; //extern Wheel
-            }
-            else if (playerInput < 0) //turning right
-            {
-                ackermannAngleLeft = Mathf.Rad2Deg * Mathf.Atan(_whellBase / (_turnRadius - (_rearTrack / 2))) * playerInput; //extern Wheel
-                ackermannAngleRight = Mathf.Rad2Deg * Mathf.Atan(_whellBase / (_turnRadius + (_rearTrack / 2))) * playerInput; //inter Wheel
+                _grounded = true;
+                AccelerationLogic();
+                TurningLogic();
+                FrictionLogic();
+                BrakeLogic();
+
+                Debug.DrawLine(_groundRayPoint.position, hit.point, Color.green);
+
+                _rigidbody.centerOfMass = Vector3.zero;
             }
             else
             {
-                ackermannAngleLeft = 0;
-                ackermannAngleRight = 0;
+                _grounded = false;
+
+                _rigidbody.drag = 0.1f;
+                _rigidbody.centerOfMass = _centerOfMass.localPosition;
+                //_rigidbody.centerOfMass = Vector3.zero;
+                _rigidbody.angularDrag = 0.1f;
+            }
+        }
+
+        private void AccelerationLogic()
+        {
+            _speedValue = _speed * _speedInput * Time.fixedDeltaTime * _multiplicatorValue * _speedCurve.Evaluate(Mathf.Abs(_carVelocity.z) / _scaleValue);
+
+            if (_speedInput > _inputThreshold)
+            {
+                _rigidbody.AddForceAtPosition(transform.forward * _speedValue, _groundRayPoint.position);
             }
 
-            // Send value to wheel
+            else if (_speedInput < -_inputThreshold)
+            {
+                _rigidbody.AddForceAtPosition(transform.forward * _speedValue / 2, _groundRayPoint.position);
+            }
+        }
 
-            for (int i = 0; i < numberOfTire; i++)
-                if (_allTires[i].CanRotate)
+        private void TurningLogic()
+        {
+            _turnValue = _turn * _turnInput * Time.fixedDeltaTime * _multiplicatorValue * _turnCurve.Evaluate(_carSpeed / _scaleValue);
+
+            if (_carVelocity.z > _carVelocityThreshold)
+            {
+                _rigidbody.AddTorque(transform.up * _turnValue);
+            }
+            else if (_carVelocity.z < -_carVelocityThreshold)
+            {
+                _rigidbody.AddTorque(transform.up * -_turnValue);
+            }
+
+            _rigidbody.angularDrag = _dragAmount * _driftCurve.Evaluate(Mathf.Abs(_carVelocity.z) / 70);
+        }
+
+        private void FrictionLogic()
+        {
+            _fricValue = _friction * _frictionCurve.Evaluate(_carSpeed / _scaleValue);
+
+            if (_carSpeed > 1)
+            {
+                _frictionAngle = (-Vector3.Angle(transform.up, Vector3.up) / 90f) + 1;
+                _rigidbody.AddForceAtPosition(transform.right * _fricValue * _frictionAngle * _multiplicatorValue / 10 * -_carVelocity.normalized.x, _frictionPoint.position);
+            }
+        }
+
+        private void BrakeLogic()
+        {
+            if (_carSpeed < 1)
+            {
+                _rigidbody.drag = 5f;
+            }
+            else
+            {
+                _rigidbody.drag = 0.1f;
+            }
+        }
+
+        private void TireVisual()
+        {
+            foreach (Transform tire in _allTiresMesh)
+            {
+                tire.RotateAround(tire.position, tire.right, _carVelocity.z / _rotatingFactor);
+                tire.localPosition = Vector3.zero;
+            }
+
+            foreach (Transform tire in _rotatingTiresMesh)
+            {
+                tire.localRotation = Quaternion.Slerp(tire.localRotation,
+                                                      Quaternion.Euler(tire.localRotation.eulerAngles.x, _turnAngle * _turnInput, tire.localRotation.eulerAngles.z),
+                                                      _turnDuration);
+            }
+        }
+
+        private void AudioControl()
+        {
+            if (_grounded && Mathf.Abs(_carVelocity.x) > _skidThreshold)
+                _skidSound.mute = false;
+
+            else
+                _skidSound.mute = true;
+
+            _engineSoundHighPitched.pitch = 2 * _engineCurve.Evaluate(_carSpeed / _scaleValue);
+            _engineSoundLowPitched.pitch = 2 * _engineCurve.Evaluate(_carSpeed / _scaleValue);
+        }
+
+        private void SkidVisual()
+        {
+            if(_grounded && Mathf.Abs(_carVelocity.x) > _skidThreshold)
+            {
+                for(int index = 0; index < _skids.Length; index++)
                 {
-                    if (_allTires[i].IsLeft)
-                        _allTires[i].SteerAngle = ackermannAngleLeft;
-                    else
-                        _allTires[i].SteerAngle = ackermannAngleRight;
+                    _skids[index].trailRenderer.emitting = true;
+                    _skids[index].particleSystem.Play();
                 }
+            }
+            else
+            {
+                for (int index = 0; index < _skids.Length; index++)
+                {
+                    _skids[index].trailRenderer.emitting = false;
+                    _skids[index].particleSystem.Stop();
+                }
+            }
+        }
+
+        private void ForwardBackward(InputAction.CallbackContext context)
+        {
+            _speedInput = context.ReadValue<float>();
+        }
+
+        private void LeftRigth(InputAction.CallbackContext context)
+        {
+            _turnInput = context.ReadValue<float>();
         }
     }
-}
 
+}
