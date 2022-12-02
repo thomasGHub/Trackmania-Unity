@@ -18,7 +18,6 @@ namespace Car
         [Header("Visual")]
         [SerializeField] private Transform[] _allTiresMesh;
         [SerializeField] private Transform[] _rotatingTiresMesh;
-        [SerializeField] private SpeedoMeter _speedoMeter;
 
         [Space(10)]
         [Tooltip("Factor that reduce the rotation speed of wheel")]
@@ -270,7 +269,6 @@ namespace Car
         public void RaceStart()
         {
             _playerMap.PlayerMovement.Enable();
-            _speedoMeter.Launch();
         }
 
         private void OnTriggerEnter(Collider other)

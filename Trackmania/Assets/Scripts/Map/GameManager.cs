@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform _startPoint;
     [SerializeField] private Vector3 _offSetSpawn;
 
-    private CarController _playerController;
+    private Player _player;
 
     private void Awake()
     {
@@ -28,12 +28,12 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         GameObject _playerCar = GameObject.Instantiate(_playerPrefab, _startPoint.position + _offSetSpawn, _startPoint.rotation);
-        _playerController = _playerCar.GetComponent<CarController>();
+        _player = _playerCar.GetComponent<Player>();
         LanchRace();
     }
 
     private void LanchRace()
     {
-        _playerController.RaceStart();
+        _player.RaceStart();
     }
 }
