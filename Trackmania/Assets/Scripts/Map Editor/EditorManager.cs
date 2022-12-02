@@ -64,7 +64,6 @@ public class EditorManager : MonoBehaviour
             { 3, _blockList[2]},
             { 4, _blockList[3]},
             { 5, _blockList[4]},
-            { 6, _blockList[5]}
         };
     }
     private void Update()
@@ -93,7 +92,8 @@ public class EditorManager : MonoBehaviour
                
                 }
                 if(BlockOnMap(_goPreview)==false)
-                {                   
+                {
+                    print(_goPreview.GetComponent<Road>());
                     _goPreview.GetComponent<Road>().redBlock.SetActive(false);
                 }
                 if (Keyboard.current[Key.R].wasPressedThisFrame)
@@ -257,6 +257,7 @@ public class EditorManager : MonoBehaviour
         {
             if (go.GetComponent<Road>() != null)
             {
+                print(go.GetComponent<Road>().id);
                 jsonData saveObject = new jsonData();
                 saveObject.id = go.GetComponent<Road>().id;
                 saveObject.position = go.transform.position;
@@ -273,7 +274,6 @@ public class EditorManager : MonoBehaviour
         string path = Application.persistentDataPath + _pathMapToLoad;
         string jsonStr = File.ReadAllText(path);
         ListBlock mySampleFile = JsonUtility.FromJson<ListBlock>(jsonStr);
-        print(mySampleFile.blocks.Count);
         foreach (jsonData jsonData in mySampleFile.blocks)
         {         
             Instantiate(_idToPrefab[jsonData.id], jsonData.position, jsonData.rotation);
