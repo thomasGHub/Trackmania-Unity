@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7601277967104519909}
-  - component: {fileID: 5284287996710932226}
   m_Layer: 0
   m_Name: Road Curve
   m_TagString: Untagged
@@ -33,19 +32,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5284287996710932226
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7601277967104519908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10301b0ab3f2f394da0e0c61b52ef21d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameObjects: []
 --- !u!1001 &3513762597507583998
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -105,18 +91,42 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3417804127929840132, guid: b6032967240922c4489442db54f1350b, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3417804127929840132, guid: b6032967240922c4489442db54f1350b, type: 3}
-      propertyPath: m_Materials.Array.data[1]
+    - target: {fileID: 2063471081393756320, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
       value: 
-      objectReference: {fileID: 2100000, guid: dc0a58970694dd54ba2a1292c213c18b, type: 2}
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: 2063471081558597648, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: 2115388405952901591, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: 2115388406386002279, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: 6764270153460137733, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: 6764270153557854133, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
     - target: {fileID: 7531903613947036660, guid: b6032967240922c4489442db54f1350b, type: 3}
       propertyPath: m_Name
       value: Road Turn
       objectReference: {fileID: 0}
+    - target: {fileID: 8981776167081476405, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
+    - target: {fileID: 8981776167512406405, guid: b6032967240922c4489442db54f1350b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1436c5e762bc4b543a6c7e450d898bdb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6032967240922c4489442db54f1350b, type: 3}
 --- !u!4 &3212390543261089362 stripped

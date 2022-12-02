@@ -1,11 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Numerics;
+using System.Runtime.InteropServices.ComTypes;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
+using static EditorManager;
+using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
+using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
 public class EditorManager : MonoBehaviour
@@ -22,13 +31,49 @@ public class EditorManager : MonoBehaviour
     [SerializeField] private Image _editorSelected;
     [SerializeField] private Image _deleteSelected;
 
+    [SerializeField] private GameObject _map;
+    [SerializeField] private List<GameObject> _blockList = new List<GameObject>();
+
+    private string _json;
+    private string _pathMapToLoad = "/test.json";
+
+    private Dictionary<int, GameObject> _idToPrefab;
+
+    [Serializable]
+    public class ListBlock
+    {
+        public List<jsonData> blocks = new List<jsonData>();
+    }
+
+    [Serializable]
+    public class jsonData
+    {
+        public int id;
+        public Vector3 position;
+        public Quaternion rotation;
+    }
     private void Start()
     {
         _plane = new UnityEngine.Plane(UnityEngine.Vector3.up, new Vector3(0, 0, 0));
         _deleteSelected.enabled = false;
+
+        _idToPrefab = new Dictionary<int, GameObject>()
+        {
+            { 1, _blockList[0]},
+            { 2, _blockList[1]},
+            { 3, _blockList[2]},
+            { 4, _blockList[3]},
+            { 5, _blockList[4]},
+            { 6, _blockList[5]}
+        };
     }
     private void Update()
     {
+        if (Keyboard.current[Key.T].wasPressedThisFrame)
+        {
+            loadFile(_pathMapToLoad);
+        }
+
         if (!_freePos && _selectedBlock != null && _editMode)
         {
             if (!_preview)
@@ -42,6 +87,15 @@ public class EditorManager : MonoBehaviour
             if (_preview)
             {
                 _goPreview.transform.position = GetPos();
+                if(BlockOnMap(_goPreview) == true)
+                {
+                    _goPreview.GetComponent<Road>().redBlock.SetActive(true);
+               
+                }
+                if(BlockOnMap(_goPreview)==false)
+                {                   
+                    _goPreview.GetComponent<Road>().redBlock.SetActive(false);
+                }
                 if (Keyboard.current[Key.R].wasPressedThisFrame)
                 {
                     _goPreview.transform.Rotate(0, 45f, 0);
@@ -68,6 +122,7 @@ public class EditorManager : MonoBehaviour
                         _preview = false;
                         _goPreview = null;
                         StartCoroutine(TimerCanBeSelected());
+
                     }
                 }
             }
@@ -76,7 +131,7 @@ public class EditorManager : MonoBehaviour
         {
             if (_deleteMode)
             {
-                Destroy(getObjectInEditor());
+                Destroy(getObjectInEditor());             
             }
             else if (_editMode && _canBeSelected)
             {
@@ -122,7 +177,6 @@ public class EditorManager : MonoBehaviour
         if (_editMode == true)
         {
             _selectedBlock = gameObject;
-            //_selectedBlock.GetComponent<Highlight>().Outline();
         }
     }
 
@@ -133,14 +187,31 @@ public class EditorManager : MonoBehaviour
 
         if (_plane.Raycast(ray, out enter))
         {
+
             UnityEngine.Vector3 hitPoint = ray.GetPoint(enter);
-            if (Keyboard.current[Key.T].wasPressedThisFrame)
-            {
-                print(hitPoint + "convertit en : " + NearPos(hitPoint));
-            }
             return NearPos(hitPoint);
         }
         else return new UnityEngine.Vector3(0, 0, 0);
+    }
+
+    /*private bool CanBePlaced()
+    {
+
+    }*/
+
+    private bool BlockOnMap(GameObject previewObj)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.transform.gameObject.name != "Plane" && hit.transform.root != previewObj.transform.root)
+            {
+                print(hit.transform.root + " comparé a : " + previewObj.transform.root);
+                return true;
+            }else return false;
+        }
+        else return false;
     }
 
     private Vector3 NearPos(Vector3 pos)
@@ -176,5 +247,36 @@ public class EditorManager : MonoBehaviour
         yield return new WaitForSeconds(.1f);
 
         _canBeSelected = true;
+    }
+
+    public void saveMap()
+    {
+        ListBlock listOfBlock = new ListBlock();
+        GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+        foreach (GameObject go in allObjects)
+        {
+            if (go.GetComponent<Road>() != null)
+            {
+                jsonData saveObject = new jsonData();
+                saveObject.id = go.GetComponent<Road>().id;
+                saveObject.position = go.transform.position;
+                saveObject.rotation = go.transform.rotation;
+                listOfBlock.blocks.Add(saveObject);
+            }
+        }
+        _json += JsonUtility.ToJson(listOfBlock);
+        print(_json);
+        File.WriteAllText(Application.persistentDataPath + "/test.json", _json);
+    }
+    public void loadFile(string _pathMapToLoad)
+    {
+        string path = Application.persistentDataPath + _pathMapToLoad;
+        string jsonStr = File.ReadAllText(path);
+        ListBlock mySampleFile = JsonUtility.FromJson<ListBlock>(jsonStr);
+        print(mySampleFile.blocks.Count);
+        foreach (jsonData jsonData in mySampleFile.blocks)
+        {         
+            Instantiate(_idToPrefab[jsonData.id], jsonData.position, jsonData.rotation);
+        }
     }
 }
