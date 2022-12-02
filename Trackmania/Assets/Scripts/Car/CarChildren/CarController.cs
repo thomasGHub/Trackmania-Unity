@@ -18,6 +18,7 @@ namespace Car
         [Header("Visual")]
         [SerializeField] private Transform[] _allTiresMesh;
         [SerializeField] private Transform[] _rotatingTiresMesh;
+        [SerializeField] private SpeedoMeter _speedoMeter;
 
         [Space(10)]
         [Tooltip("Factor that reduce the rotation speed of wheel")]
@@ -102,15 +103,17 @@ namespace Car
             _playerMap.PlayerMovement.LeftRigth.canceled += LeftRigth;
         }
 
-        private void OnEnable()
-        {
-            _playerMap.PlayerMovement.Enable();
-        }
+        //private void OnEnable()
+        //{
+        //    _playerMap.PlayerMovement.Enable();
+        //}
 
         private void OnDisable()
         {
             _playerMap.PlayerMovement.Disable();
         }
+
+        #region Car Physics
 
         private void Update()
         {
@@ -234,9 +237,9 @@ namespace Car
 
         private void SkidVisual()
         {
-            if(_grounded && Mathf.Abs(_carVelocity.x) > _skidThreshold)
+            if (_grounded && Mathf.Abs(_carVelocity.x) > _skidThreshold)
             {
-                for(int index = 0; index < _skids.Length; index++)
+                for (int index = 0; index < _skids.Length; index++)
                 {
                     _skids[index].trailRenderer.emitting = true;
                     _skids[index].particleSystem.Play();
@@ -252,6 +255,8 @@ namespace Car
             }
         }
 
+        #endregion
+
         private void ForwardBackward(InputAction.CallbackContext context)
         {
             _speedInput = context.ReadValue<float>();
@@ -260,6 +265,17 @@ namespace Car
         private void LeftRigth(InputAction.CallbackContext context)
         {
             _turnInput = context.ReadValue<float>();
+        }
+
+        public void RaceStart()
+        {
+            _playerMap.PlayerMovement.Enable();
+            _speedoMeter.Launch();
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            Debug.Log("Triggered");
         }
     }
 
