@@ -50,7 +50,6 @@ namespace Car
                     _value = Mathf.Floor(_carRigibody.velocity.magnitude);
                     _value = Mathf.Clamp(_value, _minValue, _maxValue);
                     _textMesh.text = ((int)_value).ToString("D3"); // Show value as "###"
-                    Debug.Log(((int)_value).ToString("D3"));
                 }
 
                 yield return new WaitForSeconds(_delayRefresh);

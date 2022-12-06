@@ -123,6 +123,49 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &685436274
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 685436276}
+  - component: {fileID: 685436275}
+  m_Layer: 0
+  m_Name: DebugScript
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &685436275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 685436274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61920d555f51ca24db7256b344a99f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &685436276
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 685436274}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5626.3696, y: 31.56829, z: 254.01962}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &768780827
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,7 +297,7 @@ MonoBehaviour:
   m_UpdateMethod: 1
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
-    m_Style: 1
+    m_Style: 0
     m_Time: 2
     m_CustomCurve:
       serializedVersion: 2
@@ -327,8 +370,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1093027175}
-  m_LocalRotation: {x: 0.1711407, y: 0.0034041516, z: 0.019593498, w: 0.9850459}
-  m_LocalPosition: {x: -28.35509, y: 26.696915, z: 13.5}
+  m_LocalRotation: {x: -0.000002451071, y: -0.0000040457867, z: -0.019886794, w: 0.99980223}
+  m_LocalPosition: {x: 0.035404976, y: 0.67521656, z: -0.03758856}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -353,6 +396,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5052958653051502067, guid: 54cfaf3f66ff99447a53c6a3b33cc6b7, type: 3}
+      propertyPath: _playerPrefab
+      value: 
+      objectReference: {fileID: 4900030897780796294, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
     - target: {fileID: 5052958653051502069, guid: 54cfaf3f66ff99447a53c6a3b33cc6b7, type: 3}
       propertyPath: m_Name
       value: Map

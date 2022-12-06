@@ -2,6 +2,7 @@ using Car;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class GameManager : MonoBehaviour
 
     private Player _player;
 
+    private PlayerMap _playerMap;
+
     private void Awake()
     {
         if( _instance != null )
@@ -23,16 +26,29 @@ public class GameManager : MonoBehaviour
         }
             
         _instance = this;
+
+        _playerMap = new PlayerMap();
+        _playerMap.PlayerUX.StartRace.performed += LanchRace;
+        
+    }
+
+    private void OnEnable()
+    {
+        _playerMap.PlayerUX.StartRace.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _playerMap.PlayerUX.StartRace.Disable();
     }
 
     private void Start()
     {
         GameObject _playerCar = GameObject.Instantiate(_playerPrefab, _startPoint.position + _offSetSpawn, _startPoint.rotation);
         _player = _playerCar.GetComponent<Player>();
-        LanchRace();
     }
 
-    private void LanchRace()
+    private void LanchRace(InputAction.CallbackContext context)
     {
         _player.RaceStart();
     }

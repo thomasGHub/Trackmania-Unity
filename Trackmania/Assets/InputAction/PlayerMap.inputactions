@@ -224,6 +224,120 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "PlayerUX",
+            "id": "b7db1d45-2b26-4632-8c3c-31fb03057d58",
+            "actions": [
+                {
+                    "name": "CameraSwitch",
+                    "type": "Value",
+                    "id": "ac3e1299-7cd1-4952-8a7a-f3149a290362",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "StartRace",
+                    "type": "Button",
+                    "id": "a41f0ee9-df50-411d-a778-018f5f76566e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "Camera Choice Desktop",
+                    "id": "aa121452-6822-4abb-a46e-bc636301522f",
+                    "path": "CameraChoice",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraSwitch",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "triggerCam1",
+                    "id": "91f9ad6e-747e-4a69-b901-28c5f1c8cb60",
+                    "path": "<Keyboard>/numpad1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "CameraSwitch",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "triggerCam2",
+                    "id": "71716d6f-fd0b-4144-a3d8-c3fb6795103a",
+                    "path": "<Keyboard>/numpad2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "CameraSwitch",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "triggerCam3",
+                    "id": "1e9a6b2d-9cde-47e9-aa1a-01692f8dd968",
+                    "path": "<Keyboard>/numpad3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "CameraSwitch",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Camera Choice Gamepad",
+                    "id": "0d91e93c-a0d4-4b8e-8b20-74b17ad5ebcf",
+                    "path": "CameraChoiceGamepad",
+                    "interactions": "",
+                    "processors": "Circle",
+                    "groups": "",
+                    "action": "CameraSwitch",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "changeCam",
+                    "id": "de077059-d1bd-458f-9b7d-9cad1b720bad",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "CameraSwitch",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "4ac94ad6-75b2-42d8-b066-2b78cef8a0f5",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "StartRace",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e803728b-dd12-45db-8139-625e239bd135",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StartRace",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

@@ -102,11 +102,6 @@ namespace Car
             _playerMap.PlayerMovement.LeftRigth.canceled += LeftRigth;
         }
 
-        //private void OnEnable()
-        //{
-        //    _playerMap.PlayerMovement.Enable();
-        //}
-
         private void OnDisable()
         {
             _playerMap.PlayerMovement.Disable();
