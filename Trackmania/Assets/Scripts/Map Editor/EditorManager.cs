@@ -70,6 +70,7 @@ public class EditorManager : MonoBehaviour
             { 5, _blockList[4]},
             { 6, _blockList[5]},
             { 7, _blockList[6]},
+            { 8, _blockList[7]},
         };
     }
     private void Update()
