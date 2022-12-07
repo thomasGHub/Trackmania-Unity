@@ -27,12 +27,16 @@ public class EditorManager : MonoBehaviour
     private bool _editMode = true;
     private bool _deleteMode = false;
     private bool _canBeSelected = true;
-    private int _height = 0;
+    private float _height = 0;
     [SerializeField] private Image _editorSelected;
     [SerializeField] private Image _deleteSelected;
 
     [SerializeField] private GameObject _map;
     [SerializeField] private List<GameObject> _blockList = new List<GameObject>();
+    [SerializeField] private GameObject _UI;
+    [SerializeField] private GameObject _car;
+    private GameObject _currentCar;
+    private GameObject _roadStart;
 
     private string _json;
     private string _pathMapToLoad = "/test.json";
@@ -64,7 +68,9 @@ public class EditorManager : MonoBehaviour
             { 3, _blockList[2]},
             { 4, _blockList[3]},
             { 5, _blockList[4]},
-            { 6, _blockList[5]}
+            { 6, _blockList[5]},
+            { 7, _blockList[6]},
+            { 8, _blockList[7]},
         };
     }
     private void Update()
@@ -72,6 +78,18 @@ public class EditorManager : MonoBehaviour
         if (Keyboard.current[Key.T].wasPressedThisFrame)
         {
             loadFile(_pathMapToLoad);
+        }
+
+        if (Keyboard.current[Key.Y].wasPressedThisFrame)
+        {
+            if (_UI.activeInHierarchy)
+            {
+                _UI.SetActive(false);
+            }
+            else
+            {
+                _UI.SetActive(true);
+            }
         }
 
         if (!_freePos && _selectedBlock != null && _editMode)
@@ -93,7 +111,7 @@ public class EditorManager : MonoBehaviour
                
                 }
                 if(BlockOnMap(_goPreview)==false)
-                {                   
+                {
                     _goPreview.GetComponent<Road>().redBlock.SetActive(false);
                 }
                 if (Keyboard.current[Key.R].wasPressedThisFrame)
@@ -102,11 +120,11 @@ public class EditorManager : MonoBehaviour
                 }
                 else if (Keyboard.current[Key.Q].wasPressedThisFrame && _height > 0)
                 {
-                    _height--;
+                    _height-=0.5f;
                 }
                 else if (Keyboard.current[Key.E].wasPressedThisFrame)
                 {
-                    _height++;
+                    _height+=0.5f;
                 }
                 if (Mouse.current.leftButton.wasPressedThisFrame)
                 {
@@ -194,11 +212,6 @@ public class EditorManager : MonoBehaviour
         else return new UnityEngine.Vector3(0, 0, 0);
     }
 
-    /*private bool CanBePlaced()
-    {
-
-    }*/
-
     private bool BlockOnMap(GameObject previewObj)
     {
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -207,7 +220,6 @@ public class EditorManager : MonoBehaviour
         {
             if (hit.transform.gameObject.name != "Plane" && hit.transform.root != previewObj.transform.root)
             {
-                print(hit.transform.root + " comparé a : " + previewObj.transform.root);
                 return true;
             }else return false;
         }
@@ -216,8 +228,18 @@ public class EditorManager : MonoBehaviour
 
     private Vector3 NearPos(Vector3 pos)
     {
-        pos.x = Mathf.FloorToInt(pos.x / 10) * 10;
-        pos.z = Mathf.FloorToInt(pos.z / 10) * 10;
+        pos.x = Mathf.FloorToInt(pos.x);
+        pos.z = Mathf.FloorToInt(pos.z);
+        if (pos.x % 5 <= 2f)
+        {
+            pos.x -= pos.x % 5;
+        }
+        else pos.x += 5 - (pos.x % 5);
+        if (pos.z % 5 <= 2)
+        {
+            pos.z -= (pos.z % 5);
+        }
+        else pos.z += 5 -(pos.z % 5);
         pos.y = _height;
 
         return pos;
@@ -225,7 +247,6 @@ public class EditorManager : MonoBehaviour
 
     public void editMode()
     {
-        print("EditMode");
         _editMode = true;
         _editorSelected.enabled = true;
         _deleteMode = false;
@@ -233,7 +254,6 @@ public class EditorManager : MonoBehaviour
     }
     public void deleteMode()
     {
-        print("DeleteMode");
         _editMode = false;
         _editorSelected.enabled = false;
         _deleteMode = true;
@@ -249,6 +269,22 @@ public class EditorManager : MonoBehaviour
         _canBeSelected = true;
     }
 
+    public void TestMap()
+    {
+        if (_currentCar != null)
+        {
+            Destroy(_currentCar);
+            _UI.SetActive(true);
+        }
+        else
+        {
+            _roadStart = UnityEngine.Object.FindObjectOfType<RoadStart>().GetComponent<RoadStart>().startPos;
+            Vector3 _posStart = new Vector3(_roadStart.transform.position.x, _roadStart.transform.position.y, _roadStart.transform.position.z);
+            _currentCar = Instantiate(_car, _posStart, Quaternion.identity);
+            _UI.SetActive(false);
+        }
+    }
+
     public void saveMap()
     {
         ListBlock listOfBlock = new ListBlock();
@@ -257,6 +293,7 @@ public class EditorManager : MonoBehaviour
         {
             if (go.GetComponent<Road>() != null)
             {
+                print(go.GetComponent<Road>().id);
                 jsonData saveObject = new jsonData();
                 saveObject.id = go.GetComponent<Road>().id;
                 saveObject.position = go.transform.position;
@@ -273,7 +310,6 @@ public class EditorManager : MonoBehaviour
         string path = Application.persistentDataPath + _pathMapToLoad;
         string jsonStr = File.ReadAllText(path);
         ListBlock mySampleFile = JsonUtility.FromJson<ListBlock>(jsonStr);
-        print(mySampleFile.blocks.Count);
         foreach (jsonData jsonData in mySampleFile.blocks)
         {         
             Instantiate(_idToPrefab[jsonData.id], jsonData.position, jsonData.rotation);

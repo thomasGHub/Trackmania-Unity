@@ -6,6 +6,6 @@ public class RoadRampCurve : Road
 {
     private void Start()
     {
-        id = 2;
+        id = 3;
     }
 }
