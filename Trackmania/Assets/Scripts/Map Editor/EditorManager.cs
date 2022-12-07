@@ -69,6 +69,7 @@ public class EditorManager : MonoBehaviour
             { 4, _blockList[3]},
             { 5, _blockList[4]},
             { 6, _blockList[5]},
+            { 7, _blockList[6]},
         };
     }
     private void Update()
@@ -228,23 +229,16 @@ public class EditorManager : MonoBehaviour
     {
         pos.x = Mathf.FloorToInt(pos.x);
         pos.z = Mathf.FloorToInt(pos.z);
-        print("Before pos X : " + pos.x);
-        print("Before pos Z : " + pos.z);
         if (pos.x % 5 <= 2f)
         {
             pos.x -= pos.x % 5;
         }
         else pos.x += 5 - (pos.x % 5);
-        print("After pos X : " + pos.x);
         if (pos.z % 5 <= 2)
         {
             pos.z -= (pos.z % 5);
         }
         else pos.z += 5 -(pos.z % 5);
-        print("After pos Z : " + pos.z);
-
-        //pos.x = Mathf.FloorToInt(pos.x / 10) * 10;
-        //pos.z = Mathf.FloorToInt(pos.z / 10) * 10;
         pos.y = _height;
 
         return pos;
