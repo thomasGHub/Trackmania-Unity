@@ -9,6 +9,20 @@ using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
+[Serializable]
+public class ListBlock
+{
+    public List<jsonData> blocks = new List<jsonData>();
+}
+
+[Serializable]
+public class jsonData
+{
+    public int id;
+    public Vector3 position;
+    public Quaternion rotation;
+}
+
 public class EditorManager : MonoBehaviour
 {
     #region Map
@@ -40,19 +54,7 @@ public class EditorManager : MonoBehaviour
     private string _pathMapToLoad = "/test.json";
     #endregion
 
-    [Serializable]
-    public class ListBlock
-    {
-        public List<jsonData> blocks = new List<jsonData>();
-    }
 
-    [Serializable]
-    public class jsonData
-    {
-        public int id;
-        public Vector3 position;
-        public Quaternion rotation;
-    }
     private void Start()
     {
         _plane = new UnityEngine.Plane(UnityEngine.Vector3.up, new Vector3(0, 0, 0));

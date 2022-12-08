@@ -2,14 +2,23 @@ using UnityEngine;
 
 public class CameraHandler : MonoBehaviour
 {
-    [SerializeField] private Transform _target; // référence à l'objet que la caméra doit suivre
-    [SerializeField] private float _translationSpeed = 1f; // temps de lissage de la caméra
-    [SerializeField] private float _rotationSpeed = 1f;
+    [Header("Camera Movement")]
+    [SerializeField] private AnimationCurve _DistCurve;
+    [SerializeField] private float _moveValue;
 
-    // Update is called once per frame
-    void Update()
+    [Header("Car Rigidbody")]
+    [SerializeField] private Rigidbody _carRigidbody;
+
+    private Vector3 _startLocalPosition;
+
+    private void Start()
     {
-        transform.position = Vector3.Lerp(transform.position, _target.position, _translationSpeed * Time.deltaTime);
-        transform.rotation = Quaternion.Lerp(transform.rotation, _target.rotation, _rotationSpeed * Time.deltaTime);
+        _startLocalPosition = transform.localPosition;
+    }
+
+    private void Update()
+    {
+        Vector3 distMovement = _moveValue * _DistCurve.Evaluate(_carRigidbody.velocity.magnitude / 100) * Vector3.forward;
+        transform.localPosition = Vector3.Lerp(transform.localPosition, _startLocalPosition + distMovement, 10 * Time.deltaTime);
     }
 }
