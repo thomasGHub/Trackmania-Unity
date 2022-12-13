@@ -377,28 +377,7 @@ public class UserAccountManager : MonoBehaviour
 
 
 
-    private void UpdateApiPolicy()
-    {
-        PlayFabAdminAPI.UpdatePolicy(new UpdatePolicyRequest()
-        {
-            PolicyName = "ApiPolicy",
-            OverwritePolicy = false, // Append to existing policy. Set to True, to overwrite.
-            Statements = new List<PermissionStatement>() {
-            new PermissionStatement() {
-                Action = "*", // Statement effects Execute action
-                ApiConditions = new ApiCondition() {
-                    HasSignatureOrEncryption = Conditionals.False // Require no RSA encrypted payload or signed headers
-                },
-                Comment = "Do not allow clients to confirm purchase",
-                Resource = "pfrn:api--/Client/ConfirmPurchase", // Resource name
-                Effect = EffectType.Deny, // Do not allow,
-                Principal = "*"
-            }
-        }
-        }, result => {
-            FetchApiPolicy();
-        }, error => Debug.LogError(error.GenerateErrorReport()));
-    }
+ 
 
 
 }
