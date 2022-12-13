@@ -1,47 +1,44 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Numerics;
-using System.Runtime.InteropServices.ComTypes;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 using static EditorManager;
-using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
 public class EditorManager : MonoBehaviour
 {
-    private GameObject _selectedBlock;
-    private bool _freePos = false;
+    #region Map
     private UnityEngine.Plane _plane;
-    private bool _preview = false;
+    private GameObject _selectedBlock;
     private GameObject _goPreview;
+    private GameObject _currentCar;
+    private GameObject _roadStart;
+    private bool _freePos = false;
+    private bool _preview = false;
+    private float _height = 0;
+    [SerializeField] private List<GameObject> _blockList = new List<GameObject>();
+    private Dictionary<int, GameObject> _idToPrefab;
+    #endregion
+
+    #region UI
     private bool _editMode = true;
     private bool _deleteMode = false;
     private bool _canBeSelected = true;
-    private float _height = 0;
     [SerializeField] private Image _editorSelected;
     [SerializeField] private Image _deleteSelected;
-
-    [SerializeField] private GameObject _map;
-    [SerializeField] private List<GameObject> _blockList = new List<GameObject>();
     [SerializeField] private GameObject _UI;
     [SerializeField] private GameObject _car;
-    private GameObject _currentCar;
-    private GameObject _roadStart;
+    #endregion
 
+    #region JSON
     private string _json;
     private string _pathMapToLoad = "/test.json";
-
-    private Dictionary<int, GameObject> _idToPrefab;
+    #endregion
 
     [Serializable]
     public class ListBlock
