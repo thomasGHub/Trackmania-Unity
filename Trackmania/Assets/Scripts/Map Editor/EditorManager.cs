@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -47,14 +49,18 @@ public class EditorManager : MonoBehaviour
     [SerializeField] private Image _deleteSelected;
     [SerializeField] private GameObject _UI;
     [SerializeField] private GameObject _car;
+    [SerializeField] private TMP_InputField _inputField;
     #endregion
 
     #region JSON
     [SerializeField] private RoadData _roadData;
     private string _json;
     private string _pathMapToLoad = "/test.json";
+    private string _mapName;
     #endregion
 
+    private bool _waitingForName = false;
+    private Regex letterRegex = new Regex(@"[a-zA-Z]");
 
     private void Start()
     {
@@ -68,6 +74,17 @@ public class EditorManager : MonoBehaviour
         if (Keyboard.current[Key.T].wasPressedThisFrame)
         {
             loadFile(_pathMapToLoad);
+        }
+
+        if (_waitingForName)
+        {
+            if (Keyboard.current[Key.Enter].wasPressedThisFrame && letterRegex.IsMatch(_inputField.text))
+            {
+                _mapName = _inputField.text;
+                print(_mapName);
+                saveMap();
+                _inputField.gameObject.SetActive(false);
+            }
         }
 
         if (Keyboard.current[Key.Y].wasPressedThisFrame)
@@ -275,7 +292,13 @@ public class EditorManager : MonoBehaviour
         }
     }
 
-    public void saveMap()
+    public void preSaveMap()
+    {
+        _inputField.gameObject.SetActive(true);
+        _waitingForName = true;
+    }
+
+    private void saveMap()
     {
         ListBlock listOfBlock = new ListBlock();
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
@@ -295,6 +318,8 @@ public class EditorManager : MonoBehaviour
         print(_json);
         File.WriteAllText(Application.persistentDataPath + "/test.json", _json);
     }
+
+
     public void loadFile(string _pathMapToLoad)
     {
         string path = Application.persistentDataPath + _pathMapToLoad;
