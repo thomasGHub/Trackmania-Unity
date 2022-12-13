@@ -2524,7 +2524,8 @@ MonoBehaviour:
   _editorSelected: {fileID: 736205548}
   _deleteSelected: {fileID: 1310266523}
   _UI: {fileID: 1365083336}
-  _car: {fileID: 9184899607935987076, guid: 3bb60e69b5a6a19468085da937331ff2, type: 3}
+  _car: {fileID: 7631849996204016677, guid: 3bb60e69b5a6a19468085da937331ff2, type: 3}
+  _roadData: {fileID: 11400000, guid: e3db2ed44fbfa084d905417d54d431a5, type: 2}
 --- !u!1 &1533785692
 GameObject:
   m_ObjectHideFlags: 0
