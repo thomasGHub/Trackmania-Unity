@@ -13,9 +13,9 @@ namespace MirrorBasics {
         public bool publicMatch;
         public bool inMatch;
         public bool matchFull;
-        public List<Player> players = new List<Player> ();
+        public List<PlayerNetwork> players = new List<PlayerNetwork> ();
 
-        public Match (string matchID, Player player, bool publicMatch) {
+        public Match (string matchID, PlayerNetwork player, bool publicMatch) {
             matchFull = false;
             inMatch = false;
             this.matchID = matchID;
@@ -40,7 +40,7 @@ namespace MirrorBasics {
             //DontDestroyOnLoad(gameObject);
         }
 
-        public bool HostGame (string _matchID, Player _player, bool publicMatch, out int playerIndex) {
+        public bool HostGame (string _matchID, PlayerNetwork _player, bool publicMatch, out int playerIndex) {
             playerIndex = -1;
 
             if (!matchIDs.Contains (_matchID)) {
@@ -57,7 +57,7 @@ namespace MirrorBasics {
             }
         }
 
-        public bool JoinGame (string _matchID, Player _player, out int playerIndex) {
+        public bool JoinGame (string _matchID, PlayerNetwork _player, out int playerIndex) {
             playerIndex = -1;
 
             if (matchIDs.Contains (_matchID)) {
@@ -90,7 +90,7 @@ namespace MirrorBasics {
             }
         }
 
-        public bool SearchGame (Player _player, out int playerIndex, out string matchID) {
+        public bool SearchGame (PlayerNetwork _player, out int playerIndex, out string matchID) {
             playerIndex = -1;
             matchID = "";
 
@@ -133,12 +133,12 @@ namespace MirrorBasics {
             return _id;
         }
 
-        public void PlayerDisconnected (Player player, string _matchID) {
+        public void PlayerDisconnected (PlayerNetwork player, string _matchID) {
             for (int i = 0; i < matches.Count; i++) {
                 if (matches[i].matchID == _matchID) {
                     int playerIndex = matches[i].players.IndexOf (player);
                     if (matches[i].players.Count > playerIndex) matches[i].players.RemoveAt (playerIndex);
-                    Debug.Log ($"Player disconnected from match {_matchID} | {matches[i].players.Count} players remaining");
+                    Debug.Log ($"PlayerNetwork disconnected from match {_matchID} | {matches[i].players.Count} players remaining");
 
                     if (matches[i].players.Count == 0) {
                         Debug.Log ($"No more players in Match. Terminating {_matchID}");

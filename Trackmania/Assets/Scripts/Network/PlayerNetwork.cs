@@ -8,9 +8,9 @@ using UnityEngine.SceneManagement;
 namespace MirrorBasics {
 
     [RequireComponent (typeof (NetworkMatch))]
-    public class Player : NetworkBehaviour {
+    public class PlayerNetwork : NetworkBehaviour {
 
-        public static Player localPlayer;
+        public static PlayerNetwork localPlayer;
         [SyncVar] public string matchID;
         [SyncVar] public int playerIndex;
 
@@ -226,7 +226,11 @@ namespace MirrorBasics {
         void TargetBeginGame () {
             Debug.Log ($"MatchID: {matchID} | Beginning");
             //Additively load game scene
-            SceneManager.LoadScene (2, LoadSceneMode.Additive);
+            //SceneManager.LoadScene ("Online", LoadSceneMode.Additive);
+            //SceneManager.SetActiveScene(SceneManager.GetSceneByName("Online"));
+
+            ViewManager.Show<NoUI>();
+            Player.instance.RaceStart();
             //NetworkManager.singleton.ServerChangeScene("Online");
         }
 

@@ -54,4 +54,14 @@ public class TimerCount : MonoBehaviour
     {
         _isRunning = true;
     }
+
+    public void SetInactive()
+    {
+        _minutesTextMesh.gameObject.SetActive(false);
+        _secondsTextMesh.gameObject.SetActive(false);
+        _milisecondsTextMesh.gameObject.SetActive(false);
+        this.enabled = false;
+
+    }
+
 }

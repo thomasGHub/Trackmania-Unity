@@ -61,13 +61,13 @@ namespace MirrorBasics {
         public void HostPublic () {
             lobbySelectables.ForEach (x => x.interactable = false);
 
-            Player.localPlayer.HostGame (true);
+            PlayerNetwork.localPlayer.HostGame (true);
         }
 
         public void HostPrivate () {
             lobbySelectables.ForEach (x => x.interactable = false);
 
-            Player.localPlayer.HostGame (false);
+            PlayerNetwork.localPlayer.HostGame (false);
         }
 
         public void HostSuccess (bool success, string matchID) {
@@ -76,7 +76,7 @@ namespace MirrorBasics {
                 ViewManager.Show<LobbyMenuView>();
 
                 if (localPlayerLobbyUI != null) Destroy (localPlayerLobbyUI);
-                localPlayerLobbyUI = SpawnPlayerUIPrefab (Player.localPlayer);
+                localPlayerLobbyUI = SpawnPlayerUIPrefab (PlayerNetwork.localPlayer);
                 matchIDText.text = matchID;
             } else {
                 lobbySelectables.ForEach (x => x.interactable = true);
@@ -86,7 +86,7 @@ namespace MirrorBasics {
         public void Join () {
             lobbySelectables.ForEach (x => x.interactable = false);
 
-            Player.localPlayer.JoinGame (joinMatchInput.text.ToUpper ());
+            PlayerNetwork.localPlayer.JoinGame (joinMatchInput.text.ToUpper ());
         }
 
         public void JoinSuccess (bool success, string matchID) {
@@ -95,7 +95,7 @@ namespace MirrorBasics {
                 ViewManager.Show<LobbyMenuView>();
 
                 if (localPlayerLobbyUI != null) Destroy (localPlayerLobbyUI);
-                localPlayerLobbyUI = SpawnPlayerUIPrefab (Player.localPlayer);
+                localPlayerLobbyUI = SpawnPlayerUIPrefab (PlayerNetwork.localPlayer);
                 matchIDText.text = matchID;
             } else {
                 lobbySelectables.ForEach (x => x.interactable = true);
@@ -104,14 +104,14 @@ namespace MirrorBasics {
 
         public void DisconnectGame () {
             if (localPlayerLobbyUI != null) Destroy (localPlayerLobbyUI);
-            Player.localPlayer.DisconnectGame ();
+            PlayerNetwork.localPlayer.DisconnectGame ();
 
             ViewManager.Show<ConnectMenuView>();
             //lobbyCanvas.SetActive(false);
             lobbySelectables.ForEach (x => x.interactable = true);
         }
 
-        public GameObject SpawnPlayerUIPrefab (Player player) {
+        public GameObject SpawnPlayerUIPrefab (PlayerNetwork player) {
             GameObject newUIPlayer = Instantiate (UIPlayerPrefab, UIPlayerParent);
             newUIPlayer.GetComponent<UIPlayer> ().SetPlayer (player);
             newUIPlayer.transform.SetSiblingIndex (player.playerIndex - 1);
@@ -120,7 +120,7 @@ namespace MirrorBasics {
         }
 
         public void BeginGame () {
-            Player.localPlayer.BeginGame ();
+            PlayerNetwork.localPlayer.BeginGame ();
             ViewManager.Show<NoUI>();
         }
 
@@ -159,7 +159,7 @@ namespace MirrorBasics {
                     currentTime -= Time.deltaTime;
                 } else {
                     currentTime = searchInterval;
-                    Player.localPlayer.SearchGame ();
+                    PlayerNetwork.localPlayer.SearchGame ();
                 }
                 yield return null;
             }

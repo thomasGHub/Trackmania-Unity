@@ -17,6 +17,8 @@ public class UserAccountManager : MonoBehaviour
     public static UnityEvent<string, int> OnStatisticRetrieved = new UnityEvent<string, int>();
     public static UnityEvent<string, List<PlayerLeaderboardEntry>> OnLeaderboardRetrieved = new UnityEvent<string, List<PlayerLeaderboardEntry>>();
     public string playfabID;
+    public string entityID; //for json files
+    public string entityType; //for json files
     public string playerName;
 
     public GameObject rowPrefab;
@@ -126,6 +128,8 @@ public class UserAccountManager : MonoBehaviour
                 Debug.Log($"Success Login with Android Device ID");
                 playfabID = response.PlayFabId;
                 playerName = response.PlayFabId;
+                entityID = response.EntityToken.Entity.Id;
+                entityType = response.EntityToken.Entity.Type;
                 OnSignInSuccess.Invoke();
 
             }, error =>
@@ -149,6 +153,8 @@ public class UserAccountManager : MonoBehaviour
                 Debug.Log($"Success Login with IOS Device ID");
                 playerName = response.PlayFabId;
                 playfabID = response.PlayFabId;
+                entityID = response.EntityToken.Entity.Id;
+                entityType = response.EntityToken.Entity.Type;
                 OnSignInSuccess.Invoke();
 
             }, error =>
@@ -171,6 +177,8 @@ public class UserAccountManager : MonoBehaviour
                 ViewManager.Show<GameView>();
                 Debug.Log($"Nice{response.PlayFabId}");
                 playfabID = response.PlayFabId;
+                entityID = response.EntityToken.Entity.Id;
+                entityType = response.EntityToken.Entity.Type;
                 playerName = response.PlayFabId;
                 OnSignInSuccess.Invoke();
             }, error =>
@@ -366,4 +374,31 @@ public class UserAccountManager : MonoBehaviour
     {
         Debug.Log("Update display name!");
     }
+
+
+
+    private void UpdateApiPolicy()
+    {
+        PlayFabAdminAPI.UpdatePolicy(new UpdatePolicyRequest()
+        {
+            PolicyName = "ApiPolicy",
+            OverwritePolicy = false, // Append to existing policy. Set to True, to overwrite.
+            Statements = new List<PermissionStatement>() {
+            new PermissionStatement() {
+                Action = "*", // Statement effects Execute action
+                ApiConditions = new ApiCondition() {
+                    HasSignatureOrEncryption = Conditionals.False // Require no RSA encrypted payload or signed headers
+                },
+                Comment = "Do not allow clients to confirm purchase",
+                Resource = "pfrn:api--/Client/ConfirmPurchase", // Resource name
+                Effect = EffectType.Deny, // Do not allow,
+                Principal = "*"
+            }
+        }
+        }, result => {
+            FetchApiPolicy();
+        }, error => Debug.LogError(error.GenerateErrorReport()));
+    }
+
+
 }

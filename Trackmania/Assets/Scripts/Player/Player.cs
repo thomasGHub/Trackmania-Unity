@@ -2,8 +2,9 @@ using UnityEngine;
 using Car;
 using Cinemachine;
 using UnityEngine.InputSystem;
+using Mirror;
 
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour
 {
     [SerializeField] private CarController _carController;
     [SerializeField] private SpeedoMeter _speedoMeter;
@@ -14,10 +15,16 @@ public class Player : MonoBehaviour
 
     private PlayerMap _playerMap;
     private int _currentIndex;
+    public static Player instance;
+
 
     private void Awake()
     {
         _playerMap = new PlayerMap();
+    }
+    public override void OnStartClient()
+    {
+        OnStartSetup();
     }
 
     private void Start()
@@ -25,12 +32,26 @@ public class Player : MonoBehaviour
         _allCameras[0].Priority = 1;
 
         _playerMap.PlayerUX.CameraSwitch.performed += CameraSwitch;
-        
+
+        OnStartSetup();
     }
 
     private void OnDisable()
     {
         _playerMap.PlayerUX.CameraSwitch.Disable();
+    }
+
+    private void OnStartSetup()
+    {
+        if (isLocalPlayer)
+        {
+            instance = this;
+        }
+        else
+        {
+            _timerCount.SetInactive();
+            _carController.enabled = false;
+        }
     }
 
     public void RaceStart()

@@ -9,8 +9,6 @@ using UnityEngine;
 
 public class EntityFileExample : MonoBehaviour
 {
-    public string entityId; // Id representing the logged in player
-    public string entityType; // entityType representing the logged in player
     private readonly Dictionary<string, string> _entityFileJson = new Dictionary<string, string>();
     private readonly Dictionary<string, string> _tempUpdates = new Dictionary<string, string>();
     public string ActiveUploadFileName;
@@ -25,11 +23,6 @@ public class EntityFileExample : MonoBehaviour
 
     void OnGUI()
     {
-        if (!PlayFabClientAPI.IsClientLoggedIn() && GUI.Button(new Rect(0, 0, 100, 30), "Login"))
-            Login();
-        if (PlayFabClientAPI.IsClientLoggedIn() && GUI.Button(new Rect(0, 0, 100, 30), "LogOut"))
-            PlayFabClientAPI.ForgetAllCredentials();
-
         if (PlayFabClientAPI.IsClientLoggedIn() && GUI.Button(new Rect(100, 0, 100, 30), "(re)Load Files"))
             LoadAllFiles();
 
@@ -60,21 +53,8 @@ public class EntityFileExample : MonoBehaviour
         }
     }
 
-    void Login()
-    {
-        var request = new PlayFab.ClientModels.LoginWithCustomIDRequest
-        {
-            CustomId = SystemInfo.deviceUniqueIdentifier,
-            CreateAccount = true,
-            //LoginTitlePlayerAccountEntity = true
-        };
-        PlayFabClientAPI.LoginWithCustomID(request, OnLogin, OnSharedFailure);
-    }
-    void OnLogin(PlayFab.ClientModels.LoginResult result)
-    {
-        entityId = result.EntityToken.Entity.Id;
-        entityType = result.EntityToken.Entity.Type;
-    }
+
+
 
     [ContextMenu("_LoadFiles_")]
     void LoadAllFiles()
@@ -83,9 +63,11 @@ public class EntityFileExample : MonoBehaviour
             throw new Exception("This example overly restricts file operations for safety. Careful consideration must be made when doing multiple file operations in parallel to avoid conflict.");
 
         GlobalFileLock += 1; // Start GetFiles
-        var request = new PlayFab.DataModels.GetFilesRequest { Entity = new PlayFab.DataModels.EntityKey { Id = entityId, Type = entityType } };
+        var request = new PlayFab.DataModels.GetFilesRequest { Entity = new PlayFab.DataModels.EntityKey { Id =UserAccountManager.instance.entityID, Type = UserAccountManager.instance.entityType } };
         PlayFabDataAPI.GetFiles(request, OnGetFileMeta, OnSharedFailure);
     }
+
+
     void OnGetFileMeta(PlayFab.DataModels.GetFilesResponse result)
     {
         Debug.Log("Loading " + result.Metadata.Count + " files");
@@ -119,7 +101,7 @@ public class EntityFileExample : MonoBehaviour
         GlobalFileLock += 1; // Start InitiateFileUploads
         var request = new PlayFab.DataModels.InitiateFileUploadsRequest
         {
-            Entity = new PlayFab.DataModels.EntityKey { Id = entityId, Type = entityType },
+            Entity = new PlayFab.DataModels.EntityKey { Id = UserAccountManager.instance.entityID, Type = UserAccountManager.instance.entityType },
             FileNames = new List<string> { ActiveUploadFileName },
         };
         PlayFabDataAPI.InitiateFileUploads(request, OnInitFileUpload, OnInitFailed);
@@ -132,7 +114,7 @@ public class EntityFileExample : MonoBehaviour
             GlobalFileLock += 1; // Start AbortFileUploads
             var request = new PlayFab.DataModels.AbortFileUploadsRequest
             {
-                Entity = new PlayFab.DataModels.EntityKey { Id = entityId, Type = entityType },
+                Entity = new PlayFab.DataModels.EntityKey { Id = UserAccountManager.instance.entityID, Type = UserAccountManager.instance.entityType },
                 FileNames = new List<string> { ActiveUploadFileName },
             };
             PlayFabDataAPI.AbortFileUploads(request, (result) => { GlobalFileLock -= 1; UploadFile(ActiveUploadFileName); }, OnSharedFailure); GlobalFileLock -= 1; // Finish AbortFileUploads
@@ -161,7 +143,7 @@ public class EntityFileExample : MonoBehaviour
         GlobalFileLock += 1; // Start FinalizeFileUploads
         var request = new PlayFab.DataModels.FinalizeFileUploadsRequest
         {
-            Entity = new PlayFab.DataModels.EntityKey { Id = entityId, Type = entityType },
+            Entity = new PlayFab.DataModels.EntityKey { Id = UserAccountManager.instance.entityID, Type = UserAccountManager.instance.entityType },
             FileNames = new List<string> { ActiveUploadFileName },
         };
         PlayFabDataAPI.FinalizeFileUploads(request, OnUploadSuccess, OnSharedFailure);
