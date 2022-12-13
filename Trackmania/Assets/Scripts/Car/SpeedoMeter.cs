@@ -31,6 +31,12 @@ namespace Car
             StartCoroutine(ChangeText());
         }
 
+        public void Stop()
+        {
+            _isRunning = false;
+            StopCoroutine(ChangeText());
+        }
+
         public void Pause()
         {
             _isRunning = false;

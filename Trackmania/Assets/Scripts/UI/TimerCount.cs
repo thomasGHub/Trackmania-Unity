@@ -54,4 +54,9 @@ public class TimerCount : MonoBehaviour
     {
         _isRunning = true;
     }
+
+    public void Stop()
+    {
+        _isRunning = false;
+    }
 }

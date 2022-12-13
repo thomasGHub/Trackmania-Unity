@@ -41,6 +41,14 @@ public class Player : MonoBehaviour
         _playerMap.PlayerUX.CameraSwitch.Enable();
     }
 
+    public void RaceStop()
+    {
+        _carController.RaceStop();
+        _speedoMeter.Stop();
+        _timerCount.Stop();
+        _playerMap.PlayerUX.CameraSwitch.Disable();
+    }
+
     private void CameraSwitch(InputAction.CallbackContext context)
     {
         int cameraIndex = (int)(Mathf.Floor(context.ReadValue<float>())) - 1;

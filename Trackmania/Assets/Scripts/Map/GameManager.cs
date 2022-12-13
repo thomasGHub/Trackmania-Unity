@@ -81,9 +81,7 @@ public class GameManager : MonoBehaviour
 
     public static void VehiclePassPoint(Road roadScript)
     {
-        
-
-
+        _instance._roadToFunction[roadScript.GetType()].Invoke(roadScript);
     }
 
     private void CheckPointPassed(Road roadScript)
@@ -99,7 +97,7 @@ public class GameManager : MonoBehaviour
                 return;
         }
 
-        Debug.Log("End Of Course");
+        _player.RaceStop();
     }
 
 }

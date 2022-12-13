@@ -148,8 +148,7 @@ Transform:
   m_GameObject: {fileID: 146347893}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -243,7 +242,6 @@ Transform:
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -274,7 +272,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -5214.3984, y: 105.553345, z: 442.70862}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1244221749}
   m_Father: {fileID: 0}
@@ -394,7 +391,6 @@ Transform:
   m_LocalRotation: {x: 0.17401707, y: -3.6379788e-11, z: -1.4063062e-10, w: 0.98474264}
   m_LocalPosition: {x: 0, y: 4, z: -6.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -426,7 +422,6 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 945956327}
   m_RootOrder: 0
@@ -444,8 +439,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerPrefab: {fileID: 4900030897780796294, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
-  _startPoint: {fileID: 0}
-  _offSetSpawn: {x: 3, y: 3, z: 3}
   _parentTransform: {fileID: 146347894}
   _roadData: {fileID: 11400000, guid: e3db2ed44fbfa084d905417d54d431a5, type: 2}
   _nameOfMapFile: test

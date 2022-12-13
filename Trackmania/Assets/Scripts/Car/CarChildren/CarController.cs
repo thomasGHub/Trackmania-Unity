@@ -267,6 +267,11 @@ namespace Car
             _playerMap.PlayerMovement.Enable();
         }
 
+        public void RaceStop()
+        {
+            _playerMap.PlayerMovement.Disable();
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             Road roadScript;
