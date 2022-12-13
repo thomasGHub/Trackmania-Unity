@@ -125,7 +125,7 @@ public class UserAccountManager : MonoBehaviour
             {
                 Debug.Log($"Success Login with Android Device ID");
                 playfabID = response.PlayFabId;
-                playerName = playfabID;
+                playerName = response.PlayFabId;
                 OnSignInSuccess.Invoke();
 
             }, error =>
@@ -147,7 +147,7 @@ public class UserAccountManager : MonoBehaviour
             }, response =>
             {
                 Debug.Log($"Success Login with IOS Device ID");
-                playerName = playfabID;
+                playerName = response.PlayFabId;
                 playfabID = response.PlayFabId;
                 OnSignInSuccess.Invoke();
 
@@ -169,8 +169,9 @@ public class UserAccountManager : MonoBehaviour
             {
                 Debug.Log($"Success Login with PC Device ID");
                 ViewManager.Show<GameView>();
+                Debug.Log($"Nice{response.PlayFabId}");
                 playfabID = response.PlayFabId;
-                playerName = playfabID;
+                playerName = response.PlayFabId;
                 OnSignInSuccess.Invoke();
             }, error =>
             {
