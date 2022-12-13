@@ -50,6 +50,7 @@ public class EditorManager : MonoBehaviour
     #endregion
 
     #region JSON
+    [SerializeField] private RoadData _roadData;
     private string _json;
     private string _pathMapToLoad = "/test.json";
     #endregion
@@ -60,17 +61,7 @@ public class EditorManager : MonoBehaviour
         _plane = new UnityEngine.Plane(UnityEngine.Vector3.up, new Vector3(0, 0, 0));
         _deleteSelected.enabled = false;
 
-        _idToPrefab = new Dictionary<int, GameObject>()
-        {
-            { 1, _blockList[0]},
-            { 2, _blockList[1]},
-            { 3, _blockList[2]},
-            { 4, _blockList[3]},
-            { 5, _blockList[4]},
-            { 6, _blockList[5]},
-            { 7, _blockList[6]},
-            { 8, _blockList[7]},
-        };
+        _idToPrefab = _roadData.GenerateDict();
     }
     private void Update()
     {

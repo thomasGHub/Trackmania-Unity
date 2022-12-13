@@ -28,7 +28,7 @@ public class MapLoader
 
     public void LoadMap(string nameOfMapFile,Transform parent, out Transform startPoint)
     {
-        RoadDictionnary();
+        _roadPrefabDict = _roadData.GenerateDict();
 
         startPoint = parent; // Have to give a value
         GameObject gameObject;

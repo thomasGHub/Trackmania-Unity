@@ -17,4 +17,19 @@ public class RoadData : ScriptableObject
     public Road Goal => _goal;
 
     public GameObject[] AllRoadsPrefabs => _allRoadsPrefab;
+
+    public Dictionary<int, GameObject> GenerateDict()
+    {
+        Dictionary<int, GameObject> dict = new Dictionary<int, GameObject>();
+
+        Road roadScript;
+
+        foreach (GameObject roadPrefab in AllRoadsPrefabs)
+        {
+            roadScript = roadPrefab.GetComponent<Road>();
+            dict[roadScript.id] = roadPrefab;
+        }
+
+        return dict;
+    }
 }
