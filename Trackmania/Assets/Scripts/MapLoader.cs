@@ -26,12 +26,14 @@ public class MapLoader
         }
     }
 
-    public void LoadMap(string nameOfMapFile,Transform parent, out Transform startPoint)
+    public RoadPoints LoadMap(string nameOfMapFile,Transform parent)
     {
+        RoadPoints roadPoints = new RoadPoints();
+
         _roadPrefabDict = _roadData.GenerateDict();
 
-        startPoint = parent; // Have to give a value
         GameObject gameObject;
+        List<Road> checkPointsList = new List<Road>();
 
         string path = Application.persistentDataPath + "/" + nameOfMapFile + ".json";
         string jsonStr = File.ReadAllText(path);
@@ -42,7 +44,17 @@ public class MapLoader
             gameObject = GameObject.Instantiate(_roadPrefabDict[jsonData.id], jsonData.position, jsonData.rotation, parent);
 
             if (jsonData.id == _roadData.Start.id)
-              startPoint = gameObject.transform;
+              roadPoints.Start = gameObject.GetComponent<Road>();
+
+            if(jsonData.id == _roadData.Goal.id)
+                roadPoints.End = gameObject.GetComponent<Road>();
+
+            if(jsonData.id == _roadData.CheckPoint.id)
+                checkPointsList.Add(gameObject.GetComponent<Road>());            
         }
+
+        roadPoints.CheckPoints = checkPointsList.ToArray();
+
+        return roadPoints;
     }
 }

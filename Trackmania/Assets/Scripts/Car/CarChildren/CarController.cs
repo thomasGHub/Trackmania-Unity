@@ -75,6 +75,7 @@ namespace Car
         private Vector3 _carVelocity;
         private float _carSpeed; // limitate the call "_carVelocity.magnitude"
 
+
         #region Input Variable
 
         private float _speedInput;
@@ -268,7 +269,11 @@ namespace Car
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Triggered");
+            Road roadScript;
+            if ((roadScript = other.gameObject.GetComponent<Road>()) != null)
+            {
+                GameManager.VehiclePassPoint(roadScript);
+            }
         }
     }
 

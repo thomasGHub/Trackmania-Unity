@@ -52,5 +52,8 @@ public class Player : MonoBehaviour
 
             _currentIndex = cameraIndex;
         }
+
     }
+
+    
 }

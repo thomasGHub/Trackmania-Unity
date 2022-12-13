@@ -1,9 +1,15 @@
 using Car;
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+public struct RoadPoints
+{
+    public Road Start;
+    public Road End;
+    public Road[] CheckPoints;
+}
 
 public class GameManager : MonoBehaviour
 {
@@ -11,8 +17,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Start")]
     [SerializeField] private GameObject _playerPrefab;
-    [SerializeField] private Transform _startPoint;
-    [SerializeField] private Vector3 _offSetSpawn;
 
     [Header("LoadMap")]
     [SerializeField] private Transform _parentTransform;
@@ -22,6 +26,10 @@ public class GameManager : MonoBehaviour
     private Player _player;
     private PlayerMap _playerMap;
     private MapLoader _mapLoader;
+
+    private RoadPoints _roadPoints;
+    private Dictionary<Road, bool> _checkPointPassed = new Dictionary<Road, bool>();
+    private Dictionary<Type, Action<Road>> _roadToFunction = new Dictionary<Type, Action<Road>>();
 
     private void Awake()
     {
@@ -51,17 +59,47 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        _mapLoader.LoadMap(_nameOfMapFile, _parentTransform, out _startPoint);
-        _parentTransform.localScale = _offSetSpawn;
-        GameObject _playerCar = GameObject.Instantiate(_playerPrefab, _startPoint.position + _offSetSpawn, _startPoint.rotation);
+        _roadPoints = _mapLoader.LoadMap(_nameOfMapFile, _parentTransform);
+
+        Transform startPoint = _roadPoints.Start.transform;
+        GameObject _playerCar = GameObject.Instantiate(_playerPrefab, startPoint.position, startPoint.rotation);
         _player = _playerCar.GetComponent<Player>();
 
+        _roadToFunction.Add(_roadData.CheckPoint.GetType(), CheckPointPassed);
+        _roadToFunction.Add(_roadData.Goal.GetType(), EndPointPassed);
     }
 
     private void LanchRace(InputAction.CallbackContext context)
     {
+        foreach(Road checkPoint in _roadPoints.CheckPoints)
+        {
+            _checkPointPassed[checkPoint] = false;
+        }
+
         _player.RaceStart();
     }
 
+    public static void VehiclePassPoint(Road roadScript)
+    {
+        
+
+
+    }
+
+    private void CheckPointPassed(Road roadScript)
+    {
+        _checkPointPassed[roadScript] = true;
+    }
+
+    private void EndPointPassed(Road roadScript)
+    {
+        foreach (bool value in _checkPointPassed.Values)
+        {
+            if (!value)
+                return;
+        }
+
+        Debug.Log("End Of Course");
+    }
 
 }
