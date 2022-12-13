@@ -59,8 +59,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 12.041479, y: 6.056084, z: 3.14283}
-  m_Center: {x: 0.23819065, y: 2.5280411, z: 1.7306867}
+  m_Size: {x: 13.464336, y: 6.875802, z: 3.1388023}
+  m_Center: {x: 0.7371206, y: 2.9379005, z: 1.675726}
 --- !u!1 &4335359371313474943
 GameObject:
   m_ObjectHideFlags: 0
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 9136232448510215537}
   - component: {fileID: 348757508447674971}
   - component: {fileID: 7975039660915707216}
-  - component: {fileID: 7531868523363211915}
+  - component: {fileID: 3280018281354700066}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -174,7 +174,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7531868523363211915
+--- !u!64 &3280018281354700066
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
