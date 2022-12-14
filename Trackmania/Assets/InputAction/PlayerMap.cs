@@ -44,6 +44,24 @@ public partial class @PlayerMap : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Respawn"",
+                    ""type"": ""Button"",
+                    ""id"": ""388f1d05-2ab4-4117-a1fc-6a835c2db715"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Restart"",
+                    ""type"": ""Button"",
+                    ""id"": ""8218d3a1-bc0e-466a-a690-790e3125ac15"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -244,6 +262,50 @@ public partial class @PlayerMap : IInputActionCollection2, IDisposable
                     ""action"": ""Left/Rigth"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ddf565c7-1909-4b16-8de2-6990c6a5e20f"",
+                    ""path"": ""<Keyboard>/backspace"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Respawn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""15f3fae2-738b-4226-81d1-0c218aae53b2"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Controller"",
+                    ""action"": ""Respawn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""750b188c-1014-47bb-9d0c-0f438602b3e9"",
+                    ""path"": ""<Keyboard>/delete"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Restart"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9ce69747-0720-481d-957b-39236174ba2e"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Controller"",
+                    ""action"": ""Restart"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -391,6 +453,8 @@ public partial class @PlayerMap : IInputActionCollection2, IDisposable
         m_PlayerMovement = asset.FindActionMap("PlayerMovement", throwIfNotFound: true);
         m_PlayerMovement_ForwardBackward = m_PlayerMovement.FindAction("Forward/Backward", throwIfNotFound: true);
         m_PlayerMovement_LeftRigth = m_PlayerMovement.FindAction("Left/Rigth", throwIfNotFound: true);
+        m_PlayerMovement_Respawn = m_PlayerMovement.FindAction("Respawn", throwIfNotFound: true);
+        m_PlayerMovement_Restart = m_PlayerMovement.FindAction("Restart", throwIfNotFound: true);
         // PlayerUX
         m_PlayerUX = asset.FindActionMap("PlayerUX", throwIfNotFound: true);
         m_PlayerUX_CameraSwitch = m_PlayerUX.FindAction("CameraSwitch", throwIfNotFound: true);
@@ -456,12 +520,16 @@ public partial class @PlayerMap : IInputActionCollection2, IDisposable
     private IPlayerMovementActions m_PlayerMovementActionsCallbackInterface;
     private readonly InputAction m_PlayerMovement_ForwardBackward;
     private readonly InputAction m_PlayerMovement_LeftRigth;
+    private readonly InputAction m_PlayerMovement_Respawn;
+    private readonly InputAction m_PlayerMovement_Restart;
     public struct PlayerMovementActions
     {
         private @PlayerMap m_Wrapper;
         public PlayerMovementActions(@PlayerMap wrapper) { m_Wrapper = wrapper; }
         public InputAction @ForwardBackward => m_Wrapper.m_PlayerMovement_ForwardBackward;
         public InputAction @LeftRigth => m_Wrapper.m_PlayerMovement_LeftRigth;
+        public InputAction @Respawn => m_Wrapper.m_PlayerMovement_Respawn;
+        public InputAction @Restart => m_Wrapper.m_PlayerMovement_Restart;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -477,6 +545,12 @@ public partial class @PlayerMap : IInputActionCollection2, IDisposable
                 @LeftRigth.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnLeftRigth;
                 @LeftRigth.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnLeftRigth;
                 @LeftRigth.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnLeftRigth;
+                @Respawn.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnRespawn;
+                @Respawn.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnRespawn;
+                @Respawn.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnRespawn;
+                @Restart.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnRestart;
+                @Restart.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnRestart;
+                @Restart.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnRestart;
             }
             m_Wrapper.m_PlayerMovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -487,6 +561,12 @@ public partial class @PlayerMap : IInputActionCollection2, IDisposable
                 @LeftRigth.started += instance.OnLeftRigth;
                 @LeftRigth.performed += instance.OnLeftRigth;
                 @LeftRigth.canceled += instance.OnLeftRigth;
+                @Respawn.started += instance.OnRespawn;
+                @Respawn.performed += instance.OnRespawn;
+                @Respawn.canceled += instance.OnRespawn;
+                @Restart.started += instance.OnRestart;
+                @Restart.performed += instance.OnRestart;
+                @Restart.canceled += instance.OnRestart;
             }
         }
     }
@@ -554,6 +634,8 @@ public partial class @PlayerMap : IInputActionCollection2, IDisposable
     {
         void OnForwardBackward(InputAction.CallbackContext context);
         void OnLeftRigth(InputAction.CallbackContext context);
+        void OnRespawn(InputAction.CallbackContext context);
+        void OnRestart(InputAction.CallbackContext context);
     }
     public interface IPlayerUXActions
     {

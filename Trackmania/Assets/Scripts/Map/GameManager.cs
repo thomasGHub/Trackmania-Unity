@@ -31,6 +31,10 @@ public class GameManager : MonoBehaviour
     private Dictionary<Road, bool> _checkPointPassed = new Dictionary<Road, bool>();
     private Dictionary<Type, Action<Road>> _roadToFunction = new Dictionary<Type, Action<Road>>();
 
+    private Transform _lastCheckPointPassed = null;
+    public static Transform LastCheckPointPassed => _instance._lastCheckPointPassed;
+    public static Transform StartPosition => _instance._roadPoints.Start.transform;
+
     private void Awake()
     {
         if( _instance != null )
@@ -86,7 +90,11 @@ public class GameManager : MonoBehaviour
 
     private void CheckPointPassed(Road roadScript)
     {
+        if (_checkPointPassed[roadScript])
+            return;
+
         _checkPointPassed[roadScript] = true;
+        _lastCheckPointPassed = roadScript.transform;
     }
 
     private void EndPointPassed(Road roadScript)

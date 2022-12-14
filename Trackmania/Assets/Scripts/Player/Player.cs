@@ -25,7 +25,8 @@ public class Player : MonoBehaviour
         _allCameras[0].Priority = 1;
 
         _playerMap.PlayerUX.CameraSwitch.performed += CameraSwitch;
-        
+        _playerMap.PlayerMovement.Respawn.performed += Respawn;
+        _playerMap.PlayerMovement.Restart.performed += RaceRestart;
     }
 
     private void OnDisable()
@@ -39,6 +40,8 @@ public class Player : MonoBehaviour
         _speedoMeter.Launch();
         _timerCount.Launch();
         _playerMap.PlayerUX.CameraSwitch.Enable();
+        _playerMap.PlayerMovement.Respawn.Enable();
+        _playerMap.PlayerMovement.Restart.Enable();
     }
 
     public void RaceStop()
@@ -47,6 +50,18 @@ public class Player : MonoBehaviour
         _speedoMeter.Stop();
         _timerCount.Stop();
         _playerMap.PlayerUX.CameraSwitch.Disable();
+        _playerMap.PlayerMovement.Respawn.Disable();
+        _playerMap.PlayerMovement.Restart.Disable();
+    }
+
+    public void RaceRestart()
+    {
+        RaceStop();
+
+        _carController.gameObject.transform.position = GameManager.StartPosition.position;
+        _carController.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+        RaceStart();
     }
 
     private void CameraSwitch(InputAction.CallbackContext context)
@@ -60,7 +75,25 @@ public class Player : MonoBehaviour
 
             _currentIndex = cameraIndex;
         }
+    }
 
+    private void Respawn(InputAction.CallbackContext context)
+    {
+        Transform respawnPoint = GameManager.LastCheckPointPassed;
+
+        if (respawnPoint == null)
+            RaceRestart();
+
+        else
+        {
+            _carController.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            _carController.gameObject.transform.position = respawnPoint.position;
+        }
+    }
+
+    private void RaceRestart(InputAction.CallbackContext context)
+    {
+        RaceRestart();
     }
 
     

@@ -34,9 +34,7 @@ public class TimerCount : MonoBehaviour
         {
             ++_seconds;
             _secondsTextMesh.text = _seconds.ToString("D2");
-
             _miliseconds -= 1000;
-
 
             if (_seconds >= 60)
             {
@@ -52,6 +50,14 @@ public class TimerCount : MonoBehaviour
 
     public void Launch()
     {
+        _minutes = 0;
+        _seconds = 0;
+        _miliseconds = 0;
+
+        _secondsTextMesh.text = _seconds.ToString("D2");
+        _minutesTextMesh.text = _minutes.ToString("D2");
+        _milisecondsTextMesh.text = _miliseconds.ToString("D3");
+
         _isRunning = true;
     }
 
