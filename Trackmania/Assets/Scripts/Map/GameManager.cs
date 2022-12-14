@@ -35,6 +35,13 @@ public class GameManager : MonoBehaviour
     public static Transform LastCheckPointPassed => _instance._lastCheckPointPassed;
     public static Transform StartPosition => _instance._roadPoints.Start.transform;
 
+    #region Ghost
+    private List<GhostData> _ghosts = new List<GhostData>();
+    Ghost ghost = new Ghost();
+    [SerializeField]
+    private GameObject _ghostPrefab;
+    #endregion
+
     private void Awake()
     {
         if( _instance != null )
@@ -81,6 +88,12 @@ public class GameManager : MonoBehaviour
         }
 
         _player.RaceStart();
+        
+        if (ghost.loadGhost(ghost._pathMapToLoad) != null)
+        {
+            Transform startPoint = _roadPoints.Start.transform;
+            Instantiate(_ghostPrefab, startPoint.position, startPoint.rotation);
+        }
     }
 
     public static void VehiclePassPoint(Road roadScript)

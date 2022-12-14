@@ -1,6 +1,10 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using UnityEngine.UIElements;
 
 namespace Car
 {
@@ -75,6 +79,8 @@ namespace Car
         private Vector3 _carVelocity;
         private float _carSpeed; // limitate the call "_carVelocity.magnitude"
 
+        private Ghost _ghost;
+
 
         #region Input Variable
 
@@ -87,6 +93,7 @@ namespace Car
         {
             _playerMap = new PlayerMap();
             _rigidbody = GetComponent<Rigidbody>();
+            _ghost = new Ghost(transform);
         }
 
         private void Start()
@@ -265,11 +272,14 @@ namespace Car
         public void RaceStart()
         {
             _playerMap.PlayerMovement.Enable();
+            _ghost._isInRace = true;
+            StartCoroutine(_ghost.GetData());
         }
 
         public void RaceStop()
         {
             _playerMap.PlayerMovement.Disable();
+            _ghost._isInRace = false;
         }
 
         private void OnTriggerEnter(Collider other)
