@@ -15,7 +15,7 @@ MonoBehaviour:
   TitleId: 8CA70
   DeveloperSecretKey: GGCMABTNK9SWNBESCWB88OS4H5K5TCBZAETEBPPTXYFM5MCF1S
   ProductionEnvironmentUrl: 
-  RequestType: 2
+  RequestType: 0
   DisableDeviceInfo: 0
   DisableFocusTimeCollection: 0
   RequestTimeout: 2000

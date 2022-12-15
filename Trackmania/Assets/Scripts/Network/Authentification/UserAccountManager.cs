@@ -34,6 +34,22 @@ public class UserAccountManager : MonoBehaviour
     {
         OnSignInSuccess.AddListener(()=> StartCoroutine(GameViewStart()));
         OnSignInSuccess.AddListener(SubmitName);
+
+        AutoConnect();
+
+    }
+
+
+    private void AutoConnect()
+    {
+        if (PlayerPrefs.HasKey("UserName") && PlayerPrefs.HasKey("Password"))
+        {
+            SignIn(PlayerPrefs.GetString("UserName"), PlayerPrefs.GetString("Password"));
+        }
+        else if (PlayerPrefs.HasKey("Custom_Id")  &&  PlayerPrefs.GetString("Custom_Id")== SystemInfo.deviceUniqueIdentifier)
+        {
+            SignInWithDevice();
+        }
     }
 
     public void CreateAccount(string userName, string emailAddresse, string password)
@@ -61,24 +77,28 @@ public class UserAccountManager : MonoBehaviour
 
     }
 
-    public void SignIn(string usernName, string password)
+    public void SignIn(string userName, string password)
     {
         PlayFabClientAPI.LoginWithPlayFab(
             new LoginWithPlayFabRequest()
             {
-                Username = usernName,
+                Username = userName,
                 Password = password
             },
             response =>
             {
-                Debug.Log($"Successful Account Login: {usernName}");
+                Debug.Log($"Successful Account Login: {userName}");
                 playfabID = response.PlayFabId;
-                playerName = usernName;
+                entityID = response.EntityToken.Entity.Id;
+                entityType = response.EntityToken.Entity.Type;
+                playerName = userName;
+                PlayerPrefs.SetString("UserName", userName);
+                PlayerPrefs.SetString("Password", password);
                 OnSignInSuccess.Invoke();
             },
             error =>
             {
-                Debug.Log($"Unsuccessful Account Login: {usernName}");
+                Debug.Log($"Unsuccessful Account Login: {userName}");
                 OnSignInFailed.Invoke(error.ErrorMessage);
             }
             );
@@ -91,6 +111,10 @@ public class UserAccountManager : MonoBehaviour
         ios_id = string.Empty;
         custom_id = string.Empty;
 
+
+        custom_id = SystemInfo.deviceUniqueIdentifier;
+
+        /*
         if (Application.platform == RuntimePlatform.Android)
         {
             AndroidJavaClass up = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
@@ -106,13 +130,41 @@ public class UserAccountManager : MonoBehaviour
         else
         {
             custom_id = SystemInfo.deviceUniqueIdentifier;
-        }
+        }*/
     }
 
     public void SignInWithDevice()
     {
-        GetDeviceID(out string android_id, out string ios_id, out string custom_id);
+        //GetDeviceID(out string android_id, out string ios_id, out string custom_id);
+        string custom_id = SystemInfo.deviceUniqueIdentifier;
 
+        if (!string.IsNullOrEmpty(custom_id))
+        {
+            Debug.Log($"Logging in with PC Device");
+            PlayFabClientAPI.LoginWithCustomID(new LoginWithCustomIDRequest()
+            {
+                CustomId = custom_id,
+                TitleId = PlayFabSettings.TitleId,
+                CreateAccount = true
+            }, response =>
+            {
+                Debug.Log($"Success Login with PC Device ID");
+                ViewManager.Show<GameView>();
+                Debug.Log($"Nice{response.PlayFabId}");
+                playfabID = response.PlayFabId;
+                entityID = response.EntityToken.Entity.Id;
+                entityType = response.EntityToken.Entity.Type;
+                playerName = response.PlayFabId;
+                PlayerPrefs.SetString("Custom_Id", custom_id);
+                OnSignInSuccess.Invoke();
+            }, error =>
+            {
+                Debug.Log($"Unsuccess Login with PC Device ID: {error.ErrorMessage}");
+                OnSignInFailed.Invoke(error.ErrorMessage);
+            });
+        }
+        
+        /*
         if (!string.IsNullOrEmpty(android_id))
         {
             Debug.Log($"Logging in with Android Device");
@@ -186,7 +238,7 @@ public class UserAccountManager : MonoBehaviour
                 Debug.Log($"Unsuccess Login with PC Device ID: {error.ErrorMessage}");
                 OnSignInFailed.Invoke(error.ErrorMessage);
             });
-        }
+        }*/
     }
 
     IEnumerator GameViewStart()

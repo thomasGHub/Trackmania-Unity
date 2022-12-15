@@ -5,10 +5,12 @@ using UnityEngine.UI;
 
 public class SoloMenuView : View
 {
-    public Button SoloPlayButton;
+    public Button SoloCampaign;
+    public Button SoloMapPerso;
+    public Button SoloMapDL;
     public override void Initialize()
     {
-        SoloPlayButton.onClick.AddListener(()=>SoloPlay()) ; 
+        SoloCampaign.onClick.AddListener(()=>SoloPlay()) ; 
     }
 
     void SoloPlay()

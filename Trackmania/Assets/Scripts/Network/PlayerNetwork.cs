@@ -11,6 +11,7 @@ namespace MirrorBasics {
     public class PlayerNetwork : NetworkBehaviour {
 
         public static PlayerNetwork localPlayer;
+        [SyncVar] public string playerName;
         [SyncVar] public string matchID;
         [SyncVar] public int playerIndex;
 
@@ -30,6 +31,8 @@ namespace MirrorBasics {
         {
             //DontDestroyOnLoad(gameObject);
         }
+
+
 
         public override void OnStartServer () {
             netIDGuid = netId.ToString ().ToGuid ();
@@ -91,6 +94,7 @@ namespace MirrorBasics {
 
         public void JoinGame (string _inputID) {
             CmdJoinGame (_inputID);
+            UILobby.instance.searchingAllRooms = false;
         }
 
         [Command]
@@ -118,6 +122,21 @@ namespace MirrorBasics {
             Debug.Log ($"MatchID: {matchID} == {_matchID}");
             UILobby.instance.JoinSuccess (success, _matchID);
         }
+
+        [Command]
+        public void CmdGetRooms()
+        {
+            List<List<string>> matchs = new List<List<string>>();
+            matchs = MatchMaker.instance.GetRooms();
+            TargetGetRooms(matchs);
+        }
+
+        [TargetRpc]
+        public void TargetGetRooms(List<List<string>> matchs)
+        {
+            UILobby.instance.GetRooms(matchs);
+        }
+
 
         /* 
             DISCONNECT

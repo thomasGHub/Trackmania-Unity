@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 public class OnlineMenuView : View
 {
+    /*
     public Button OnlineHostButton;
-    public Button OnlineJoinButton;
+    public Button OnlineJoinButton;*/
     public override void Initialize()
     {
         //OnlineHostButton.onClick.AddListener(()=> OnlineHost()) ;

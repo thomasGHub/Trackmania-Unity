@@ -107,6 +107,26 @@ namespace MirrorBasics {
             return false;
         }
 
+        public List<List<string>> GetRooms()
+        {
+            List<List<string>> matchs = new List<List<string>>();
+            for (int i = 0; i < matches.Count; i++)
+            {
+                //Debug.Log($"Get match {matches[i].matchID} | inMatch {matches[i].inMatch} | matchFull {matches[i].matchFull} | publicMatch {matches[i].publicMatch}");
+                if (!matches[i].matchFull && matches[i].publicMatch)
+                {
+                    List<string> sousmatch = new List<string>();
+                    sousmatch.Add(matches[i].players[0].name);
+                    sousmatch.Add(matches[i].players.Count.ToString());
+                    sousmatch.Add(matches[i].matchID);
+                    matchs.Add(sousmatch);
+                }
+            }
+            return matchs;
+        }
+
+
+
         public void BeginGame (string _matchID) {
             for (int i = 0; i < matches.Count; i++) {
                 if (matches[i].matchID == _matchID) {

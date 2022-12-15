@@ -11,6 +11,7 @@ public class EntityFileExample : MonoBehaviour
 {
     private readonly Dictionary<string, string> _entityFileJson = new Dictionary<string, string>();
     private readonly Dictionary<string, string> _tempUpdates = new Dictionary<string, string>();
+    public string playerIdGetFile;
     public string ActiveUploadFileName;
     public string NewFileName;
     public int GlobalFileLock = 0; // Kind of cheap and simple way to handle this kind of lock
@@ -21,6 +22,7 @@ public class EntityFileExample : MonoBehaviour
         GlobalFileLock -= 1;
     }
 
+    /*
     void OnGUI()
     {
         if (PlayFabClientAPI.IsClientLoggedIn() && GUI.Button(new Rect(100, 0, 100, 30), "(re)Load Files"))
@@ -52,11 +54,22 @@ public class EntityFileExample : MonoBehaviour
                 UploadFile(NewFileName);
         }
     }
+    */
+
+    [ContextMenu("_LoadOtherPlayerFiles_")]
+    void LoadOtherPlayerFilesFiles()
+    {
+        if (GlobalFileLock != 0)
+            throw new Exception("This example overly restricts file operations for safety. Careful consideration must be made when doing multiple file operations in parallel to avoid conflict.");
+
+        GlobalFileLock += 1; // Start GetFiles
+        var request = new PlayFab.DataModels.GetFilesRequest { Entity = new PlayFab.DataModels.EntityKey { Id = playerIdGetFile, Type = UserAccountManager.instance.entityType } };
+        PlayFabDataAPI.GetFiles(request, OnGetFileMeta, OnSharedFailure);
+    }
 
 
 
-
-    [ContextMenu("_LoadFiles_")]
+    [ContextMenu("_LoadMyFiles_")]  
     void LoadAllFiles()
     {
         if (GlobalFileLock != 0)

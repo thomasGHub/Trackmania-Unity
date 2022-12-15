@@ -16,6 +16,7 @@ namespace MirrorBasics {
         [SerializeField] GameObject lobbyCanvas;
         [SerializeField] GameObject searchCanvas;
         bool searching = false;
+        [HideInInspector] public bool searchingAllRooms = true;
 
         [Header ("Lobby")]
         [SerializeField] Transform UIPlayerParent;
@@ -33,11 +34,15 @@ namespace MirrorBasics {
         public Button BeginGameButton;
         public Button CancelMatchButton;
         public Button CancelSearchButton;
+        public GameObject RoomI;
+        public Transform ListRoomContener;
+        public List<GameObject> ListAllRooms = new List<GameObject>();
 
 
         void Start () {
             instance = this;
             ListenerUI();
+            StartCoroutine(SearchingRoom());
         }
 
 
@@ -121,7 +126,7 @@ namespace MirrorBasics {
 
         public void BeginGame () {
             PlayerNetwork.localPlayer.BeginGame ();
-            ViewManager.Show<NoUI>();
+            
         }
 
         public void SearchGame () {
@@ -165,6 +170,58 @@ namespace MirrorBasics {
             }
             //searchCanvas.SetActive(false);
             //ViewManager.Show<LobbyMenuView>();
+
+        }
+
+
+        IEnumerator SearchingRoom()
+        {
+            searchingAllRooms = true;
+
+            float searchInterval = 1;
+            float currentTime = 1;
+
+            while (searchingAllRooms)
+            {
+                if (currentTime > 0)
+                {
+                    currentTime -= Time.deltaTime;
+                }
+                else
+                {
+                    currentTime = searchInterval;
+                    List<string> matchs = new List<string>();
+                    PlayerNetwork.localPlayer.CmdGetRooms();
+                    for (int i = 0; i < matchs.Count; i++)
+                    {
+                        Debug.Log(matchs[i]);
+                    }
+                }
+                yield return null;
+            }
+            //searchCanvas.SetActive(false);
+            //ViewManager.Show<LobbyMenuView>();
+
+        }
+
+        public void GetRooms(List<List<string>> matchs)
+        {
+            for (int i = 0; i < ListAllRooms.Count; i++)
+            {
+                Destroy(ListAllRooms[i].gameObject);
+            }
+            ListAllRooms.Clear();
+
+            for (int i = 0; i < matchs.Count; i++)
+            {
+                GameObject roomI = Instantiate(RoomI, ListRoomContener);
+                ListAllRooms.Add(roomI);
+                roomI.GetComponent<RoomX>().roomName.text = $"{matchs[i][0]}  {matchs[i][1]}";
+                roomI.GetComponent<RoomX>().roomID = matchs[i][2];
+
+            }
+            
+
 
         }
 
