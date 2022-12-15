@@ -24,7 +24,7 @@ public partial class @Trackmania : IInputActionCollection2, IDisposable
     ""name"": ""Trackmania"",
     ""maps"": [
         {
-            ""name"": ""PlayerNetwork"",
+            ""name"": ""Player"",
             ""id"": ""77df32a2-0458-4996-8cb1-2ecdeb4eab2b"",
             ""actions"": [
                 {
@@ -792,8 +792,8 @@ public partial class @Trackmania : IInputActionCollection2, IDisposable
         }
     ]
 }");
-        // PlayerNetwork
-        m_Player = asset.FindActionMap("PlayerNetwork", throwIfNotFound: true);
+        // Player
+        m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Zoom = m_Player.FindAction("Zoom", throwIfNotFound: true);
         m_Player_Rotation = m_Player.FindAction("Rotation", throwIfNotFound: true);
@@ -865,7 +865,7 @@ public partial class @Trackmania : IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // PlayerNetwork
+    // Player
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;

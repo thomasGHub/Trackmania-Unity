@@ -253,5 +253,11 @@ namespace MirrorBasics {
             //NetworkManager.singleton.ServerChangeScene("Online");
         }
 
+
+        public void OnLeaveNetwork()
+        {
+            NetworkManager.singleton.StopHost();
+        }
+
     }
 }

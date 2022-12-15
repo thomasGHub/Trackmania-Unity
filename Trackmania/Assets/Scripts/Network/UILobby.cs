@@ -38,6 +38,8 @@ namespace MirrorBasics {
         public Transform ListRoomContener;
         public List<GameObject> ListAllRooms = new List<GameObject>();
 
+        public Button LeaveButton;
+
 
         void Start () {
             instance = this;
@@ -55,6 +57,7 @@ namespace MirrorBasics {
             BeginGameButton.onClick.AddListener(() => BeginGame());
             CancelMatchButton.onClick.AddListener(() => DisconnectGame());
             CancelSearchButton.onClick.AddListener(() => CancelSearchGame());
+            LeaveButton.onClick.AddListener(() => PlayerNetwork.localPlayer.OnLeaveNetwork());
 
         }
 
@@ -220,10 +223,8 @@ namespace MirrorBasics {
                 roomI.GetComponent<RoomX>().roomID = matchs[i][2];
 
             }
-            
-
-
         }
+
 
     }
 }
