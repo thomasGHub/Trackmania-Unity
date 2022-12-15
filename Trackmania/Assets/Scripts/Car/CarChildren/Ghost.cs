@@ -38,6 +38,11 @@ public class Ghost
         }
         sendGhostData(_pathMapToLoad);
     }
+    public void RestartData()
+    {
+        ghostList.GhostPos.Clear();
+    }
+
     private void saveData()
     {
         GhostData saveGhost = new GhostData();
@@ -47,15 +52,23 @@ public class Ghost
     }
     private void sendGhostData(string _pathMapToLoad)
     {
-        _json += JsonUtility.ToJson(ghostList);
-        Debug.Log(_json);
-        File.WriteAllText(Application.persistentDataPath + _pathMapToLoad, _json);
+        if (ghostList.GhostPos.Count > 0)
+        {
+            _json += JsonUtility.ToJson(ghostList);
+            Debug.Log("test : " + _json);
+            File.WriteAllText(Application.persistentDataPath + _pathMapToLoad, _json);
+        }
     }
     public List<GhostData> loadGhost(string _pathMapToLoad)
     {
         string path = Application.persistentDataPath + _pathMapToLoad;
-        string jsonStr = File.ReadAllText(path);
-        GhostList mySampleFile = JsonUtility.FromJson<GhostList>(jsonStr);
-        return mySampleFile.GhostPos;
+        if(File.Exists(path))
+        {
+            string jsonStr = File.ReadAllText(path);
+            GhostList mySampleFile = JsonUtility.FromJson<GhostList>(jsonStr);
+            return mySampleFile.GhostPos;
+        }
+
+        return null;
     }
 }

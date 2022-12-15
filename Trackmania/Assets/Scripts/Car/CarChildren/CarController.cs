@@ -80,6 +80,7 @@ namespace Car
         private float _carSpeed; // limitate the call "_carVelocity.magnitude"
 
         private Ghost _ghost;
+        private IEnumerator _ghostSaveCoroutine;
 
 
         #region Input Variable
@@ -273,7 +274,11 @@ namespace Car
         {
             _playerMap.PlayerMovement.Enable();
             _ghost._isInRace = true;
-            StartCoroutine(_ghost.GetData());
+            if (_ghostSaveCoroutine == null)
+            {
+                _ghostSaveCoroutine = _ghost.GetData();
+                StartCoroutine(_ghostSaveCoroutine);
+            }
         }
 
         public void RaceStop()

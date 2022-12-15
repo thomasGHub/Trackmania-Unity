@@ -56,6 +56,9 @@ public class Player : MonoBehaviour
 
     public void RaceRestart()
     {
+
+        Ghost ghost = new Ghost();
+        ghost.RestartData();
         RaceStop();
 
         _carController.gameObject.transform.position = GameManager.StartPosition.position;

@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Start")]
     [SerializeField] private GameObject _playerPrefab;
+    [SerializeField] private Vector3 _scaleMap;
 
     [Header("LoadMap")]
     [SerializeField] private Transform _parentTransform;
@@ -71,6 +72,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _roadPoints = _mapLoader.LoadMap(_nameOfMapFile, _parentTransform);
+        _parentTransform.localScale = _scaleMap;
 
         Transform startPoint = _roadPoints.Start.transform;
         GameObject _playerCar = GameObject.Instantiate(_playerPrefab, startPoint.position, startPoint.rotation);
