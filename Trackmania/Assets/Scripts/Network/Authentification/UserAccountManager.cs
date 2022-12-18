@@ -5,6 +5,7 @@ using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine.Events;
 using System;
+using UnityEngine.SceneManagement;
 
 public class UserAccountManager : MonoBehaviour
 {
@@ -34,13 +35,14 @@ public class UserAccountManager : MonoBehaviour
     {
         OnSignInSuccess.AddListener(()=> StartCoroutine(GameViewStart()));
         OnSignInSuccess.AddListener(SubmitName);
+        OnSignInFailed.AddListener(SignInFailedChangeView);
 
         AutoConnect();
 
     }
 
 
-    private void AutoConnect()
+    public void AutoConnect()
     {
         if (PlayerPrefs.HasKey("UserName") && PlayerPrefs.HasKey("Password"))
         {
@@ -51,6 +53,14 @@ public class UserAccountManager : MonoBehaviour
             SignInWithDevice();
         }
     }
+
+    public void SignInFailedChangeView(string error)
+    {
+        Debug.Log("errrororo");
+        ViewManager.GetView<ConnectionFailedView>().Error.text = error;
+        ViewManager.Show<ConnectionFailedView>();
+    }
+
 
     public void CreateAccount(string userName, string emailAddresse, string password)
     {
@@ -425,9 +435,13 @@ public class UserAccountManager : MonoBehaviour
     private void OnDisplayNameUpdate(UpdateUserTitleDisplayNameResult obj)
     {
         Debug.Log("Update display name!");
+        ChangeScene();
     }
 
-
+    void ChangeScene()
+    {
+        SceneManager.LoadScene("Offline", LoadSceneMode.Single);
+    }
 
  
 

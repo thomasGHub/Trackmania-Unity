@@ -10,11 +10,21 @@ public class SoloMenuView : View
     public Button SoloMapDL;
     public override void Initialize()
     {
-        SoloCampaign.onClick.AddListener(()=>SoloPlay()) ; 
+        SoloCampaign.onClick.AddListener(()=> PlayCampaign()) ;
+        SoloMapPerso.onClick.AddListener(()=> PlayMapPerso()) ;
+        SoloMapDL.onClick.AddListener(()=> PlayMapDL());
     }
 
-    void SoloPlay()
+    void PlayCampaign()
     {
-    
+        ViewManager.Show<SoloCampaignMenuView>(true, false);
+    }
+    void PlayMapPerso()
+    {
+        ViewManager.Show<SoloMapPersoMenuView>(true, false);
+    }
+    void PlayMapDL()
+    {
+        ViewManager.Show<SoloMapDLMenuView>(true, false);
     }
 }

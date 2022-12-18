@@ -6,113 +6,113 @@ using MirrorBasics;
 [CustomPreview(typeof(GameObject))]
 public class GameObjectEditorWindow : ObjectPreview
 {
-    class Styles
-    {
-        public GUIStyle labelStyle = new GUIStyle(EditorStyles.label);
-        public GUIStyle componentName = new GUIStyle(EditorStyles.boldLabel);
-        public GUIStyle disabledName = new GUIStyle(EditorStyles.miniLabel);
+    //class Styles
+    //{
+    //    public GUIStyle labelStyle = new GUIStyle(EditorStyles.label);
+    //    public GUIStyle componentName = new GUIStyle(EditorStyles.boldLabel);
+    //    public GUIStyle disabledName = new GUIStyle(EditorStyles.miniLabel);
 
-        public Styles()
-        {
-            Color fontColor = new Color(0.7f, 0.7f, 0.7f);
-            labelStyle.padding.right += 20;
-            labelStyle.normal.textColor = fontColor;
-            labelStyle.active.textColor = fontColor;
-            labelStyle.focused.textColor = fontColor;
-            labelStyle.hover.textColor = fontColor;
-            labelStyle.onNormal.textColor = fontColor;
-            labelStyle.onActive.textColor = fontColor;
-            labelStyle.onFocused.textColor = fontColor;
-            labelStyle.onHover.textColor = fontColor;
+    //    public Styles()
+    //    {
+    //        Color fontColor = new Color(0.7f, 0.7f, 0.7f);
+    //        labelStyle.padding.right += 20;
+    //        labelStyle.normal.textColor = fontColor;
+    //        labelStyle.active.textColor = fontColor;
+    //        labelStyle.focused.textColor = fontColor;
+    //        labelStyle.hover.textColor = fontColor;
+    //        labelStyle.onNormal.textColor = fontColor;
+    //        labelStyle.onActive.textColor = fontColor;
+    //        labelStyle.onFocused.textColor = fontColor;
+    //        labelStyle.onHover.textColor = fontColor;
 
-            componentName.normal.textColor = fontColor;
-            componentName.active.textColor = fontColor;
-            componentName.focused.textColor = fontColor;
-            componentName.hover.textColor = fontColor;
-            componentName.onNormal.textColor = fontColor;
-            componentName.onActive.textColor = fontColor;
-            componentName.onFocused.textColor = fontColor;
-            componentName.onHover.textColor = fontColor;
+    //        componentName.normal.textColor = fontColor;
+    //        componentName.active.textColor = fontColor;
+    //        componentName.focused.textColor = fontColor;
+    //        componentName.hover.textColor = fontColor;
+    //        componentName.onNormal.textColor = fontColor;
+    //        componentName.onActive.textColor = fontColor;
+    //        componentName.onFocused.textColor = fontColor;
+    //        componentName.onHover.textColor = fontColor;
 
-            disabledName.normal.textColor = fontColor;
-            disabledName.active.textColor = fontColor;
-            disabledName.focused.textColor = fontColor;
-            disabledName.hover.textColor = fontColor;
-            disabledName.onNormal.textColor = fontColor;
-            disabledName.onActive.textColor = fontColor;
-            disabledName.onFocused.textColor = fontColor;
-            disabledName.onHover.textColor = fontColor;
-        }
-    }
+    //        disabledName.normal.textColor = fontColor;
+    //        disabledName.active.textColor = fontColor;
+    //        disabledName.focused.textColor = fontColor;
+    //        disabledName.hover.textColor = fontColor;
+    //        disabledName.onNormal.textColor = fontColor;
+    //        disabledName.onActive.textColor = fontColor;
+    //        disabledName.onFocused.textColor = fontColor;
+    //        disabledName.onHover.textColor = fontColor;
+    //    }
+    //}
 
-    GUIContent title;
-    Styles styles = new Styles();
+    //GUIContent title;
+    //Styles styles = new Styles();
 
-    public override GUIContent GetPreviewTitle()
-    {
-        if (title == null)
-        {
-            title = new GUIContent("Network Information");
-        }
-        return title;
-    }
+    //public override GUIContent GetPreviewTitle()
+    //{
+    //    if (title == null)
+    //    {
+    //        title = new GUIContent("Network Information");
+    //    }
+    //    return title;
+    //}
 
-    public override bool HasPreviewGUI()
-    {
-        // need to check if target is null to stop MissingReferenceException
-        return target != null && target is GameObject gameObject;
-    }
-
-
-    public override void OnPreviewGUI(Rect r, GUIStyle background)
-    {
-        if (Event.current.type != EventType.Repaint)
-            return;
-
-        if (target == null)
-            return;
-
-        GameObject targetGameObject = target as GameObject;
-
-        if (targetGameObject == null)
-            return;
-
-        MonoBehaviour script = targetGameObject.GetComponent<UILobby>();
-
-        if (script == null)
-        {
-            Debug.Log("script null");
-            return;
-        }
-
-        if (styles == null)
-            styles = new Styles();
+    //public override bool HasPreviewGUI()
+    //{
+    //    // need to check if target is null to stop MissingReferenceException
+    //    return target != null && target is GameObject gameObject;
+    //}
 
 
-        // padding
-        RectOffset previewPadding = new RectOffset(-5, -5, -5, -5);
-        Rect paddedr = previewPadding.Add(r);
+    //public override void OnPreviewGUI(Rect r, GUIStyle background)
+    //{
+    //    if (Event.current.type != EventType.Repaint)
+    //        return;
 
-        //Centering
-        float initialX = paddedr.x + 10;
-        float Y = paddedr.y + 10;
+    //    if (target == null)
+    //        return;
 
-        Debug.Log("tesdt");
-        System.Reflection.FieldInfo[] properties = target.GetType().GetFields();
+    //    GameObject targetGameObject = target as GameObject;
 
-        for (int i = 0; i < properties.Length; i++)
-        {
-            Debug.Log(properties[i].Name);
-            Debug.Log(properties[i].GetType());
-        }
-        //Y = DrawNetworkIdentityInfo(initialX, Y);
+    //    if (targetGameObject == null)
+    //        return;
 
-        //Y = DrawNetworkBehaviors(script, initialX, Y);
+    //    MonoBehaviour script = targetGameObject.GetComponent<UILobby>();
 
-        //Y = DrawObservers(script, initialX, Y);
+    //    if (script == null)
+    //    {
+    //        Debug.Log("script null");
+    //        return;
+    //    }
+
+    //    if (styles == null)
+    //        styles = new Styles();
 
 
-    }
+    //    // padding
+    //    RectOffset previewPadding = new RectOffset(-5, -5, -5, -5);
+    //    Rect paddedr = previewPadding.Add(r);
+
+    //    //Centering
+    //    float initialX = paddedr.x + 10;
+    //    float Y = paddedr.y + 10;
+
+    //    Debug.Log("tesdt");
+    //    System.Reflection.FieldInfo[] properties = target.GetType().GetFields();
+
+    //    for (int i = 0; i < properties.Length; i++)
+    //    {
+    //        Debug.Log(properties[i].Name);
+    //        Debug.Log(properties[i].GetType());
+    //    }
+    //    //Y = DrawNetworkIdentityInfo(initialX, Y);
+
+    //    //Y = DrawNetworkBehaviors(script, initialX, Y);
+
+    //    //Y = DrawObservers(script, initialX, Y);
+
+
+    //}
 
     //float DrawNetworkIdentityInfo(float initialX, float Y)
     //{

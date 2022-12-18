@@ -10,8 +10,7 @@ public class ViewManager : MonoBehaviour
 
     [SerializeField] private View[] _views;
 
-    private View _currentView;
-    private View _currentViewAdditive;
+    private  View _currentView;
 
     private readonly Stack<View> _history = new Stack<View>();
 
@@ -46,14 +45,8 @@ public class ViewManager : MonoBehaviour
         return null;
     }
 
-    public static void Show<T>(bool remember = true, bool additive = false) where T : View
+    public static void Show<T>(bool remember = true, bool hideOther = true) where T : View
     {
-        if (s_instance._currentViewAdditive !=null)
-        {
-            s_instance._currentViewAdditive.Hide();
-        }
-        
-
         for (int i = 0; i < s_instance._views.Length; i++)
         {
             if (s_instance._views[i] is T)
@@ -64,20 +57,24 @@ public class ViewManager : MonoBehaviour
                     {
                         s_instance._history.Push(s_instance._currentView);
                     }
-                    if (additive)
-                    {
-                        s_instance._currentViewAdditive = s_instance._views[i];
-                    }
-                    else
-                    {
-                        s_instance._currentView.Hide();
 
+                    if (hideOther)
+                    {
+                        for (int ii = 0; ii < s_instance._views.Length; ii++)
+                        {
+                            s_instance._views[ii].Hide();
+
+                            Debug.Log("hide" );
+
+                        }
                     }
 
+                    
+
+                    s_instance._views[i].Show();
+                    s_instance._currentView = s_instance._views[i];
 
                 }
-                s_instance._views[i].Show();
-                s_instance._currentView = s_instance._views[i];
 
             }
             
