@@ -12,5 +12,6 @@ public class SettingsMenuView : View
     {
         AudioManager.instance.volumeMusicSlider = sliderMusic;
         AudioManager.instance.volumeFXSlider = sliderFx;
+        AudioManager.instance.InitializeSliders();
     }
 }

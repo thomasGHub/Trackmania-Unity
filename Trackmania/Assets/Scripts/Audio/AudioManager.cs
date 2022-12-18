@@ -48,12 +48,22 @@ public class AudioManager : MonoBehaviour
             s.source.loop = s.loop;
 
         }
-        volumeMusicSlider.value = MusicVolume;
-        volumeMusicSlider.onValueChanged.AddListener(delegate { ValueChangeSliderCheck(); });
-
-        volumeFXSlider.value = FXVolume;
-        volumeFXSlider.onValueChanged.AddListener(delegate { ValueChangeSliderCheck(); });
+        InitializeSliders();
     }
+
+    public void InitializeSliders()
+    {
+        if (volumeMusicSlider!= null && volumeFXSlider!=null)
+        {
+            volumeMusicSlider.value = MusicVolume;
+            volumeMusicSlider.onValueChanged.AddListener(delegate { ValueChangeSliderCheck(); });
+
+            volumeFXSlider.value = FXVolume;
+            volumeFXSlider.onValueChanged.AddListener(delegate { ValueChangeSliderCheck(); });
+        }
+        
+    }
+
     public void Start()
     {
 

@@ -30,8 +30,8 @@ namespace MirrorBasics {
 
         public static MatchMaker instance;
 
-        public SyncList<Match> matches = new SyncList<Match> ();
-        public SyncList<String> matchIDs = new SyncList<String> ();
+        public readonly SyncList<Match> matches = new SyncList<Match> ();
+        public readonly SyncList<String> matchIDs = new SyncList<String> ();
 
         [SerializeField] int maxMatchPlayers = 12;
 
