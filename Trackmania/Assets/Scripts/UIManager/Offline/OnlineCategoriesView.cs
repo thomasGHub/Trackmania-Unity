@@ -14,7 +14,7 @@ public class OnlineCategoriesView : View
         SoloButton.onClick.AddListener(() => OnSoloClicked()) ;
         OnlineButton.onClick.AddListener(() => OnOnlineClicked());
         LanButton.onClick.AddListener(() => OnLanClicked());
-        BackButton.onClick.AddListener(() => OnLanClicked());
+        BackButton.onClick.AddListener(() => OnBack());
     }
 
     void OnHide()
@@ -43,6 +43,6 @@ public class OnlineCategoriesView : View
 
     void OnBack()
     {
-        ViewManager.ShowLast();
+        ViewManager.Show<MainMenuView>();
     }
 }

@@ -12,6 +12,7 @@ public class UserAccountManager : MonoBehaviour
     public static UserAccountManager instance;
     public static UnityEvent OnSignInSuccess = new UnityEvent();
     public static UnityEvent<string> OnSignInFailed = new UnityEvent<string>();
+    public static UnityEvent OnRegisterSuccess = new UnityEvent();
     public static UnityEvent<string> OnRegisterFailed = new UnityEvent<string>();
 
     public static UnityEvent<string, string> OnUserDataRetrieved = new UnityEvent<string, string>();
@@ -22,8 +23,8 @@ public class UserAccountManager : MonoBehaviour
     public string entityType; //for json files
     public string playerName;
 
-    public GameObject rowPrefab;
-    public Transform rowsParent;
+    private GameObject rowPrefab;
+    private Transform rowsParent;
 
 
     private void Awake()
@@ -33,8 +34,9 @@ public class UserAccountManager : MonoBehaviour
 
     private void Start()
     {
-        OnSignInSuccess.AddListener(()=> StartCoroutine(GameViewStart()));
-        OnSignInSuccess.AddListener(SubmitName);
+        //OnSignInSuccess.AddListener(()=> StartCoroutine(GameViewStart()));
+        OnSignInSuccess.AddListener(ChangeScene);
+        OnRegisterSuccess.AddListener(SubmitName);  // 
         OnSignInFailed.AddListener(SignInFailedChangeView);
 
         AutoConnect();
@@ -75,6 +77,8 @@ public class UserAccountManager : MonoBehaviour
             response =>
             {
                 Debug.Log($"Succesful Account Creation : {userName}, {emailAddresse}");
+                OnRegisterSuccess.Invoke();
+
                 SignIn(userName, password);
             },
             error =>
@@ -123,7 +127,7 @@ public class UserAccountManager : MonoBehaviour
 
 
         custom_id = SystemInfo.deviceUniqueIdentifier;
-
+        #region Mobil
         /*
         if (Application.platform == RuntimePlatform.Android)
         {
@@ -141,6 +145,7 @@ public class UserAccountManager : MonoBehaviour
         {
             custom_id = SystemInfo.deviceUniqueIdentifier;
         }*/
+        #endregion
     }
 
     public void SignInWithDevice()
@@ -173,7 +178,7 @@ public class UserAccountManager : MonoBehaviour
                 OnSignInFailed.Invoke(error.ErrorMessage);
             });
         }
-        
+        #region Mobil
         /*
         if (!string.IsNullOrEmpty(android_id))
         {
@@ -249,6 +254,7 @@ public class UserAccountManager : MonoBehaviour
                 OnSignInFailed.Invoke(error.ErrorMessage);
             });
         }*/
+        #endregion
     }
 
     IEnumerator GameViewStart()
@@ -435,8 +441,8 @@ public class UserAccountManager : MonoBehaviour
     private void OnDisplayNameUpdate(UpdateUserTitleDisplayNameResult obj)
     {
         Debug.Log("Update display name!");
-        ChangeScene();
     }
+
 
     void ChangeScene()
     {
