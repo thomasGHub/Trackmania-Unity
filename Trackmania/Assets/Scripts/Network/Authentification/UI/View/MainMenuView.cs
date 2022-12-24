@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
+using UnityEngine.SceneManagement;
+using System.IO;
 
 public class MainMenuView : View
 {
@@ -10,6 +13,7 @@ public class MainMenuView : View
     public Button CreateButton;
     public Button MarketPLaceButton;
     public Button SettingsButton;
+    public Button DeconnectionButton;
 
     public override void Initialize()
     {
@@ -17,7 +21,10 @@ public class MainMenuView : View
         CreateButton.onClick.AddListener(() => CreateClicked());
         MarketPLaceButton.onClick.AddListener(() => MarketPlaceClicked());
         SettingsButton.onClick.AddListener(() => SettingsClicked());
+        DeconnectionButton.onClick.AddListener(() => OnDeconnection());
     }
+
+
 
     void PlayClicked()
     {
@@ -39,4 +46,48 @@ public class MainMenuView : View
     {
         ViewManager.Show<SettingsMenuView>();
     }
+
+    private void OnDeconnection()
+    {
+        StartCoroutine(OnDeco());
+        //SceneManager.LoadScene("Login", LoadSceneMode.Single);
+        //ViewManager.Show<AuthentificationStartView>();
+
+        //PlayerPrefs.DeleteKey("UserName");
+        //PlayerPrefs.DeleteKey("Password");
+        //PlayerPrefs.DeleteKey("Custom_Id");
+    }
+
+
+    public IEnumerator OnDeco()
+    {
+        PlayerPrefs.DeleteKey("UserName");
+        PlayerPrefs.DeleteKey("Password");
+        PlayerPrefs.DeleteKey("Custom_Id");
+
+        DestroyFilesRank();
+        StartCoroutine(UserAccountManager.instance.AutoConnectAfter());
+
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene("Login", LoadSceneMode.Single);
+        yield return new WaitForSeconds(1);
+        ViewManager.Show<AuthentificationStartView>();
+
+
+    }
+
+
+    public void DestroyFilesRank()
+    {
+        for (int i = 1; i <= 9; i++)
+        {
+            string path = Application.persistentDataPath + "/Leaderboard" + i + "LocalRank" + ".json";
+            if (File.Exists(path)) 
+            {
+                File.Delete(path);
+            }
+        }
+        
+    }
+
 }

@@ -18,6 +18,7 @@ public class SoloMenuView : View
     void PlayCampaign()
     {
         ViewManager.Show<SoloCampaignMenuView>(true, false);
+        SoloCampaignMenuView.instance.MouseOnButtonNumber(1);
     }
     void PlayMapPerso()
     {

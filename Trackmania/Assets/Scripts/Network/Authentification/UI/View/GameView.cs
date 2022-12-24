@@ -34,8 +34,8 @@ public class GameView : View
 
     public override void Initialize()
     {
-        SendLeaderboardButton.onClick.AddListener(()=> UserAccountManager.instance.SendLeaderboard((new System.Random()).Next(1,100)));
-        GetLeaderboardButton.onClick.AddListener(()=> UserAccountManager.instance.GetLeaderboard());
+        //SendLeaderboardButton.onClick.AddListener(()=> UserAccountManager.instance.SendLeaderboard((new System.Random()).Next(1,100)));
+        //GetLeaderboardButton.onClick.AddListener(()=> UserAccountManager.instance.GetLeaderboard());
         LogOutButton.onClick.AddListener(()=> LogOut());
     }
 

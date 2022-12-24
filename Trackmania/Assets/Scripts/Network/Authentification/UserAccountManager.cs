@@ -18,10 +18,12 @@ public class UserAccountManager : MonoBehaviour
     public static UnityEvent<string, string> OnUserDataRetrieved = new UnityEvent<string, string>();
     public static UnityEvent<string, int> OnStatisticRetrieved = new UnityEvent<string, int>();
     public static UnityEvent<string, List<PlayerLeaderboardEntry>> OnLeaderboardRetrieved = new UnityEvent<string, List<PlayerLeaderboardEntry>>();
+
     public string playfabID;
     public string entityID; //for json files
     public string entityType; //for json files
     public string playerName;
+    public string playerPassword;
 
     private GameObject rowPrefab;
     private Transform rowsParent;
@@ -30,16 +32,18 @@ public class UserAccountManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        Debug.Log(Application.persistentDataPath);
     }
 
     private void Start()
     {
         //OnSignInSuccess.AddListener(()=> StartCoroutine(GameViewStart()));
         OnSignInSuccess.AddListener(ChangeScene);
-        OnRegisterSuccess.AddListener(SubmitName);  // 
+        OnRegisterSuccess.AddListener(()=>SubmitName(playerName)); 
+        OnRegisterSuccess.AddListener(()=> SignIn(playerName, playerPassword));
         OnSignInFailed.AddListener(SignInFailedChangeView);
 
-        AutoConnect();
+        StartCoroutine(AutoConnectAfter());
 
     }
 
@@ -54,7 +58,19 @@ public class UserAccountManager : MonoBehaviour
         {
             SignInWithDevice();
         }
+        else
+        {
+            ViewManager.Show<AuthentificationStartView>();
+        }
     }
+
+    public IEnumerator AutoConnectAfter()
+    {
+        yield return new WaitForSeconds(0.1f);
+        AutoConnect();
+    }
+
+
 
     public void SignInFailedChangeView(string error)
     {
@@ -77,9 +93,10 @@ public class UserAccountManager : MonoBehaviour
             response =>
             {
                 Debug.Log($"Succesful Account Creation : {userName}, {emailAddresse}");
+                playerName = userName;
+                playerPassword = password;
                 OnRegisterSuccess.Invoke();
-
-                SignIn(userName, password);
+                
             },
             error =>
             {
@@ -119,38 +136,17 @@ public class UserAccountManager : MonoBehaviour
     }
 
 
-    void GetDeviceID(out string android_id, out string ios_id, out string custom_id)
+    public string GetRandomName(char key)
     {
-        android_id = string.Empty;
-        ios_id = string.Empty;
-        custom_id = string.Empty;
-
-
-        custom_id = SystemInfo.deviceUniqueIdentifier;
-        #region Mobil
-        /*
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            AndroidJavaClass up = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            AndroidJavaObject currentActivity = up.GetStatic<AndroidJavaObject>("currentActivity");
-            AndroidJavaObject contentResolver = currentActivity.Call<AndroidJavaObject>("getContentResolver");
-            AndroidJavaClass secure = new AndroidJavaClass("android.provider.Settings$Secure");
-            android_id = secure.CallStatic<string>("getString", contentResolver, "android_id");
-        }
-        else if (Application.platform == RuntimePlatform.IPhonePlayer)
-        {
-            ios_id = UnityEngine.iOS.Device.vendorIdentifier;
-        }
-        else
-        {
-            custom_id = SystemInfo.deviceUniqueIdentifier;
-        }*/
-        #endregion
+        string[] Names = { "Rodrigo", "Mario", "Luigi", "Gustavo", "Gomez" };
+        int number = (key) % Names.Length;
+        PlayerPrefs.SetString("UserName", Names[number]);
+        return Names[number];
     }
+
 
     public void SignInWithDevice()
     {
-        //GetDeviceID(out string android_id, out string ios_id, out string custom_id);
         string custom_id = SystemInfo.deviceUniqueIdentifier;
 
         if (!string.IsNullOrEmpty(custom_id))
@@ -171,6 +167,7 @@ public class UserAccountManager : MonoBehaviour
                 entityType = response.EntityToken.Entity.Type;
                 playerName = response.PlayFabId;
                 PlayerPrefs.SetString("Custom_Id", custom_id);
+                SubmitName(GetRandomName(custom_id[custom_id.Length-1]));
                 OnSignInSuccess.Invoke();
             }, error =>
             {
@@ -178,83 +175,7 @@ public class UserAccountManager : MonoBehaviour
                 OnSignInFailed.Invoke(error.ErrorMessage);
             });
         }
-        #region Mobil
-        /*
-        if (!string.IsNullOrEmpty(android_id))
-        {
-            Debug.Log($"Logging in with Android Device");
-            PlayFabClientAPI.LoginWithAndroidDeviceID(new LoginWithAndroidDeviceIDRequest()
-            {
-                AndroidDeviceId = android_id,
-                OS = SystemInfo.operatingSystem,
-                AndroidDevice = SystemInfo.deviceModel,
-                TitleId = PlayFabSettings.TitleId,
-                CreateAccount = true
-            }, response =>
-            {
-                Debug.Log($"Success Login with Android Device ID");
-                playfabID = response.PlayFabId;
-                playerName = response.PlayFabId;
-                entityID = response.EntityToken.Entity.Id;
-                entityType = response.EntityToken.Entity.Type;
-                OnSignInSuccess.Invoke();
-
-            }, error =>
-            {
-                Debug.Log($"Unsuccess Login with Android Device ID: {error.ErrorMessage}");
-                OnSignInFailed.Invoke(error.ErrorMessage);
-            });
-        }
-        else if (!string.IsNullOrEmpty(ios_id))
-        {
-            Debug.Log($"Logging in with IOS Device");
-            PlayFabClientAPI.LoginWithIOSDeviceID(new LoginWithIOSDeviceIDRequest()
-            {
-                DeviceId = ios_id,
-                OS = SystemInfo.operatingSystem,
-                DeviceModel = SystemInfo.deviceModel,
-                TitleId = PlayFabSettings.TitleId,
-                CreateAccount = true
-            }, response =>
-            {
-                Debug.Log($"Success Login with IOS Device ID");
-                playerName = response.PlayFabId;
-                playfabID = response.PlayFabId;
-                entityID = response.EntityToken.Entity.Id;
-                entityType = response.EntityToken.Entity.Type;
-                OnSignInSuccess.Invoke();
-
-            }, error =>
-            {
-                Debug.Log($"Unsuccess Login with IOS Device ID: {error.ErrorMessage}");
-                OnSignInFailed.Invoke(error.ErrorMessage);
-            });
-        }
-        else if (!string.IsNullOrEmpty(custom_id))
-        {
-            Debug.Log($"Logging in with PC Device");
-            PlayFabClientAPI.LoginWithCustomID(new LoginWithCustomIDRequest()
-            {
-                CustomId = custom_id,
-                TitleId = PlayFabSettings.TitleId,
-                CreateAccount = true
-            }, response =>
-            {
-                Debug.Log($"Success Login with PC Device ID");
-                ViewManager.Show<GameView>();
-                Debug.Log($"Nice{response.PlayFabId}");
-                playfabID = response.PlayFabId;
-                entityID = response.EntityToken.Entity.Id;
-                entityType = response.EntityToken.Entity.Type;
-                playerName = response.PlayFabId;
-                OnSignInSuccess.Invoke();
-            }, error =>
-            {
-                Debug.Log($"Unsuccess Login with PC Device ID: {error.ErrorMessage}");
-                OnSignInFailed.Invoke(error.ErrorMessage);
-            });
-        }*/
-        #endregion
+        
     }
 
     IEnumerator GameViewStart()
@@ -353,94 +274,29 @@ public class UserAccountManager : MonoBehaviour
     }
 
 
-    public void GetLeaderboard(string key)
-    {
-        PlayFabClientAPI.GetLeaderboard(new GetLeaderboardRequest()
-        {
-            StatisticName = key,
-            MaxResultsCount = 5
-        }, response =>
-        {
-            if (response.Leaderboard != null)
-            {
-                Debug.Log($"Successful GetLeaderborad");
-                OnLeaderboardRetrieved.Invoke(key, response.Leaderboard);
-            }
-            else { Debug.Log($"Get NULLLL Leaderborad"); }
-            
-        }, error =>
-        {
-            Debug.Log($"Unsuccessful GetLeaderborad");
-        });
-    }
+   
     void OnError(PlayFabError error)
     {
         Debug.Log(error.GenerateErrorReport());
     }
 
-    public void SendLeaderboard(int score)
-    {
-        var request = new UpdatePlayerStatisticsRequest
-        {
-            Statistics = new List<StatisticUpdate>
-            {
-                new StatisticUpdate
-                {
-                    StatisticName = "LeaderBoardMap",
-                    Value = score
-
-                }
-            }
-        };
-        PlayFabClientAPI.UpdatePlayerStatistics(request, OnLeaderboardUpdate, OnError);
-
-    }
-
-    private void OnLeaderboardUpdate(UpdatePlayerStatisticsResult obj)
-    {
-        Debug.Log("Successfull leaderboard sent");
-    }
-
-    public void GetLeaderboard()
-    {
-        var request = new GetLeaderboardRequest
-        {
-            StatisticName = "LeaderBoardMap",
-            StartPosition = 0,
-            MaxResultsCount = 10
-        };
-        PlayFabClientAPI.GetLeaderboard(request, OnLeaderboardGet, OnError);
-    }
-
-    private void OnLeaderboardGet(GetLeaderboardResult result)
-    {
-        foreach (Transform item in rowsParent)
-        {
-            Destroy(item.gameObject);
-        }
-
-        foreach (var item in result.Leaderboard)
-        {
-            GameObject newGo = Instantiate(rowPrefab, rowsParent);
-            newGo.GetComponent<UILeaderboardEntry>().placeText.text = (item.Position+1).ToString();
-            newGo.GetComponent<UILeaderboardEntry>().nameText.text = item.DisplayName;//item.PlayFabId.ToString();
-            newGo.GetComponent<UILeaderboardEntry>().valueText.text = item.StatValue.ToString();
-            Debug.Log($"{item.Position} {item.PlayFabId} {item.StatValue}");
-        }
-    }
-
-    public void SubmitName()
+    
+    public void SubmitName(string _name)
     {
         var request = new UpdateUserTitleDisplayNameRequest
         {
-            DisplayName = playerName,
+            DisplayName = _name,
         };
         PlayFabClientAPI.UpdateUserTitleDisplayName(request, OnDisplayNameUpdate, OnError);
+
+
+
     }
 
     private void OnDisplayNameUpdate(UpdateUserTitleDisplayNameResult obj)
     {
         Debug.Log("Update display name!");
+        //SignIn(playerName, playerPassword);
     }
 
 
@@ -449,7 +305,6 @@ public class UserAccountManager : MonoBehaviour
         SceneManager.LoadScene("Offline", LoadSceneMode.Single);
     }
 
- 
 
 
 }
