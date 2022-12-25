@@ -271,6 +271,7 @@ public class EditorManager : MonoBehaviour
             _roadStart = UnityEngine.Object.FindObjectOfType<RoadStart>().GetComponent<RoadStart>().startPos;
             Vector3 _posStart = new Vector3(_roadStart.transform.position.x, _roadStart.transform.position.y, _roadStart.transform.position.z);
             _currentCar = Instantiate(_car, _posStart, Quaternion.identity);
+            _currentCar.GetComponent<Player>().RaceStart();
             _UI.SetActive(false);
         }
     }
@@ -283,7 +284,6 @@ public class EditorManager : MonoBehaviour
         {
             if (go.GetComponent<Road>() != null)
             {
-                print(go.GetComponent<Road>().id);
                 jsonData saveObject = new jsonData();
                 saveObject.id = go.GetComponent<Road>().id;
                 saveObject.position = go.transform.position;
