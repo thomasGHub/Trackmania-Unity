@@ -121,7 +121,7 @@ namespace MirrorBasics {
 
         public GameObject SpawnPlayerUIPrefab (PlayerNetwork player) {
             GameObject newUIPlayer = Instantiate (UIPlayerPrefab, UIPlayerParent);
-            newUIPlayer.GetComponent<UIPlayer> ().SetPlayer (player);
+            newUIPlayer.GetComponent<UIPlayer>().SetPlayer(player);
             newUIPlayer.transform.SetSiblingIndex (player.playerIndex - 1);
 
             return newUIPlayer;
@@ -219,8 +219,8 @@ namespace MirrorBasics {
             {
                 GameObject roomI = Instantiate(RoomI, ListRoomContener);
                 ListAllRooms.Add(roomI);
-                roomI.GetComponent<RoomX>().roomName.text = $"{matchs[i][0]}  {matchs[i][1]}";
-                roomI.GetComponent<RoomX>().roomID = matchs[i][2];
+                roomI.GetComponent<RoomX>().SetRoomUI(matchs[i]); //.roomName.text = $"{matchs[i][0]}  {matchs[i][1]}";
+                //roomI.GetComponent<RoomX>().roomID = matchs[i][2];
 
             }
         }

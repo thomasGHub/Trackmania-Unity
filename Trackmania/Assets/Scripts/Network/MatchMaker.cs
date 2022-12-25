@@ -116,7 +116,7 @@ namespace MirrorBasics {
                 if (!matches[i].matchFull && matches[i].publicMatch)
                 {
                     List<string> sousmatch = new List<string>();
-                    sousmatch.Add(matches[i].players[0].name);
+                    sousmatch.Add(matches[i].players[0].playerName);
                     sousmatch.Add(matches[i].players.Count.ToString());
                     sousmatch.Add(matches[i].matchID);
                     matchs.Add(sousmatch);

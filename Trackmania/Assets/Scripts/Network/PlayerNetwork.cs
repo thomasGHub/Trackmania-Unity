@@ -42,6 +42,7 @@ namespace MirrorBasics {
         public override void OnStartClient () {
             if (isLocalPlayer) {
                 localPlayer = this;
+                CmdSendName(PlayerPrefs.GetString("UserName"));
             } else {
                 Debug.Log ($"Spawning other player UI Prefab");
                 playerLobbyUI = UILobby.instance.SpawnPlayerUIPrefab (this);
@@ -249,7 +250,9 @@ namespace MirrorBasics {
             //SceneManager.SetActiveScene(SceneManager.GetSceneByName("Online"));
 
             ViewManager.Show<NoUI>();
-            Player.instance.RaceStart();
+            gameObject.GetComponent<Player>().RaceStart();
+            if (!isLocalPlayer){gameObject.GetComponent<Player>()._timerCount.HideUI();}
+
             //NetworkManager.singleton.ServerChangeScene("Online");
         }
 
@@ -257,6 +260,12 @@ namespace MirrorBasics {
         public void OnLeaveNetwork()
         {
             NetworkManager.singleton.StopHost();
+        }
+
+        [Command]
+        void CmdSendName(string name)
+        {
+            playerName = name;
         }
 
     }

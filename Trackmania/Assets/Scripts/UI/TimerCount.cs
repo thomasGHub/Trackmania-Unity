@@ -61,6 +61,14 @@ public class TimerCount : MonoBehaviour
         _isRunning = true;
     }
 
+    public void HideUI()
+    {
+        _minutesTextMesh.gameObject.SetActive(false);
+        _secondsTextMesh.gameObject.SetActive(false);
+        _milisecondsTextMesh.gameObject.SetActive(false);
+    }
+
+
     public void Stop()
     {
         _isRunning = false;

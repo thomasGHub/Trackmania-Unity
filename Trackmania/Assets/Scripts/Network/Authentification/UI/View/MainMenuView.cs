@@ -81,7 +81,7 @@ public class MainMenuView : View
     {
         for (int i = 1; i <= 9; i++)
         {
-            string path = Application.persistentDataPath + "/Leaderboard" + i + "LocalRank" + ".json";
+            string path = Application.persistentDataPath + "/Leaderboard" + i + ".json";
             if (File.Exists(path)) 
             {
                 File.Delete(path);
