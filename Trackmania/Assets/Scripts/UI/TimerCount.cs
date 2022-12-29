@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Mirror;
+using MirrorBasics;
 
 public class TimerCount : MonoBehaviour
 {
@@ -61,11 +63,12 @@ public class TimerCount : MonoBehaviour
         _isRunning = true;
     }
 
-    public void HideUI()
+    public void ShowUI(bool show)
     {
-        _minutesTextMesh.gameObject.SetActive(false);
-        _secondsTextMesh.gameObject.SetActive(false);
-        _milisecondsTextMesh.gameObject.SetActive(false);
+        Debug.Log("ShowUI" + show + " "+ PlayerNetwork.localPlayer.gameObject.name);
+        _minutesTextMesh.gameObject.SetActive(show);
+        _secondsTextMesh.gameObject.SetActive(show);
+        _milisecondsTextMesh.gameObject.SetActive(show);
     }
 
 

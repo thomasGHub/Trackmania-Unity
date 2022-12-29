@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
         _playerMap.PlayerUX.CameraSwitch.performed += CameraSwitch;
         _playerMap.PlayerMovement.Respawn.performed += Respawn;
         _playerMap.PlayerMovement.Restart.performed += RaceRestart;
+
     }
 
     private void OnDisable()

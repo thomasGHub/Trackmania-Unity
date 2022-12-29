@@ -29,7 +29,14 @@ namespace MirrorBasics {
 
         private void Start()
         {
-            //DontDestroyOnLoad(gameObject);
+            if (isLocalPlayer)
+            {
+                gameObject.GetComponent<Player>()._timerCount.ShowUI(true);
+            }
+            else
+            {
+                gameObject.GetComponent<Player>()._timerCount.ShowUI(false);
+            }
         }
 
 
@@ -43,9 +50,11 @@ namespace MirrorBasics {
             if (isLocalPlayer) {
                 localPlayer = this;
                 CmdSendName(PlayerPrefs.GetString("UserName"));
-            } else {
+            }
+            else {
                 Debug.Log ($"Spawning other player UI Prefab");
                 playerLobbyUI = UILobby.instance.SpawnPlayerUIPrefab (this);
+
             }
         }
 
@@ -239,19 +248,26 @@ namespace MirrorBasics {
         }
 
         public void StartGame () { //Server
-            TargetBeginGame ();
+            RpcBeginGame();
         }
 
-        [TargetRpc]
-        void TargetBeginGame () {
-            Debug.Log ($"MatchID: {matchID} | Beginning");
+        [ClientRpc]
+        void RpcBeginGame () {
+            Debug.Log ($"MatchID: {matchID} | Beginning | Index { playerIndex}");
             //Additively load game scene
             //SceneManager.LoadScene ("Online", LoadSceneMode.Additive);
             //SceneManager.SetActiveScene(SceneManager.GetSceneByName("Online"));
 
-            ViewManager.Show<NoUI>();
-            gameObject.GetComponent<Player>().RaceStart();
-            if (!isLocalPlayer){gameObject.GetComponent<Player>()._timerCount.HideUI();}
+            
+
+            if (isLocalPlayer)
+            {
+                gameObject.GetComponent<Player>().RaceStart();
+                ViewManager.Show<NoUI>();
+            }
+            else
+            {
+            }
 
             //NetworkManager.singleton.ServerChangeScene("Online");
         }

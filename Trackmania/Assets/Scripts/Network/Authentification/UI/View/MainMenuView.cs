@@ -6,6 +6,7 @@ using TMPro;
 using System;
 using UnityEngine.SceneManagement;
 using System.IO;
+using Mirror;
 
 public class MainMenuView : View
 {
@@ -61,6 +62,8 @@ public class MainMenuView : View
 
     public IEnumerator OnDeco()
     {
+        NetworkManager.singleton.OnDestroySelf();
+
         PlayerPrefs.DeleteKey("UserName");
         PlayerPrefs.DeleteKey("Password");
         PlayerPrefs.DeleteKey("Custom_Id");

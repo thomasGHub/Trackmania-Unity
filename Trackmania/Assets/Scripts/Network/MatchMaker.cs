@@ -127,12 +127,13 @@ namespace MirrorBasics {
 
 
 
-        public void BeginGame (string _matchID) {
+        public void BeginGame (string _matchID) {   //Server
             for (int i = 0; i < matches.Count; i++) {
                 if (matches[i].matchID == _matchID) {
                     matches[i].inMatch = true;
                     foreach (var player in matches[i].players) {
                         player.StartGame ();
+                        Debug.Log("Start " + player.playerIndex);
                     }
                     break;
                 }

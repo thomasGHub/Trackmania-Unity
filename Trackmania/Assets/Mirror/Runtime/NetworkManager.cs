@@ -142,6 +142,15 @@ namespace Mirror
             }
         }
 
+        public virtual void OnDestroySelf()
+        {
+            if (singleton==this)
+            {
+                singleton = null;
+            }
+            Destroy(gameObject);
+        }
+
         // virtual so that inheriting classes' Reset() can call base.Reset() too
         // Reset only gets called when the component is added or the user resets the component
         // Thats why we validate these things that only need to be validated on adding the NetworkManager here

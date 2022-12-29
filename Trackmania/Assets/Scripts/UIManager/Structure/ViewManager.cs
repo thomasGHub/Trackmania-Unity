@@ -69,7 +69,7 @@ public class ViewManager : MonoBehaviour
 
                     }
                 }
-                Debug.Log("Show " + s_instance._views[i]);
+                //Debug.Log("Show " + s_instance._views[i]);
                 s_instance._views[i].Show();
                 s_instance._currentView = s_instance._views[i];
                 
