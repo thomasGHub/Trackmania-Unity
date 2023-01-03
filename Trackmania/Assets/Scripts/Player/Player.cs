@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private CarController _carController;
     [SerializeField] private SpeedoMeter _speedoMeter;
-    [SerializeField] private TimerCount _timerCount;
+    public TimerCount _timerCount;
 
     [Header("Car Camera")]
     [SerializeField] private CinemachineVirtualCamera[] _allCameras;
@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
         _playerMap.PlayerUX.CameraSwitch.performed += CameraSwitch;
         _playerMap.PlayerMovement.Respawn.performed += Respawn;
         _playerMap.PlayerMovement.Restart.performed += RaceRestart;
+
     }
 
     private void OnDisable()
@@ -71,7 +72,7 @@ public class Player : MonoBehaviour
     {
         int cameraIndex = (int)(Mathf.Floor(context.ReadValue<float>())) - 1;
 
-        if(cameraIndex < _allCameras.Length)
+        if (cameraIndex < _allCameras.Length)
         {
             _allCameras[_currentIndex].Priority = -1;
             _allCameras[cameraIndex].Priority = 1;
@@ -99,5 +100,5 @@ public class Player : MonoBehaviour
         RaceRestart();
     }
 
-    
+
 }
