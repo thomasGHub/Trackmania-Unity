@@ -254,16 +254,13 @@ namespace MirrorBasics {
         [ClientRpc]
         void RpcBeginGame () {
             Debug.Log ($"MatchID: {matchID} | Beginning | Index { playerIndex}");
-            //Additively load game scene
-            //SceneManager.LoadScene ("Online", LoadSceneMode.Additive);
-            //SceneManager.SetActiveScene(SceneManager.GetSceneByName("Online"));
-
-            
+            //Additively load game scene //SceneManager.LoadScene ("Online", LoadSceneMode.Additive); //SceneManager.SetActiveScene(SceneManager.GetSceneByName("Online"));
 
             if (isLocalPlayer)
             {
                 gameObject.GetComponent<Player>().RaceStart();
                 ViewManager.Show<NoUI>();
+                InRoom.instance.LoadFileMap();
             }
             else
             {
