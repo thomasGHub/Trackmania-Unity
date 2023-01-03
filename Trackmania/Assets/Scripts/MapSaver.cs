@@ -9,6 +9,8 @@ public class MapSaver
     private static string _mapInfo = "/MapInfo.json";
 
     public static string MapDataPath => _mapDataPath;
+    public static string MapBlock => _mapBlock;
+    public static string MapInfo => _mapInfo;
 
     public static void SaveMap(ListBlock listBlock, string mapName, bool newFile = true)
     {
@@ -29,13 +31,10 @@ public class MapSaver
         Directory.CreateDirectory(path);
 
         _json = JsonUtility.ToJson(listBlock);
-        Debug.Log(_json);
         File.WriteAllText(path + _mapBlock, _json);
-
-        MapInfo mapInfo = new MapInfo(id.ToString(), mapName, "Moi");
+        MapInfo mapInfo = new MapInfo(id.ToString(), mapName, PlayerPrefs.GetString("UserName"));
 
         _json = JsonConvert.SerializeObject(mapInfo);
-        Debug.Log(_json);
         File.WriteAllText(path + _mapInfo, _json);
     }
 
