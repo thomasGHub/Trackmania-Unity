@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 [System.Serializable]
 public class Testable
@@ -86,6 +87,9 @@ public class Test : MonoBehaviour
     public Testable detestable = new Testable();
     public Testable2 detestable22 = new Testable2();
 
+    public bool isNewDebugUpdate = false;
+    public bool isOldDebugUpdate = false;
+
 
     void Start()
     {
@@ -100,23 +104,72 @@ public class Test : MonoBehaviour
 
         detestable22 = new Testable2();
 
-    
+
+
+
+        GameLog.ClearConsole();
+
 
         //GameLog.ClearConsole();
 
-        
-        //GameLog.ClearConsole();
 
 
 
+        //this.Log(vs1, Category.None, "cc");
 
-        this.Logs(vs1, Category.None, "cc");
+        //this.Logger("vvv", Category.None, "ici");
+        //this.Log(detestable, Category.Map, "test11");
 
-        this.Log("vvv", Category.None, "ici");
-        this.Logs(detestable, Category.Map, "test11");
+        //Debug.Log(vs1[0] + " " + vs1[1] +true + transform.position+ detestable);
+        //this.Log("cc");
+        //this.Logger("cc");
+
+
+        //ConsoleProDebug.Search("cc");
+        //ConsoleProDebug.Watch("cc", "1");
+        //ConsoleProDebug.LogToFilter("cc", "cc", this);
+
+        //ConsoleProDebug.LogAsType("Hi", "Error");
+        //ConsoleProDebug.LogToFilter("Hi", "Tested");
+
+        this.Log(vs1, Category.Car);
+        Debug.Log("Tested" +detestable);
+        Debug.Log("Hello");
 
 
     }
 
-   
+    private void Update()
+    {
+        DebugInUpdate();
+    }
+
+    private void DebugInUpdate()
+    {
+        if (isNewDebugUpdate)
+        {
+            this.Log(detestable, Category.Map, "test11");
+            this.Log(detestable, Category.Map, "test11");
+            this.Log(detestable, Category.Map, "test11");
+            this.Log(detestable, Category.Map, "test11");
+            this.Log(detestable, Category.Map, "test11");
+            this.Log(detestable, Category.Map, "test11");
+            this.Log(detestable, Category.Map, "test11");
+            this.Log(detestable, Category.Map, "test11");
+            this.Log(detestable, Category.Map, "test11");
+        }
+        if (isOldDebugUpdate)
+        {
+            Debug.Log(detestable);
+            Debug.Log(detestable);
+            Debug.Log(detestable);
+            Debug.Log(detestable);
+            Debug.Log(detestable);
+            Debug.Log(detestable);
+            Debug.Log(detestable);
+            Debug.Log(detestable);
+            Debug.Log(detestable);
+            Debug.Log(detestable);
+        }
+    }
 }

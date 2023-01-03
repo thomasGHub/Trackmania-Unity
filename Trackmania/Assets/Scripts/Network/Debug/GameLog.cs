@@ -6,6 +6,8 @@ using System.Text;
 using UnityEngine;
 using UnityEditor;
 using Object = UnityEngine.Object;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 public enum Category
 {
@@ -27,7 +29,7 @@ public static class GameLog
         {Category.Game, "black"}
     };
 
-    public static void Log<T>(this Object myObj, T message, Category category = Category.None, string prefix = "")   //Classique
+    public static void Logger<T>(this Object myObj, T message, Category category = Category.None, string prefix = "")   // Base 
     {
 
         string categoryName = category.ToString().Color(CatToColorDic[category]);
@@ -50,15 +52,17 @@ public static class GameLog
     }
 
 
-    public static void Logs<T>(this Object myObj, List<T> data, Category category = Category.None, string prefix = "") // List Colors
+    #region List
+    [Conditional("UNITY_EDITOR")]
+    public static void Log<T>(this Object myObj, List<T> data, Category category = Category.None, string prefix = "") // List 
     {
         StringBuilder stb = ListToString(data);
-        GameLog.Log(myObj, stb, category, prefix);
+        Logger(myObj, stb, category, prefix);
     }
 
 
 
-    private static StringBuilder ListToString<T>(List<T> data)
+    private static StringBuilder ListToString<T>(List<T> data)  // List Helper
     {
         StringBuilder stb = new StringBuilder("{");
 
@@ -71,24 +75,54 @@ public static class GameLog
         return stb;
     }
 
+    #endregion
 
+
+    #region Array
+    [Conditional("UNITY_EDITOR")]
+    public static void Log<T>(this Object myObj, T[] data, Category category = Category.None, string prefix = "") // List 
+    {
+        StringBuilder stb = ArrayToString(data);
+        Logger(myObj, stb, category, prefix);
+    }
+
+
+
+    private static StringBuilder ArrayToString<T>(T[] data)  // List Helper
+    {
+        StringBuilder stb = new StringBuilder("{");
+
+        for (int i = 0; i < data.Length; i++)
+        {
+            stb.Append(data[i] + "; ");
+        }
+        stb.Remove(stb.Length - 2, 2);
+        stb.Append(" } ");
+        return stb;
+    }
+
+    #endregion
 
     #region Class
 
-    public static void Logs<T>(this Object myObj, T data)   // Class
+    [Conditional("UNITY_EDITOR")]
+    public static void Log<T>(this Object myObj, T data, Category category = Category.None, string prefix = "")   // Class
     {
-        StringBuilder stb = ClassToString(data);
+        StringBuilder stb;
 
-        GameLog.Log(myObj, stb);
+        if (data.GetType() == typeof(string))
+        {
+            Logger(myObj, data, category, prefix);
+        }
+        else
+        {
+            stb = ClassToString(data);
+            Logger(myObj, stb, category, prefix);
+        }
+
     }
 
-    public static void Logs<T>(this Object myObj, T data, Category category = Category.None, string prefix = "")   // Class
-    {
-        StringBuilder stb = ClassToString(data);
-        GameLog.Log(myObj, stb, category, prefix);
-    }
-
-    private static StringBuilder ClassToString<T>(T data)
+    private static StringBuilder ClassToString<T>(T data)  // Class
     {
         StringBuilder stb = new StringBuilder(data.ToString() + " { ");
 
@@ -101,7 +135,7 @@ public static class GameLog
         return stb;
     }
 
-    private static void FieldInfoToString<T>(T data, StringBuilder stb, FieldInfo[] fieldInfo)
+    private static void FieldInfoToString<T>(T data, StringBuilder stb, FieldInfo[] fieldInfo)  // Class
     {
         foreach (System.Reflection.FieldInfo info in fieldInfo)
         {
@@ -146,7 +180,12 @@ public static class GameLog
             {
                 if (info.GetValue(data).GetType() == typeof(string))
                 {
-                    stb.Append(info.Name + "=" + info.GetValue(data) + " | ");
+                    if ((info.Name!="Empty"))
+                    {
+                        stb.Append(info.Name + "=" + info.GetValue(data) + " | ");
+                    }
+
+
                 }
                 else
                 {
@@ -158,21 +197,17 @@ public static class GameLog
 
                     stb.Append("}");
                     stb.Append(" | ");
-                    //foreach (var item in info.GetValue(data).GetType().GetFields())
-                    //{
-                    //    stb.Append(item.Name + "=" + item.GetValue(info.GetValue(data)) + "; ");
-                    //}
-                    //stb.Remove(stb.Length - 2, 2);
-                    //stb.Append(" | ");
                 }
             }
             else
             {
                 stb.Append(info.Name + "=" + info.GetValue(data) + " | ");
             }
+
+
         }
     }
-    #endregion
+    
 
 
     public static StringBuilder Logg<T>(string name, List<T> data)  // List Class
@@ -201,9 +236,11 @@ public static class GameLog
         return stb;
     }
 
+    #endregion
 
+    #region Tools
 
-    public static void ClearConsole()
+    public static void ClearConsole()  // Tools
     {
         var assembly = Assembly.GetAssembly(typeof(SceneView));
         var type = assembly.GetType("UnityEditor.LogEntries");
@@ -211,9 +248,10 @@ public static class GameLog
         method.Invoke(new object(), null);
     }
 
-    public static string Color(this string myStr, string color)
+    public static string Color(this string myStr, string color) // Tools
     {
         return $"<color={color}>{myStr}</color>";
     }
 
+    #endregion
 }
