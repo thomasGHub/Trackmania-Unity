@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
@@ -73,7 +72,7 @@ public class EditorManager : MonoBehaviour
     {
         if (Keyboard.current[Key.T].wasPressedThisFrame)
         {
-            loadFile(_pathMapToLoad);
+            loadFile("134645");
         }
 
         if (_waitingForName)
@@ -81,7 +80,7 @@ public class EditorManager : MonoBehaviour
             if (Keyboard.current[Key.Enter].wasPressedThisFrame && letterRegex.IsMatch(_inputField.text))
             {
                 _mapName = _inputField.text;
-                print(_mapName);
+                print(_mapName);
                 saveMap();
                 _inputField.gameObject.SetActive(false);
             }
@@ -300,7 +299,7 @@ public class EditorManager : MonoBehaviour
     }
 
     private void saveMap()
-    {
+    {
         ListBlock listOfBlock = new ListBlock();
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
         foreach (GameObject go in allObjects)
@@ -313,18 +312,13 @@ public class EditorManager : MonoBehaviour
                 saveObject.rotation = go.transform.rotation;
                 listOfBlock.blocks.Add(saveObject);
             }
-        }
-        _json += JsonUtility.ToJson(listOfBlock);
-        print(_json);
-        File.WriteAllText(Application.persistentDataPath + "/test.json", _json);
+        }        MapSaver.SaveMap(listOfBlock, _inputField.text);
     }
 
 
-    public void loadFile(string _pathMapToLoad)
+    public void loadFile(string id)
     {
-        string path = Application.persistentDataPath + _pathMapToLoad;
-        string jsonStr = File.ReadAllText(path);
-        ListBlock mySampleFile = JsonUtility.FromJson<ListBlock>(jsonStr);
+        ListBlock mySampleFile = MapSaver.GetMapBlock(id);
         foreach (jsonData jsonData in mySampleFile.blocks)
         {         
             Instantiate(_idToPrefab[jsonData.id], jsonData.position, jsonData.rotation);

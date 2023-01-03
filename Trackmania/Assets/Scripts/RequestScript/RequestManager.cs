@@ -131,7 +131,7 @@ public class RequestManager : MonoBehaviour
                 Debug.Log("Succes");
                 Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(request.downloadHandler.text);
                 Debug.Log("Request : " + request.downloadHandler.text);
-                Debug.Log("MapInfo : " + myDeserializedClass.document._id);
+                Debug.Log("MapInfo : " + myDeserializedClass.document.ID);
             }
         }
     }
