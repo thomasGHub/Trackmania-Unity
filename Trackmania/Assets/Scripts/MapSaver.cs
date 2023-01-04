@@ -1,4 +1,6 @@
+using DG.Tweening.Plugins.Core.PathCore;
 using Newtonsoft.Json;
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -12,27 +14,34 @@ public class MapSaver
     public static string MapBlock => _mapBlock;
     public static string MapInfo => _mapInfo;
 
-    public static void SaveMap(ListBlock listBlock, string mapName, bool newFile = true)
+    public static void CreateNewMap(ListBlock listBlock, string mapName)
     {
         CheckMapFolder();
-
-        int id;
         string path;
-        string _json;
+        int id;
+
         do
         {
 
-            id = Random.Range(0, 999999);
+            id = UnityEngine.Random.Range(0, 999999);
             path = _mapDataPath + "/" + id;
             Debug.Log(id);
 
         } while (Directory.Exists(path));
 
         Directory.CreateDirectory(path);
+        MapInfo mapInfo = new MapInfo(id.ToString(), mapName, PlayerPrefs.GetString("UserName"));
 
+        SaveMap(listBlock, mapInfo);
+
+    }
+
+    public static void SaveMap(ListBlock listBlock, MapInfo mapInfo)
+    {
+        string _json;
+        string path = _mapDataPath + "/" + mapInfo.ID;
         _json = JsonUtility.ToJson(listBlock);
         File.WriteAllText(path + _mapBlock, _json);
-        MapInfo mapInfo = new MapInfo(id.ToString(), mapName, PlayerPrefs.GetString("UserName"));
 
         _json = JsonConvert.SerializeObject(mapInfo);
         File.WriteAllText(path + _mapInfo, _json);

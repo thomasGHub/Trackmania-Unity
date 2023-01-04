@@ -705,6 +705,54 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "UIV2",
+            "id": "cb0a51a1-99e6-441c-9979-618815566135",
+            "actions": [
+                {
+                    "name": "ShowHide",
+                    "type": "Button",
+                    "id": "051e5971-6ea5-4a14-ae95-d13d8ba84b3d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Button",
+                    "id": "141a5d22-3e5f-44b6-87a0-cea910540985",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "691314b8-16fc-411d-b286-b7741a0f8811",
+                    "path": "<Keyboard>/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ShowHide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "062e6b06-6fb5-42ab-954c-47abe6eefffd",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

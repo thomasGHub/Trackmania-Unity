@@ -25,6 +25,6 @@ public class MapUiSingleBlock : MonoBehaviour
 
     private void EditMap()
     {
-        Debug.Log("MapName : " + _mapInfo.Name);
+        LoadEditorMap.SwitchSceneAsync(_mapInfo);
     }
 }

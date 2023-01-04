@@ -6,9 +6,9 @@ public class MapInfo
 {
     [JsonProperty("_id")]
     public string ID { get; private set; }
-    public string Name { get; private set; }
-    public string Author { get; private set; }
-    public DateTime DateTime { get; private set; }
+    public string Name { get; set; }
+    public string Author { get; set; }
+    public DateTime DateTime { get; set; }
 
     public MapInfo(string iD, string name, string author)
     {

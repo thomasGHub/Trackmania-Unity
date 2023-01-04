@@ -188,7 +188,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7051339842319619533}
-  - component: {fileID: -1705767815624828505}
+  - component: {fileID: 3533311857330045568}
   m_Layer: 0
   m_Name: roadRamp
   m_TagString: Untagged
@@ -212,7 +212,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-1705767815624828505
+--- !u!114 &3533311857330045568
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -221,7 +221,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7678835923264819063}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9637c5d67afca384d8bea61b2283f35b, type: 3}
+  m_Script: {fileID: 11500000, guid: 534310a306ef5ab4692f22857dc9d3c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   id: 2

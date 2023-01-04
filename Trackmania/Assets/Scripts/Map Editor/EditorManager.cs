@@ -1,14 +1,14 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using Quaternion = UnityEngine.Quaternion;
-using Vector3 = UnityEngine.Vector3;
 
 [Serializable]
 public class ListBlock
@@ -37,6 +37,7 @@ public class EditorManager : MonoBehaviour
     private float _height = 0;
     [SerializeField] private List<GameObject> _blockList = new List<GameObject>();
     private Dictionary<int, GameObject> _idToPrefab;
+    private MapInfo _currentMapInfo = null;
     #endregion
 
     #region UI
@@ -56,6 +57,7 @@ public class EditorManager : MonoBehaviour
     private string _json;
     private string _pathMapToLoad = "/test.json";
     private string _mapName;
+    private string _mapToLoadFile = "mapToLoad";
     #endregion
 
     private bool _waitingForName = false;
@@ -67,36 +69,24 @@ public class EditorManager : MonoBehaviour
         _deleteSelected.enabled = false;
 
         _idToPrefab = _roadData.GenerateDict();
+
+        CheckMapToLoad();
     }
+
     private void Update()
     {
-        if (Keyboard.current[Key.T].wasPressedThisFrame)
+        if (_waitingForName)
         {
-            loadFile("134645");
-        }
-
-        if (_waitingForName)
-        {
             if (Keyboard.current[Key.Enter].wasPressedThisFrame && letterRegex.IsMatch(_inputField.text))
             {
-                _mapName = _inputField.text;
+                _mapName = _inputField.text;
                 print(_mapName);
                 saveMap();
                 _inputField.gameObject.SetActive(false);
-            }
+            }
         }
 
-        if (Keyboard.current[Key.Y].wasPressedThisFrame)
-        {
-            if (_UI.activeInHierarchy)
-            {
-                _UI.SetActive(false);
-            }
-            else
-            {
-                _UI.SetActive(true);
-            }
-        }
+        ShowHideUI();
 
         if (!_freePos && _selectedBlock != null && _editMode)
         {
@@ -170,6 +160,7 @@ public class EditorManager : MonoBehaviour
             editMode();
         }
     }
+
     public void Hello()
     {
         print(_selectedBlock);
@@ -258,6 +249,7 @@ public class EditorManager : MonoBehaviour
         _deleteMode = false;
         _deleteSelected.enabled = false;
     }
+
     public void deleteMode()
     {
         _editMode = false;
@@ -294,7 +286,14 @@ public class EditorManager : MonoBehaviour
 
     public void preSaveMap()
     {
-        _inputField.gameObject.SetActive(true);
+        if(_currentMapInfo != null)
+        {
+            saveMap();
+            return;
+        }
+
+        _inputField.gameObject.SetActive(true);
+
         _waitingForName = true;
     }
 
@@ -308,13 +307,18 @@ public class EditorManager : MonoBehaviour
             {
                 jsonData saveObject = new jsonData();
                 saveObject.id = go.GetComponent<Road>().id;
+                Debug.Log("saveObject Id : " + saveObject.id);
                 saveObject.position = go.transform.position;
                 saveObject.rotation = go.transform.rotation;
                 listOfBlock.blocks.Add(saveObject);
             }
-        }        MapSaver.SaveMap(listOfBlock, _inputField.text);
+        }        if (_currentMapInfo == null)            MapSaver.CreateNewMap(listOfBlock, _inputField.text);        else
+        {
+            _currentMapInfo.DateTime = DateTime.Now;
+            MapSaver.SaveMap(listOfBlock, _currentMapInfo);
+        }
+            
     }
-
 
     public void loadFile(string id)
     {
@@ -322,6 +326,35 @@ public class EditorManager : MonoBehaviour
         foreach (jsonData jsonData in mySampleFile.blocks)
         {         
             Instantiate(_idToPrefab[jsonData.id], jsonData.position, jsonData.rotation);
+        }
+    }
+
+    public void CheckMapToLoad()
+    {
+        string path = MapSaver.MapDataPath + "/" + _mapToLoadFile;
+        if (File.Exists(path))
+        {
+            string content = File.ReadAllText(path);
+            _currentMapInfo = JsonConvert.DeserializeObject<MapInfo>(content);
+
+
+            File.Delete(path);
+            loadFile(_currentMapInfo.ID);
+        }
+    }
+
+    private void ShowHideUI()
+    {
+        if (Keyboard.current[Key.Y].wasPressedThisFrame)
+        {
+            if (_UI.activeInHierarchy)
+            {
+                _UI.SetActive(false);
+            }
+            else
+            {
+                _UI.SetActive(true);
+            }
         }
     }
 }
