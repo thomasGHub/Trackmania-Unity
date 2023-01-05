@@ -2,13 +2,16 @@ using Newtonsoft.Json;
 using System;
 using UnityEngine;
 
+[Serializable]
 public class MapInfo
 {
-    [JsonProperty("_id")]
     public string ID { get; private set; }
     public string Name { get; set; }
     public string Author { get; set; }
     public DateTime DateTime { get; set; }
+
+    public bool IsPublished { get; set; }
+    public bool IsModified { get; set; }
 
     public MapInfo(string iD, string name, string author)
     {
@@ -16,6 +19,8 @@ public class MapInfo
         Name = name;
         Author = author;
         DateTime = DateTime.Now;
+        IsPublished = false;
+        IsModified = false;
     }
 }
 

@@ -10,20 +10,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-[Serializable]
-public class ListBlock
-{
-    public List<jsonData> blocks = new List<jsonData>();
-}
-
-[Serializable]
-public class jsonData
-{
-    public int id;
-    public Vector3 position;
-    public Quaternion rotation;
-}
-
 public class EditorManager : MonoBehaviour
 {
     #region Map
@@ -54,8 +40,6 @@ public class EditorManager : MonoBehaviour
 
     #region JSON
     [SerializeField] private RoadData _roadData;
-    private string _json;
-    private string _pathMapToLoad = "/test.json";
     private string _mapName;
     private string _mapToLoadFile = "mapToLoad";
     #endregion
@@ -299,22 +283,23 @@ public class EditorManager : MonoBehaviour
 
     private void saveMap()
     {
-        ListBlock listOfBlock = new ListBlock();
+        ListJsonData listOfBlock = new ListJsonData();
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
         foreach (GameObject go in allObjects)
         {
             if (go.GetComponent<Road>() != null)
             {
-                jsonData saveObject = new jsonData();
+                JsonData saveObject = new JsonData(go.GetComponent<Road>().id, go.transform.position, go.transform.rotation);
+                /*
                 saveObject.id = go.GetComponent<Road>().id;
                 Debug.Log("saveObject Id : " + saveObject.id);
                 saveObject.position = go.transform.position;
-                saveObject.rotation = go.transform.rotation;
+                saveObject.rotation = go.transform.rotation;*/
                 listOfBlock.blocks.Add(saveObject);
             }
         }        if (_currentMapInfo == null)            MapSaver.CreateNewMap(listOfBlock, _inputField.text);        else
         {
-            _currentMapInfo.DateTime = DateTime.Now;
+            listOfBlock.ID = _currentMapInfo.ID;
             MapSaver.SaveMap(listOfBlock, _currentMapInfo);
         }
             
@@ -322,10 +307,11 @@ public class EditorManager : MonoBehaviour
 
     public void loadFile(string id)
     {
-        ListBlock mySampleFile = MapSaver.GetMapBlock(id);
-        foreach (jsonData jsonData in mySampleFile.blocks)
+        ListBlockData listBlockData = MapSaver.GetMapBlock(id);
+
+        foreach (BlockData blockData in listBlockData.blocks)
         {         
-            Instantiate(_idToPrefab[jsonData.id], jsonData.position, jsonData.rotation);
+            Instantiate(_idToPrefab[blockData.id], blockData.position, blockData.rotation);
         }
     }
 

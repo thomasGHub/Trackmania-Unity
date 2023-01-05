@@ -25,7 +25,7 @@ public class MapLoader
         }
     }
 
-    public RoadPoints LoadMap(string nameOfMapFile,Transform parent)
+    public RoadPoints LoadMap(string ID,Transform parent)
     {
         RoadPoints roadPoints = new RoadPoints();
 
@@ -34,21 +34,19 @@ public class MapLoader
         GameObject gameObject;
         List<Road> checkPointsList = new List<Road>();
 
-        string path = Application.persistentDataPath + "/" + nameOfMapFile + ".json";
-        string jsonStr = File.ReadAllText(path);
-        ListBlock mySampleFile = JsonUtility.FromJson<ListBlock>(jsonStr);
+        ListBlockData listBlockData = MapSaver.GetMapBlock(ID);
 
-        foreach (jsonData jsonData in mySampleFile.blocks)
+        foreach (BlockData blockData in listBlockData.blocks)
         {
-            gameObject = GameObject.Instantiate(_roadPrefabDict[jsonData.id], jsonData.position, jsonData.rotation, parent);
+            gameObject = GameObject.Instantiate(_roadPrefabDict[blockData.id], blockData.position, blockData.rotation, parent);
 
-            if (jsonData.id == _roadData.Start.id)
+            if (blockData.id == _roadData.Start.id)
               roadPoints.Start = gameObject.GetComponent<Road>();
 
-            if(jsonData.id == _roadData.Goal.id)
+            if(blockData.id == _roadData.Goal.id)
                 roadPoints.End = gameObject.GetComponent<Road>();
 
-            if(jsonData.id == _roadData.CheckPoint.id)
+            if(blockData.id == _roadData.CheckPoint.id)
                 checkPointsList.Add(gameObject.GetComponent<Road>());            
         }
 

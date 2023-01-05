@@ -7,14 +7,14 @@ using UnityEngine;
 public class MapSaver
 {
     private static string _mapDataPath = Application.persistentDataPath + "/MapData";
-    private static string _mapBlock = "/MapBlock.json";
+    private static string _mapBlocks = "/MapBlocks.json";
     private static string _mapInfo = "/MapInfo.json";
 
     public static string MapDataPath => _mapDataPath;
-    public static string MapBlock => _mapBlock;
+    public static string MapBlocks => _mapBlocks;
     public static string MapInfo => _mapInfo;
 
-    public static void CreateNewMap(ListBlock listBlock, string mapName)
+    public static void CreateNewMap(ListJsonData listBlock, string mapName)
     {
         CheckMapFolder();
         string path;
@@ -31,27 +31,32 @@ public class MapSaver
 
         Directory.CreateDirectory(path);
         MapInfo mapInfo = new MapInfo(id.ToString(), mapName, PlayerPrefs.GetString("UserName"));
+        listBlock.ID = id.ToString();
+
 
         SaveMap(listBlock, mapInfo);
 
     }
 
-    public static void SaveMap(ListBlock listBlock, MapInfo mapInfo)
+    public static void SaveMap(ListJsonData listBlock, MapInfo mapInfo)
     {
+        mapInfo.DateTime = DateTime.Now;
+        mapInfo.IsModified = true;
         string _json;
         string path = _mapDataPath + "/" + mapInfo.ID;
-        _json = JsonUtility.ToJson(listBlock);
-        File.WriteAllText(path + _mapBlock, _json);
+        _json = JsonConvert.SerializeObject(listBlock);
+        File.WriteAllText(path + _mapBlocks, _json);
 
         _json = JsonConvert.SerializeObject(mapInfo);
         File.WriteAllText(path + _mapInfo, _json);
     }
 
-    public static ListBlock GetMapBlock(string id)
+    public static ListBlockData GetMapBlock(string id)
     {
-        string path = _mapDataPath + "/" + id + _mapBlock;
+        string path = _mapDataPath + "/" + id + _mapBlocks;
         string jsonStr = File.ReadAllText(path);
-        return JsonUtility.FromJson<ListBlock>(jsonStr);
+        ListJsonData listJsonData = JsonUtility.FromJson<ListJsonData>(jsonStr);
+        return listJsonData.DataToUnity();
     }
 
     public static void CheckMapFolder()
