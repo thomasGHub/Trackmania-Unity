@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+
 [System.Serializable]
 public class Testable
 {
@@ -132,9 +133,10 @@ public class Test : MonoBehaviour
         //ConsoleProDebug.LogAsType("Hi", "Error");
         //ConsoleProDebug.LogToFilter("Hi", "Tested");
 
-        this.Log(vs1, Category.Car);
-        Debug.Log("Tested" +detestable);
-        Debug.Log("Hello");
+        //this.Log(vs1, Category.Car);
+        //Debug.Log("Tested" +detestable);
+        //Debug.LogState(detestable);
+        //Debug.Log(()=>vs1);
 
 
     }

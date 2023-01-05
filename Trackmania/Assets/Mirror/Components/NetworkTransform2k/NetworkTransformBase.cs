@@ -522,7 +522,7 @@ namespace Mirror
         }
 
         // common Teleport code for client->server and server->client
-        protected virtual void OnTeleport(Vector3 destination, Quaternion rotation)
+        public virtual void OnTeleport(Vector3 destination, Quaternion rotation)
         {
             // reset any in-progress interpolation & buffers
             Reset();

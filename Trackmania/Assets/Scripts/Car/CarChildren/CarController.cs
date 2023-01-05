@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using MirrorBasics;
 
 namespace Car
 {
@@ -99,10 +100,17 @@ namespace Car
 
         private void Start()
         {
-            _rigidbody.centerOfMass = _centerOfMass.localPosition;
+            
 
             for (int index = 0; index < _skids.Length; index++)
                 _skids[index].trailRenderer.startWidth = _skidWidth;
+
+            if (!PlayerNetwork.localPlayer.isLocalPlayer)
+            {
+                return;
+            }
+
+            _rigidbody.centerOfMass = _centerOfMass.localPosition;
 
             _playerMap.PlayerMovement.ForwardBackward.performed += ForwardBackward;
             _playerMap.PlayerMovement.ForwardBackward.canceled += ForwardBackward;
@@ -120,6 +128,7 @@ namespace Car
 
         private void Update()
         {
+
             TireVisual();
             AudioControl();
             SkidVisual();
@@ -127,6 +136,11 @@ namespace Car
 
         private void FixedUpdate()
         {
+            if (!PlayerNetwork.localPlayer.isLocalPlayer)
+            {
+                return;
+            }
+
             RaycastHit hit;
             Physics.Raycast(_groundRayPoint.position, -transform.up, out hit, _maxRayLenght);
 
@@ -212,6 +226,11 @@ namespace Car
 
         private void TireVisual()
         {
+            if (!PlayerNetwork.localPlayer.isLocalPlayer)
+            {
+                return;
+            }
+
             foreach (Transform tire in _allTiresMesh)
             {
                 tire.RotateAround(tire.position, tire.right, _carVelocity.z / _rotatingFactor);
@@ -289,6 +308,10 @@ namespace Car
 
         private void OnTriggerEnter(Collider other)
         {
+            if (!PlayerNetwork.localPlayer.isLocalPlayer)
+            {
+                return;
+            }
             Road roadScript;
             if ((roadScript = other.gameObject.GetComponent<Road>()) != null)
             {

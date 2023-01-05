@@ -2,6 +2,7 @@ using UnityEngine;
 using Car;
 using Cinemachine;
 using UnityEngine.InputSystem;
+using Mirror;
 
 public class Player : MonoBehaviour
 {
@@ -37,6 +38,7 @@ public class Player : MonoBehaviour
 
     public void RaceStart()
     {
+        gameObject.GetComponent<NetworkTransformChild>().OnTeleport(GameManager.StartPosition.position, Quaternion.identity);
         _carController.RaceStart();
         _speedoMeter.Launch();
         _timerCount.Launch();
@@ -62,6 +64,7 @@ public class Player : MonoBehaviour
         ghost.RestartData();
         RaceStop();
 
+        gameObject.GetComponent<NetworkTransformChild>().OnTeleport(GameManager.StartPosition.position, Quaternion.identity);
         _carController.gameObject.transform.position = GameManager.StartPosition.position;
         _carController.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
@@ -99,6 +102,22 @@ public class Player : MonoBehaviour
     {
         RaceRestart();
     }
+
+    public void SetCamPriorityNotLocalPlayer()
+    {
+        for (int i = 0; i <_allCameras.Length; i++)
+        {
+            _allCameras[i].Priority = -10;
+        }
+    }
+
+    public void DisableNotLocalPlayer()
+    {
+        Destroy(_carController);
+        //_carController.enabled = false;
+
+    }
+
 
 
 }

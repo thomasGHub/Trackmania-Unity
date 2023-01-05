@@ -1,8 +1,8 @@
-#if UNITY_EDITOR
-using UnityEditor;
 using UnityEngine.InputSystem;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
 [InitializeOnLoad]
 #endif
 public class CircleProcessor : InputProcessor<float>
@@ -19,7 +19,7 @@ public class CircleProcessor : InputProcessor<float>
 
     private int index = 1;
 
-    [RuntimeInitializeOnLoadMethod]
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void Initialize()
     {
         InputSystem.RegisterProcessor<CircleProcessor>();

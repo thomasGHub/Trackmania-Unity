@@ -242,10 +242,12 @@ public static class GameLog
 
     public static void ClearConsole()  // Tools
     {
+#if UNITY_EDITOR
         var assembly = Assembly.GetAssembly(typeof(SceneView));
         var type = assembly.GetType("UnityEditor.LogEntries");
         var method = type.GetMethod("Clear");
         method.Invoke(new object(), null);
+#endif
     }
 
     public static string Color(this string myStr, string color) // Tools

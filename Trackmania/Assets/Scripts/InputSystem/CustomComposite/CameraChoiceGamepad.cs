@@ -2,20 +2,22 @@
 // values of type TValue.
 // NOTE: It is possible to define a composite that returns different kinds of values
 //       but doing so requires deriving directly from InputBindingComposite.
-#if UNITY_EDITOR
-using UnityEditor;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem.LowLevel;
 
-[InitializeOnLoad] // Automatically register in editor.
+
+// Automatically register in editor.
+#if UNITY_EDITOR
+using UnityEditor.MPE;
+using UnityEditor;
+[InitializeOnLoad]
 #endif
-// Determine how GetBindingDisplayString() formats the composite by applying
-// the  DisplayStringFormat attribute.
-[DisplayStringFormat("{trigger}")]
-public class CameraChoice : InputBindingComposite<float>
+[DisplayStringFormat("{changeCam}")]
+public class CameraChoiceGamepad : InputBindingComposite<float>
 {
     // Each part binding is represented as a field of type int and annotated with
     // InputControlAttribute. Setting "layout" restricts the controls that
@@ -25,33 +27,18 @@ public class CameraChoice : InputBindingComposite<float>
     // part. This identifier can read values from InputBindingCompositeContext.
     // See ReadValue() below.
     [InputControl(layout = "Button")]
-    public int triggerCam1;
+    public int changeCam;
 
-    [InputControl(layout = "Button")]
-    public int triggerCam2;
-
-    [InputControl(layout = "Button")]
-    public int triggerCam3;
 
     // This method computes the resulting input value of the composite based
     // on the input from its part bindings.
     public override float ReadValue(ref InputBindingCompositeContext context)
     {
-        var triggerValue = context.ReadValue<float>(triggerCam1);
-
+        var triggerValue = context.ReadValue<float>(changeCam);
         if (triggerValue > 0.1f)
-            return 1;
-
-        triggerValue = context.ReadValue<float>(triggerCam2);
-
-        if (triggerValue > 0.1f)
-            return 2;
-
-        triggerValue = context.ReadValue<float>(triggerCam3);
-
-        if (triggerValue > 0.1f)
-            return 3;
-
+        {
+            return 5;
+        }
         return -1;
         //... do some processing and return value
     }
@@ -63,8 +50,8 @@ public class CameraChoice : InputBindingComposite<float>
 
         return ReadValue(ref context);
     }
-
-    static CameraChoice()
+#if UNITY_EDITOR
+    static CameraChoiceGamepad()
     {
         // Can give custom name or use default (type name with "Composite" clipped off).
         // Same composite can be registered multiple times with different names to introduce
@@ -76,7 +63,14 @@ public class CameraChoice : InputBindingComposite<float>
         //       the registration has to take place before the composite is first used
         //       in a binding. Also, for the composite to show in the editor, it has
         //       to be registered from code that runs in edit mode.
-        InputSystem.RegisterBindingComposite<CameraChoice>();
+        InputSystem.RegisterBindingComposite<CameraChoiceGamepad>();
+    }
+#endif
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void Initialize()
+    {
+        InputSystem.RegisterBindingComposite<CameraChoiceGamepad>();
     }
 
     [RuntimeInitializeOnLoadMethod]

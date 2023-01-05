@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomPreview(typeof(GameObject))]
-public class GameObjectEditorWindow : ObjectPreview
+public class GameObjectEditorWindow2 : ObjectPreview
 {
     public override bool HasPreviewGUI()
     {

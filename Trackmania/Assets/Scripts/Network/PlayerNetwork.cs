@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Car;
+
 
 namespace MirrorBasics {
 
@@ -49,11 +51,17 @@ namespace MirrorBasics {
         public override void OnStartClient () {
             if (isLocalPlayer) {
                 localPlayer = this;
+                GameManager.SetPlayerReference(gameObject.GetComponent<Player>());
                 CmdSendName(PlayerPrefs.GetString("UserName"));
             }
             else {
                 Debug.Log ($"Spawning other player UI Prefab");
                 playerLobbyUI = UILobby.instance.SpawnPlayerUIPrefab (this);
+
+                gameObject.GetComponent<Player>().SetCamPriorityNotLocalPlayer();
+                gameObject.GetComponent<Player>().enabled = false;
+                gameObject.GetComponent<Player>().DisableNotLocalPlayer();
+
 
             }
         }
@@ -260,7 +268,11 @@ namespace MirrorBasics {
             {
                 gameObject.GetComponent<Player>().RaceStart();
                 ViewManager.Show<NoUI>();
-                InRoom.instance.LoadFileMap();
+
+                Vector3 destination= GameManager.StartPosition.position;
+                Quaternion rotation =  Quaternion.identity; //A venir Bryan
+                gameObject.GetComponent<NetworkTransformChild>().OnTeleport(destination, rotation);
+
             }
             else
             {
