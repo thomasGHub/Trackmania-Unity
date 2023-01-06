@@ -1,32 +1,23 @@
 using Newtonsoft.Json;
 using System.IO;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MapUiSingleBlock : MonoBehaviour
+public class LocalMapUIBlock : MapUiBlock
 {
-    [Header("Ui Object")]
-    [SerializeField] private TextMeshProUGUI _textName;
-    [SerializeField] private TextMeshProUGUI _textAuthor;
-    [SerializeField] private TextMeshProUGUI _textDate;
+
     [SerializeField] private Button _editButton;
     [SerializeField] private Button _publishButton;
 
     private string _mapInfoPath;
     private string _mapBlocksPath;
 
-    private MapInfo _mapInfo;
-    
-    public void Init(MapInfo mapInfo)
+    public override void Init(MapInfo mapInfo)
     {
-        _mapInfo = mapInfo;
+        base.Init(mapInfo);
+
         _mapInfoPath = MapSaver.MapDataPath + "/" + _mapInfo.ID + "/" + MapSaver.MapInfo;
         _mapBlocksPath = MapSaver.MapDataPath + "/" + _mapInfo.ID + "/" + MapSaver.MapBlocks;
-
-        _textName.text = _mapInfo.Name;
-        _textAuthor.text = _mapInfo.Author;
-        _textDate.text = _mapInfo.DateTime.ToShortDateString();
 
         _editButton.onClick.AddListener(EditMap);
         _publishButton.onClick.AddListener(PublishMap);

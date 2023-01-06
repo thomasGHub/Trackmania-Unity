@@ -22,7 +22,6 @@ public class MapSaver
 
         do
         {
-
             id = UnityEngine.Random.Range(0, 999999);
             path = _mapDataPath + "/" + id;
             Debug.Log(id);
@@ -32,16 +31,22 @@ public class MapSaver
         Directory.CreateDirectory(path);
         MapInfo mapInfo = new MapInfo(id.ToString(), mapName, PlayerPrefs.GetString("UserName"));
         listBlock.ID = id.ToString();
+        mapInfo.DateTime = DateTime.Now;
+        mapInfo.IsModified = true;
 
+        SaveMap(listBlock, mapInfo);
 
+    }
+
+    public static void SaveOnlineMap(ListJsonData listBlock, MapInfo mapInfo)
+    {
+        Directory.CreateDirectory(_mapDataPath + "/" + mapInfo.ID);
         SaveMap(listBlock, mapInfo);
 
     }
 
     public static void SaveMap(ListJsonData listBlock, MapInfo mapInfo)
     {
-        mapInfo.DateTime = DateTime.Now;
-        mapInfo.IsModified = true;
         string _json;
         string path = _mapDataPath + "/" + mapInfo.ID;
         _json = JsonConvert.SerializeObject(listBlock);

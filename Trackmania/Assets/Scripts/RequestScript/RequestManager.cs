@@ -47,6 +47,7 @@ public class RequestManager : MonoBehaviour
 
     private DatabaseInformation _databaseInformation = new DatabaseInformation();
     private static RequestManager _instance;
+    private string _data = "";
 
     public static DatabaseInformation DatabaseInformation => _instance._databaseInformation;
 
@@ -58,15 +59,9 @@ public class RequestManager : MonoBehaviour
         _instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public static void UploadingData(RequestData requestData, bool alreadyUpdate = false)
     {
-        if(alreadyUpdate)
+        if (alreadyUpdate)
             _instance.StartCoroutine(_instance.UpdatingdData(requestData));
         else
             _instance.StartCoroutine(_instance.SendingNewData(requestData));
@@ -103,7 +98,7 @@ public class RequestManager : MonoBehaviour
         }
     }
 
-    public IEnumerator SendingNewData(RequestData requestData) 
+    public IEnumerator SendingNewData(RequestData requestData)
     {
         using (UnityWebRequest request = new UnityWebRequest(_instance._databaseURL + "insertOne", "POST"))
         {
@@ -118,7 +113,7 @@ public class RequestManager : MonoBehaviour
             request.downloadHandler = new DownloadHandlerBuffer();
 
             yield return request.SendWebRequest();
-                
+
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.Log("Connection Error");
@@ -134,18 +129,47 @@ public class RequestManager : MonoBehaviour
         }
     }
 
-    public IEnumerator DownloadingData(RequestData requestData)
+    public static IEnumerator DownloadingSingleData(DownloadingData downloadingData, System.Action<ListJsonData> callback = null)
     {
         using (UnityWebRequest request = new UnityWebRequest(_instance._databaseURL + "findOne", "POST"))
         {
             request.SetRequestHeader("Content-Type", "application/json");
-            //request.SetRequestHeader("Access-Control-Request-Headers", "*");
-            //request.SetRequestHeader("Accept", "application/json");
             request.SetRequestHeader("api-key", "p0wgTxTbPwPkwoSjGkzIuRtRmkAtFDPxCOd1Tv0qNxXTaXEvPqlRFTgjHqWbo9nw");
 
-            //byte[] bodyRaw = File.ReadAllBytes(@"C:\Users\Bryan\Desktop\Projet\Unity\TestDBB\Assets\Download.json");
+            string json = downloadingData.Stringnify();
+            byte[] bodyRaw = Encoding.ASCII.GetBytes(json);
+            Debug.Log(json);
+            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            yield return request.SendWebRequest();
 
-            //RequestData requestData = new RequestData(Database.Trackmania, Source.TrackmaniaDB, Collection.Map);
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                Debug.Log("Connection Error");
+            }
+            if (request.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.Log("Request Error");
+            }
+            else
+            {
+                Debug.Log("Succes");
+                Debug.Log("Request : " + request.downloadHandler.text);
+
+                SingleElement myDeserializedClass = JsonConvert.DeserializeObject<SingleElement>(request.downloadHandler.text);
+                Debug.Log("MapInfo : " + myDeserializedClass._listJsonData.ID);
+                callback(myDeserializedClass._listJsonData);
+            }
+        }
+    }
+
+    public static IEnumerator DownloadingAllData(RequestData requestData, System.Action<MapInfo[]> callback = null)
+    {
+        using (UnityWebRequest request = new UnityWebRequest(_instance._databaseURL + "find", "POST"))
+        {
+            request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("api-key", "p0wgTxTbPwPkwoSjGkzIuRtRmkAtFDPxCOd1Tv0qNxXTaXEvPqlRFTgjHqWbo9nw");
+
             string json = requestData.Stringnify();
             Debug.Log(json);
             byte[] bodyRaw = Encoding.ASCII.GetBytes(json);
@@ -165,9 +189,12 @@ public class RequestManager : MonoBehaviour
             else
             {
                 Debug.Log("Succes");
-                Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(request.downloadHandler.text);
+                _instance._data = request.downloadHandler.text;
+                MultipleElement myDeserializedClass = JsonConvert.DeserializeObject<MultipleElement>(request.downloadHandler.text);
                 Debug.Log("Request : " + request.downloadHandler.text);
-                Debug.Log("MapInfo : " + myDeserializedClass.document.ID);
+                Debug.Log("MapInfo : " + myDeserializedClass._allMapInfo.Length);
+
+                callback(myDeserializedClass._allMapInfo);
             }
         }
     }

@@ -24,7 +24,14 @@ public class MapInfo
     }
 }
 
-public class Root
+public class SingleElement
 {
-    public MapInfo document { get; set; }
+    [JsonProperty("document")]
+    public ListJsonData _listJsonData { get; set; }
+}
+
+public class MultipleElement
+{
+    [JsonProperty("documents")]
+    public MapInfo[] _allMapInfo { get; set; }
 }

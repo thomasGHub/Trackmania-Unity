@@ -1,7 +1,10 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using UnityEngine;
 
+
+#region Filter
 public class Filter
 {
     
@@ -17,7 +20,9 @@ public class FilterID : Filter
         _id = id;
     }
 }
+#endregion
 
+#region Update
 public class Update
 {
 
@@ -31,6 +36,26 @@ public class UpdateMapInfo : Update
     public UpdateMapInfo(object data)
     {
         _data = data;
+    }
+}
+#endregion
+
+public class Projection
+{
+
+}
+
+public class MapDataProjection : Projection
+{
+    [JsonProperty("ID")]
+    private int _id;
+    [JsonProperty("blocks")]
+    private int _blocks;
+
+    public MapDataProjection()
+    {
+        _id = 1;
+        _blocks = 1;
     }
 }
 
@@ -82,6 +107,20 @@ public class NewData : RequestData
     public NewData(Database database, Source source, Collection collection, object data) : base(database, source, collection)
     {
         _data = data;
+    }
+}
+
+public class DownloadingData : RequestData
+{
+    [JsonProperty("filter")]
+    private Filter _filterBy { get; set; }
+    [JsonProperty("projection")]
+    private Projection _projection { get; set; }
+
+    public DownloadingData(Database database, Source source, Collection collection, Filter filterBy, Projection projection) : base(database, source, collection)
+    {
+        _filterBy = filterBy;
+        _projection = projection;
     }
 }
 
