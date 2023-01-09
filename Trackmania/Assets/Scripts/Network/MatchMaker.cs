@@ -22,7 +22,7 @@ namespace MirrorBasics {
             this.matchID = matchID;
             this.publicMatch = publicMatch;
             players.Add (player);
-            //playersScores.Add(-1);
+            playersScores.Add(null);
         }
 
         public Match () { }
@@ -68,7 +68,7 @@ namespace MirrorBasics {
                     if (matches[i].matchID == _matchID) {
                         if (!matches[i].inMatch && !matches[i].matchFull) {
                             matches[i].players.Add (_player);
-                            //matches[i].playersScores.Add (-1);
+                            matches[i].playersScores.Add (null);
                             _player.currentMatch = matches[i];
                             playerIndex = matches[i].players.Count;
 
