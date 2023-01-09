@@ -355,7 +355,6 @@ namespace MirrorBasics {
             int playerIndex = currentMatch.players.IndexOf(player);
             currentMatch.playersScores[playerIndex] = score;
 
-            InGa
 
             RpcReceiveScore(userName, rank ,score);
         }
@@ -365,7 +364,7 @@ namespace MirrorBasics {
         {
             if (isLocalPlayer)
             {
-                //Update score
+                InGameView.instance.DoLeadarboardInGameView();
 
             }
         }

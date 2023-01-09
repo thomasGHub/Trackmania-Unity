@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
         Temps temps = _player.RaceFinish();
         string playerName = PlayerPrefs.GetString("UserName");
 
-        PlayerNetwork.localPlayer.CmdSendScore(playerName, temps);
+        //PlayerNetwork.localPlayer.CmdSendScore(playerName, temps);
 
 
     }

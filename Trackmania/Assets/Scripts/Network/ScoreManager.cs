@@ -7,7 +7,7 @@ using UnityEngine;
 public class ScoreManager : MonoBehaviour
 {
 
-    public List<PlayerScore> playersScores = new List<PlayerScore>();
+
 
 
 

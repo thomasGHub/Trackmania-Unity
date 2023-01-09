@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class InGameLeaderboard : MonoBehaviour
 {
-    
+    public static InGameLeaderboard instance;
+    private void Awake()
+    {
+        instance = this;
+    }
+
     public static int TempsToInt(Temps score)
     {
         int intScore = score._miliseconds;
@@ -14,4 +19,13 @@ public class InGameLeaderboard : MonoBehaviour
         return intScore;
     }
     
+
+
+
+
+
+
+
+
+
 }

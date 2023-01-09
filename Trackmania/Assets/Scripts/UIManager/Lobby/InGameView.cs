@@ -5,18 +5,25 @@ using UnityEngine;
 public class InGameView : View
 {
 
+    public static InGameView instance;
+    private void Awake()
+    {
+        instance = this;
+    }
+
+
+
     public override void Initialize()
     {
         
     }
 
-    void Start()
+    public void DoLeadarboardInGameView()
     {
-        
-    }
 
-    void Update()
-    {
-        
+
+
+
+
     }
 }
