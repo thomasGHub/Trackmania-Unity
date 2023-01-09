@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using MirrorBasics;
 
 namespace Car
 {
@@ -76,7 +77,7 @@ namespace Car
         private float _scaleValue = 100f; // Value that divide the car Velocity to pass it in 100 Unit per hour
         private float _multiplicatorValue = 1000f; // Value that multiply the speed, turn and friction value
 
-        private Vector3 _carVelocity;
+        [SerializeField] private Vector3 _carVelocity;
         private float _carSpeed; // limitate the call "_carVelocity.magnitude"
 
         private Ghost _ghost;
@@ -90,6 +91,8 @@ namespace Car
 
         #endregion
 
+        public bool isLocalPlayer = true;
+
         private void Awake()
         {
             _playerMap = new PlayerMap();
@@ -99,10 +102,17 @@ namespace Car
 
         private void Start()
         {
-            _rigidbody.centerOfMass = _centerOfMass.localPosition;
+            
 
             for (int index = 0; index < _skids.Length; index++)
                 _skids[index].trailRenderer.startWidth = _skidWidth;
+
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
+            _rigidbody.centerOfMass = _centerOfMass.localPosition;
 
             _playerMap.PlayerMovement.ForwardBackward.performed += ForwardBackward;
             _playerMap.PlayerMovement.ForwardBackward.canceled += ForwardBackward;
@@ -120,6 +130,7 @@ namespace Car
 
         private void Update()
         {
+
             TireVisual();
             AudioControl();
             SkidVisual();
@@ -127,11 +138,24 @@ namespace Car
 
         private void FixedUpdate()
         {
+            
+
             RaycastHit hit;
             Physics.Raycast(_groundRayPoint.position, -transform.up, out hit, _maxRayLenght);
 
             _carVelocity = transform.InverseTransformDirection(_rigidbody.velocity);
             _carSpeed = _carVelocity.magnitude;
+
+            if (hit.collider)  // for network
+            {
+                _grounded = true;
+            }
+
+            if (!isLocalPlayer)
+            {
+                Debug.Log(_carVelocity);
+                return;
+            }
 
             if (hit.collider)
             {
@@ -212,6 +236,11 @@ namespace Car
 
         private void TireVisual()
         {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
             foreach (Transform tire in _allTiresMesh)
             {
                 tire.RotateAround(tire.position, tire.right, _carVelocity.z / _rotatingFactor);
@@ -289,6 +318,10 @@ namespace Car
 
         private void OnTriggerEnter(Collider other)
         {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
             Road roadScript;
             if ((roadScript = other.gameObject.GetComponent<Road>()) != null)
             {

@@ -10,5 +10,11 @@ namespace Mirror
         [Header("Target")]
         public Transform target;
         protected override Transform targetComponent => target;
+
+        public override void OnTeleport(Vector3 destination, Quaternion rotation)
+        {
+            base.OnTeleport(destination, rotation);
+            Debug.Log("Teleportation..."+ destination+ rotation);
+        }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using MirrorBasics;
 
 public struct RoadPoints
 {
@@ -16,7 +17,7 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
 
     [Header("Start")]
-    [SerializeField] private GameObject _playerPrefab;
+    //[SerializeField] private GameObject _playerPrefab;
     [SerializeField] private Vector3 _scaleMap;
 
     [Header("LoadMap")]
@@ -75,11 +76,14 @@ public class GameManager : MonoBehaviour
         _parentTransform.localScale = _scaleMap;
 
         Transform startPoint = _roadPoints.Start.transform;
-        GameObject _playerCar = GameObject.Instantiate(_playerPrefab, startPoint.position, startPoint.rotation);
-        _player = _playerCar.GetComponent<Player>();
+        //GameObject _playerCar = GameObject.Instantiate(_playerPrefab, startPoint.position, startPoint.rotation);
+        //Debug.Log("[Car]" +PlayerNetwork.localPlayer);
+        //_player = PlayerNetwork.localPlayer.gameObject.GetComponent<Player>();//_playerCar.GetComponent<Player>();
 
         _roadToFunction.Add(_roadData.CheckPoint.GetType(), CheckPointPassed);
         _roadToFunction.Add(_roadData.Goal.GetType(), EndPointPassed);
+
+        Debug.Log(_roadData.Goal.GetType());
     }
 
     private void LanchRace(InputAction.CallbackContext context)
@@ -119,8 +123,20 @@ public class GameManager : MonoBehaviour
             if (!value)
                 return;
         }
-
         _player.RaceStop();
+
+        Temps temps = _player.RaceFinish();
+        string playerName = PlayerPrefs.GetString("UserName");
+
+        //PlayerNetwork.localPlayer.CmdSendScore(playerName, temps);
+
+
     }
+
+    public static void SetPlayerReference(Player __player )
+    {
+        _instance._player = __player;
+    }
+
 
 }

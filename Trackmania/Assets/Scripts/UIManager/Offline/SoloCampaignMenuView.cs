@@ -277,6 +277,12 @@ public class SoloCampaignMenuView : View
                 LevelButton[number].GetComponent<CampaignButtonUI>().imageMedal.sprite = bronze;
 
             }
+            else
+            {
+                tempColor = new Color(1f, 1f, 1f, 0f); ;
+                LevelButton[number].GetComponent<CampaignButtonUI>().imageMedal.color = tempColor;
+                LevelButton[number].GetComponent<CampaignButtonUI>().imageMedal.sprite = null;
+            }
 
         }
         else

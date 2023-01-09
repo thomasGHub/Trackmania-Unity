@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Car;
+
 
 namespace MirrorBasics {
 
-    [RequireComponent (typeof (NetworkMatch))]
-    public class PlayerNetwork : NetworkBehaviour {
+    [RequireComponent(typeof(NetworkMatch))]
+    public class PlayerNetwork : NetworkBehaviour
+    {
 
         public static PlayerNetwork localPlayer;
         [SyncVar] public string playerName;
@@ -23,8 +26,9 @@ namespace MirrorBasics {
 
         Guid netIDGuid;
 
-        void Awake () {
-            networkMatch = GetComponent<NetworkMatch> ();
+        void Awake()
+        {
+            networkMatch = GetComponent<NetworkMatch>();
         }
 
         private void Start()
@@ -41,96 +45,121 @@ namespace MirrorBasics {
 
 
 
-        public override void OnStartServer () {
-            netIDGuid = netId.ToString ().ToGuid ();
+        public override void OnStartServer()
+        {
+            netIDGuid = netId.ToString().ToGuid();
             networkMatch.matchId = netIDGuid;
         }
 
-        public override void OnStartClient () {
-            if (isLocalPlayer) {
+        public override void OnStartClient()
+        {
+            if (isLocalPlayer)
+            {
                 localPlayer = this;
+                GameManager.SetPlayerReference(gameObject.GetComponent<Player>());
                 CmdSendName(PlayerPrefs.GetString("UserName"));
             }
-            else {
-                Debug.Log ($"Spawning other player UI Prefab");
-                playerLobbyUI = UILobby.instance.SpawnPlayerUIPrefab (this);
+            else
+            {
+                Debug.Log($"Spawning other player UI Prefab");
+                playerLobbyUI = UILobby.instance.SpawnPlayerUIPrefab(this);
+
+                gameObject.GetComponent<Player>().SetCamPriorityNotLocalPlayer();
+                gameObject.GetComponent<Player>().enabled = false;
+                gameObject.GetComponent<Player>().DisableNotLocalPlayerCar();
+
 
             }
         }
 
-        public override void OnStopClient () {
-            Debug.Log ($"Client Stopped");
-            ClientDisconnect ();
+        public override void OnStopClient()
+        {
+            Debug.Log($"Client Stopped");
+            ClientDisconnect();
         }
 
-        public override void OnStopServer () {
-            Debug.Log ($"Client Stopped on Server");
-            ServerDisconnect ();
+        public override void OnStopServer()
+        {
+            Debug.Log($"Client Stopped on Server");
+            ServerDisconnect();
         }
 
         /* 
             HOST MATCH
         */
 
-        public void HostGame (bool publicMatch) {
-            string matchID = MatchMaker.GetRandomMatchID ();
-            CmdHostGame (matchID, publicMatch);
+        public void HostGame(bool publicMatch)
+        {
+            string matchID = MatchMaker.GetRandomMatchID();
+            CmdHostGame(matchID, publicMatch);
         }
 
         [Command]
-        void CmdHostGame (string _matchID, bool publicMatch) {
+        void CmdHostGame(string _matchID, bool publicMatch)
+        {
             matchID = _matchID;
-            if (MatchMaker.instance.HostGame (_matchID, this, publicMatch, out playerIndex)) {
-                Debug.Log ($"<color=green>Game hosted successfully</color>");
-                networkMatch.matchId = _matchID.ToGuid ();
-                TargetHostGame (true, _matchID, playerIndex);
-            } else {
-                Debug.Log ($"<color=red>Game hosted failed</color>");
-                TargetHostGame (false, _matchID, playerIndex);
+            if (MatchMaker.instance.HostGame(_matchID, this, publicMatch, out playerIndex))
+            {
+                Debug.Log($"<color=green>Game hosted successfully</color>");
+                networkMatch.matchId = _matchID.ToGuid();
+                TargetHostGame(true, _matchID, playerIndex);
+            }
+            else
+            {
+                Debug.Log($"<color=red>Game hosted failed</color>");
+                TargetHostGame(false, _matchID, playerIndex);
             }
         }
 
         [TargetRpc]
-        void TargetHostGame (bool success, string _matchID, int _playerIndex) {
+        void TargetHostGame(bool success, string _matchID, int _playerIndex)
+        {
             playerIndex = _playerIndex;
             matchID = _matchID;
-            Debug.Log ($"MatchID: {matchID} == {_matchID}");
-            UILobby.instance.HostSuccess (success, _matchID);
+            Debug.Log($"MatchID: {matchID} == {_matchID}");
+            UILobby.instance.HostSuccess(success, _matchID);
         }
 
         /* 
             JOIN MATCH
         */
 
-        public void JoinGame (string _inputID) {
-            CmdJoinGame (_inputID);
+        public void JoinGame(string _inputID)
+        {
+            CmdJoinGame(_inputID);
             UILobby.instance.searchingAllRooms = false;
         }
 
         [Command]
-        void CmdJoinGame (string _matchID) {
+        void CmdJoinGame(string _matchID)
+        {
             matchID = _matchID;
-            if (MatchMaker.instance.JoinGame (_matchID, this, out playerIndex)) {
-                Debug.Log ($"<color=green>Game Joined successfully</color>");
-                networkMatch.matchId = _matchID.ToGuid ();
-                TargetJoinGame (true, _matchID, playerIndex);
+            if (MatchMaker.instance.JoinGame(_matchID, this, out playerIndex))
+            {
+                Debug.Log($"<color=green>Game Joined successfully</color>");
+                networkMatch.matchId = _matchID.ToGuid();
+                TargetJoinGame(true, _matchID, playerIndex);
 
                 //Host
-                if (isServer && playerLobbyUI != null) {
-                    playerLobbyUI.SetActive (true);
+                if (isServer && playerLobbyUI != null)
+                {
+                    playerLobbyUI.SetActive(true);
                 }
-            } else {
-                Debug.Log ($"<color=red>Game Joined failed</color>");
-                TargetJoinGame (false, _matchID, playerIndex);
+            }
+            else
+            {
+                Debug.Log($"<color=red>Game Joined failed</color>");
+                TargetJoinGame(false, _matchID, playerIndex);
             }
         }
 
         [TargetRpc]
-        void TargetJoinGame (bool success, string _matchID, int _playerIndex) {
+        void TargetJoinGame(bool success, string _matchID, int _playerIndex)
+        {
             playerIndex = _playerIndex;
             matchID = _matchID;
-            Debug.Log ($"MatchID: {matchID} == {_matchID}");
-            UILobby.instance.JoinSuccess (success, _matchID);
+            Debug.Log($"MatchID: {matchID} == {_matchID}");
+            UILobby.instance.JoinSuccess(success, _matchID);
         }
 
         [Command]
@@ -152,32 +181,41 @@ namespace MirrorBasics {
             DISCONNECT
         */
 
-        public void DisconnectGame () {
-            CmdDisconnectGame ();
+        public void DisconnectGame()
+        {
+            CmdDisconnectGame();
         }
 
         [Command]
-        void CmdDisconnectGame () {
-            ServerDisconnect ();
+        void CmdDisconnectGame()
+        {
+            ServerDisconnect();
         }
 
-        void ServerDisconnect () {
-            MatchMaker.instance.PlayerDisconnected (this, matchID);
-            RpcDisconnectGame ();
+        void ServerDisconnect()
+        {
+            MatchMaker.instance.PlayerDisconnected(this, matchID);
+            RpcDisconnectGame();
             networkMatch.matchId = netIDGuid;
         }
 
         [ClientRpc]
-        void RpcDisconnectGame () {
-            ClientDisconnect ();
+        void RpcDisconnectGame()
+        {
+            ClientDisconnect();
         }
 
-        void ClientDisconnect () {
-            if (playerLobbyUI != null) {
-                if (!isServer) {
-                    Destroy (playerLobbyUI);
-                } else {
-                    playerLobbyUI.SetActive (false);
+        void ClientDisconnect()
+        {
+            if (playerLobbyUI != null)
+            {
+                if (!isServer)
+                {
+                    Destroy(playerLobbyUI);
+                }
+                else
+                {
+                    playerLobbyUI.SetActive(false);
                 }
             }
         }
@@ -186,33 +224,40 @@ namespace MirrorBasics {
             SEARCH MATCH
         */
 
-        public void SearchGame () {
-            CmdSearchGame ();
+        public void SearchGame()
+        {
+            CmdSearchGame();
         }
 
         [Command]
-        void CmdSearchGame () {
-            if (MatchMaker.instance.SearchGame (this, out playerIndex, out matchID)) {
-                Debug.Log ($"<color=green>Game Found Successfully</color>");
-                networkMatch.matchId = matchID.ToGuid ();
-                TargetSearchGame (true, matchID, playerIndex);
+        void CmdSearchGame()
+        {
+            if (MatchMaker.instance.SearchGame(this, out playerIndex, out matchID))
+            {
+                Debug.Log($"<color=green>Game Found Successfully</color>");
+                networkMatch.matchId = matchID.ToGuid();
+                TargetSearchGame(true, matchID, playerIndex);
 
                 //Host
-                if (isServer && playerLobbyUI != null) {
-                    playerLobbyUI.SetActive (true);
+                if (isServer && playerLobbyUI != null)
+                {
+                    playerLobbyUI.SetActive(true);
                 }
-            } else {
-                Debug.Log ($"<color=red>Game Search Failed</color>");
-                TargetSearchGame (false, matchID, playerIndex);
+            }
+            else
+            {
+                Debug.Log($"<color=red>Game Search Failed</color>");
+                TargetSearchGame(false, matchID, playerIndex);
             }
         }
 
         [TargetRpc]
-        void TargetSearchGame (bool success, string _matchID, int _playerIndex) {
+        void TargetSearchGame(bool success, string _matchID, int _playerIndex)
+        {
             playerIndex = _playerIndex;
             matchID = _matchID;
-            Debug.Log ($"MatchID: {matchID} == {_matchID} | {success}");
-            UILobby.instance.SearchGameSuccess (success, _matchID);
+            Debug.Log($"MatchID: {matchID} == {_matchID} | {success}");
+            UILobby.instance.SearchGameSuccess(success, _matchID);
         }
 
         /* 
@@ -220,15 +265,20 @@ namespace MirrorBasics {
         */
 
         [Server]
-        public void PlayerCountUpdated (int playerCount) {
-            TargetPlayerCountUpdated (playerCount);
+        public void PlayerCountUpdated(int playerCount)
+        {
+            TargetPlayerCountUpdated(playerCount);
         }
 
         [TargetRpc]
-        void TargetPlayerCountUpdated (int playerCount) {
-            if (playerCount > 1) {
+        void TargetPlayerCountUpdated(int playerCount)
+        {
+            if (playerCount > 1)
+            {
                 UILobby.instance.SetStartButtonActive(true);
-            } else {
+            }
+            else
+            {
                 UILobby.instance.SetStartButtonActive(false);
             }
         }
@@ -237,33 +287,38 @@ namespace MirrorBasics {
             BEGIN MATCH
         */
 
-        public void BeginGame () {
-            CmdBeginGame ();
+        public void BeginGame()
+        {
+            CmdBeginGame();
         }
 
         [Command]
-        void CmdBeginGame () {
-            MatchMaker.instance.BeginGame (matchID);
-            Debug.Log ($"<color=red>Game Beginning</color>");
+        void CmdBeginGame()
+        {
+            MatchMaker.instance.BeginGame(matchID);
+            Debug.Log($"<color=red>Game Beginning</color>");
         }
 
-        public void StartGame () { //Server
+        public void StartGame()
+        { //Server
             RpcBeginGame();
         }
 
         [ClientRpc]
-        void RpcBeginGame () {
-            Debug.Log ($"MatchID: {matchID} | Beginning | Index { playerIndex}");
-            //Additively load game scene
-            //SceneManager.LoadScene ("Online", LoadSceneMode.Additive);
-            //SceneManager.SetActiveScene(SceneManager.GetSceneByName("Online"));
-
-            
+        void RpcBeginGame()
+        {
+            Debug.Log($"MatchID: {matchID} | Beginning | Index { playerIndex}");
+            //Additively load game scene //SceneManager.LoadScene ("Online", LoadSceneMode.Additive); //SceneManager.SetActiveScene(SceneManager.GetSceneByName("Online"));
 
             if (isLocalPlayer)
             {
                 gameObject.GetComponent<Player>().RaceStart();
                 ViewManager.Show<NoUI>();
+
+                Vector3 destination = GameManager.StartPosition.position;
+                Quaternion rotation = Quaternion.identity; //A venir Bryan
+                gameObject.GetComponent<NetworkTransformChild>().OnTeleport(destination, rotation);
+
             }
             else
             {
@@ -282,6 +337,36 @@ namespace MirrorBasics {
         void CmdSendName(string name)
         {
             playerName = name;
+        }
+
+
+
+
+
+        //# Send Score
+
+
+
+
+        [Command]
+        public void CmdSendScore(string userName, Temps score, PlayerNetwork player)
+        {
+            int rank = 0;
+            int playerIndex = currentMatch.players.IndexOf(player);
+            currentMatch.playersScores[playerIndex] = score;
+
+
+            RpcReceiveScore(userName, rank ,score);
+        }
+
+        [ClientRpc]
+        void RpcReceiveScore(string userName, int rank, Temps score)
+        {
+            if (isLocalPlayer)
+            {
+                InGameView.instance.DoLeadarboardInGameView();
+
+            }
         }
 
     }

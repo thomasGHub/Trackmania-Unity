@@ -14,6 +14,7 @@ namespace MirrorBasics {
         public bool inMatch;
         public bool matchFull;
         public List<PlayerNetwork> players = new List<PlayerNetwork> ();
+        public List<Temps> playersScores = new List<Temps>();
 
         public Match (string matchID, PlayerNetwork player, bool publicMatch) {
             matchFull = false;
@@ -21,6 +22,7 @@ namespace MirrorBasics {
             this.matchID = matchID;
             this.publicMatch = publicMatch;
             players.Add (player);
+            //playersScores.Add(-1);
         }
 
         public Match () { }
@@ -66,6 +68,7 @@ namespace MirrorBasics {
                     if (matches[i].matchID == _matchID) {
                         if (!matches[i].inMatch && !matches[i].matchFull) {
                             matches[i].players.Add (_player);
+                            //matches[i].playersScores.Add (-1);
                             _player.currentMatch = matches[i];
                             playerIndex = matches[i].players.Count;
 
@@ -158,7 +161,11 @@ namespace MirrorBasics {
             for (int i = 0; i < matches.Count; i++) {
                 if (matches[i].matchID == _matchID) {
                     int playerIndex = matches[i].players.IndexOf (player);
-                    if (matches[i].players.Count > playerIndex) matches[i].players.RemoveAt (playerIndex);
+                    if (matches[i].players.Count > playerIndex)
+                    {
+                        matches[i].players.RemoveAt(playerIndex);
+                        matches[i].playersScores.RemoveAt(playerIndex);
+                    }
                     Debug.Log ($"PlayerNetwork disconnected from match {_matchID} | {matches[i].players.Count} players remaining");
 
                     if (matches[i].players.Count == 0) {
