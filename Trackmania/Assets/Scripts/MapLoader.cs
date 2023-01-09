@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using Newtonsoft.Json;
 
 public class MapLoader
 {
@@ -25,7 +26,7 @@ public class MapLoader
         }
     }
 
-    public RoadPoints LoadMap(string ID,Transform parent)
+    public RoadPoints LoadMap(string _fileName,Transform parent)
     {
         RoadPoints roadPoints = new RoadPoints();
 
@@ -33,8 +34,14 @@ public class MapLoader
 
         GameObject gameObject;
         List<Road> checkPointsList = new List<Road>();
+        MapInfo mapInfo;
+        string path = MapSaver.MapDataPath + "/" + _fileName + ".json";
 
-        ListBlockData listBlockData = MapSaver.GetMapBlock(ID);
+        string json = File.ReadAllText(path);
+        mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
+        File.Delete(path);
+
+        ListBlockData listBlockData = MapSaver.GetMapBlock(mapInfo.ID);
 
         foreach (BlockData blockData in listBlockData.blocks)
         {

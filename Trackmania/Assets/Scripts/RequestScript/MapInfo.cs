@@ -22,6 +22,18 @@ public class MapInfo
         IsPublished = false;
         IsModified = false;
     }
+
+    public static bool operator != (MapInfo a, MapInfo b)
+    {
+        return !(a == b);
+    }
+
+    public static bool operator == (MapInfo a, MapInfo b)
+    {
+        return a.ID == b.ID && a.Name == b.Name && a.Author == b.Author
+            && a.DateTime == b.DateTime && a.IsPublished == b.IsPublished
+            && a.IsModified == b.IsModified;
+    }
 }
 
 public class SingleElement

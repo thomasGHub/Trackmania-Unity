@@ -45,6 +45,9 @@ public class RequestManager : MonoBehaviour
     [SerializeField] private string _databaseURL = "https://data.mongodb-api.com/app/data-xivyv/endpoint/data/v1/action/";
     [SerializeField] private string _apiKey = "p0wgTxTbPwPkwoSjGkzIuRtRmkAtFDPxCOd1Tv0qNxXTaXEvPqlRFTgjHqWbo9nw";
 
+    [Header("PopUp")]
+    [SerializeField] private GameObject _popUp;
+
     private DatabaseInformation _databaseInformation = new DatabaseInformation();
     private static RequestManager _instance;
     private string _data = "";
@@ -59,20 +62,22 @@ public class RequestManager : MonoBehaviour
         _instance = this;
     }
 
-    public static void UploadingData(RequestData requestData, bool alreadyUpdate = false)
+    public static void UploadingData(RequestData requestData, bool alreadyUpdate = false, System.Action callback = null)
     {
         if (alreadyUpdate)
-            _instance.StartCoroutine(_instance.UpdatingdData(requestData));
+            _instance.StartCoroutine(UpdatingdData(requestData));
         else
-            _instance.StartCoroutine(_instance.SendingNewData(requestData));
+            _instance.StartCoroutine(SendingNewData(requestData));
     }
 
-    public IEnumerator UpdatingdData(RequestData requestData)
+    public static IEnumerator UpdatingdData(RequestData requestData, System.Action callback = null)
     {
+        _instance._popUp.SetActive(true);
+
         using (UnityWebRequest request = new UnityWebRequest(_instance._databaseURL + "updateOne", "POST"))
         {
             request.SetRequestHeader("Content-Type", "application/json");
-            request.SetRequestHeader("api-key", _apiKey);
+            request.SetRequestHeader("api-key", _instance._apiKey);
 
             string json = requestData.Stringnify();
             Debug.Log(json);
@@ -94,16 +99,20 @@ public class RequestManager : MonoBehaviour
             else
             {
                 Debug.Log("Succes");
+                if (callback != null)
+                    callback();
             }
         }
+
+        _instance._popUp.SetActive(false);
     }
 
-    public IEnumerator SendingNewData(RequestData requestData)
+    public static IEnumerator SendingNewData(RequestData requestData, System.Action callback = null)
     {
         using (UnityWebRequest request = new UnityWebRequest(_instance._databaseURL + "insertOne", "POST"))
         {
             request.SetRequestHeader("Content-Type", "application/json");
-            request.SetRequestHeader("api-key", _apiKey);
+            request.SetRequestHeader("api-key", _instance._apiKey);
 
             string json = requestData.Stringnify();
             Debug.Log(json);
@@ -125,12 +134,16 @@ public class RequestManager : MonoBehaviour
             else
             {
                 Debug.Log("Succes");
+                if(callback != null)
+                    callback();
             }
         }
     }
 
     public static IEnumerator DownloadingSingleData(DownloadingData downloadingData, System.Action<ListJsonData> callback = null)
     {
+        _instance._popUp.SetActive(true);
+
         using (UnityWebRequest request = new UnityWebRequest(_instance._databaseURL + "findOne", "POST"))
         {
             request.SetRequestHeader("Content-Type", "application/json");
@@ -161,10 +174,14 @@ public class RequestManager : MonoBehaviour
                 callback(myDeserializedClass._listJsonData);
             }
         }
+
+        _instance._popUp.SetActive(false);
     }
 
     public static IEnumerator DownloadingAllData(RequestData requestData, System.Action<MapInfo[]> callback = null)
     {
+        _instance._popUp.SetActive(true);
+
         using (UnityWebRequest request = new UnityWebRequest(_instance._databaseURL + "find", "POST"))
         {
             request.SetRequestHeader("Content-Type", "application/json");
@@ -197,5 +214,7 @@ public class RequestManager : MonoBehaviour
                 callback(myDeserializedClass._allMapInfo);
             }
         }
+
+        _instance._popUp.SetActive(false);
     }
 }

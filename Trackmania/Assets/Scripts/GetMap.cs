@@ -8,7 +8,7 @@ public static class GetMap
 {
     public static List<MapInfo> GetLocalMap()
     {
-        string mapFolderPath = MapSaver.MapDataPath;
+        string mapFolderPath = MapSaver.MapDataPath + MapSaver.Local;
         string[] directoriesPath = Directory.GetDirectories(mapFolderPath);
         List<MapInfo> _allMapInfo = new List<MapInfo>();
 

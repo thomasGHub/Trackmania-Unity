@@ -5,12 +5,13 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LoadEditorMap : MonoBehaviour
+public class LoadMap : MonoBehaviour
 {
     [SerializeField] private string _targetSceneName;
+    [SerializeField] private string _fileName = "mapToLoad";
+    [SerializeField] private PopUp _popUp;
 
-    private static LoadEditorMap _instance;
-    private string _fileName = "mapToLoad";
+    private static LoadMap _instance;
 
     private void Awake()
     {
@@ -31,7 +32,7 @@ public class LoadEditorMap : MonoBehaviour
         asyncOperation.allowSceneActivation = false;
 
         string json = JsonConvert.SerializeObject(mapInfo);
-        File.WriteAllText(MapSaver.MapDataPath + "/" + _fileName, json);
+        File.WriteAllText(MapSaver.MapDataPath + "/" + _fileName + ".json", json);
 
         yield return asyncOperation.isDone;
 

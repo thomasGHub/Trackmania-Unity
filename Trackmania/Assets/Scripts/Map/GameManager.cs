@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     [Header("LoadMap")]
     [SerializeField] private Transform _parentTransform;
     [SerializeField] private RoadData _roadData;
-    [SerializeField] private string _nameOfMapFile;
+    [SerializeField] private string _nameOfMapFile = "mapToPlay";
 
     private Player _player;
     private PlayerMap _playerMap;
@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        _roadPoints = _mapLoader.LoadMap(_nameOfMapFile, _parentTransform);
+        _roadPoints = _mapLoader.LoadMap(_nameOfMapFile , _parentTransform);
         _parentTransform.localScale = _scaleMap;
 
         Transform startPoint = _roadPoints.Start.transform;

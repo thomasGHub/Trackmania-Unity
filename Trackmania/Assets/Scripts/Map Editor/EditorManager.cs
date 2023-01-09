@@ -41,7 +41,7 @@ public class EditorManager : MonoBehaviour
     #region JSON
     [SerializeField] private RoadData _roadData;
     private string _mapName;
-    private string _mapToLoadFile = "mapToLoad";
+    private string _mapToLoadFile = "mapToLoad.json";
     #endregion
 
     private bool _waitingForName = false;
@@ -300,7 +300,7 @@ public class EditorManager : MonoBehaviour
         }        if (_currentMapInfo == null)            MapSaver.CreateNewMap(listOfBlock, _inputField.text);        else
         {
             listOfBlock.ID = _currentMapInfo.ID;
-            MapSaver.SaveMap(listOfBlock, _currentMapInfo);
+            MapSaver.SaveMap(listOfBlock, _currentMapInfo, true);
         }
             
     }

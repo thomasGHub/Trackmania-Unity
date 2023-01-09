@@ -5,14 +5,16 @@ using UnityEngine;
 
 public class MapUIBlockCreator : MonoBehaviour
 {
+    [Header("Instantiate Map UI")]
     [SerializeField] protected Transform _parentTransform;
     [SerializeField] protected GameObject _mapDataPrefab;
+
 
     [SerializeField, Range(0, 500)] protected int _spaceBetweenBlock;
 
     protected List<MapInfo> _allMapInfo = new List<MapInfo>();
 
-    protected void Init()
+    protected virtual void Init()
     {
         foreach(MapInfo mapInfo in _allMapInfo)
         {
