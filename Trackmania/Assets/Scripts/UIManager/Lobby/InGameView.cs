@@ -30,23 +30,35 @@ public class InGameView : View
     {
         DestroyLeaderboard();
 
-        List<int> scoresInt = new List<int>();
-        for (int i = 0; i < PlayerNetwork.localPlayer.currentMatch.playersScores.Count; i++)
-        {
-            scoresInt.Add(TempsToInt(PlayerNetwork.localPlayer.currentMatch.playersScores[i]));
-        }
+        //List<int> scoresInt = new List<int>();
+        //for (int i = 0; i < PlayerNetwork.localPlayer.currentMatch.playersScores.Count; i++)
+        //{
+        //    scoresInt.Add(TempsToInt(PlayerNetwork.localPlayer.currentMatch.playersScores[i]));
+        //}
 
-        for (int i = 0; i < scoresInt.Count; i++)
+        for (int i = 0; i < PlayerNetwork.localPlayer.currentMatch.playersScores.Count; i++)
         {
             GameObject lbActuel = Instantiate(lbPrefab, lbParent);
             lbActuel.GetComponent<UILeaderboardEntry>().nameText.text = PlayerNetwork.localPlayer.currentMatch.players[i].playerName;
             lbActuel.GetComponent<UILeaderboardEntry>().placeText.text = PlayerNetwork.localPlayer.currentMatch.players[i].playerIndex.ToString();
             lbActuel.GetComponent<UILeaderboardEntry>().valueText.text = TempsToString( PlayerNetwork.localPlayer.currentMatch.playersScores[i] );
 
+            for (int ii = 0; ii < PlayerNetwork.localPlayer.currentMatch.playersScores.Count; ii++)
+            {
+                if (PlayerNetwork.localPlayer.currentMatch.players[ii].playerIndex == i+1)
+                {
+                    //do
+                }
+            }
+
 
             //lbs.Add(lbActuel);
         }
         
+
+
+
+
 
 
     }

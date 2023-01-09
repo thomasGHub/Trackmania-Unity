@@ -5,7 +5,8 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Car;
-
+using Newtonsoft.Json;
+using System.IO;
 
 namespace MirrorBasics {
 
@@ -56,7 +57,7 @@ namespace MirrorBasics {
             if (isLocalPlayer)
             {
                 localPlayer = this;
-                GameManager.SetPlayerReference(gameObject.GetComponent<Player>());
+                //GameManager.SetPlayerReference(gameObject.GetComponent<Player>());
                 CmdSendName(PlayerPrefs.GetString("UserName"));
             }
             else
@@ -98,7 +99,11 @@ namespace MirrorBasics {
         void CmdHostGame(string _matchID, bool publicMatch)
         {
             matchID = _matchID;
-            if (MatchMaker.instance.HostGame(_matchID, this, publicMatch, out playerIndex))
+            string path = MapSaver.MapDataPath + "/" + "mapToLoad" + ".json";
+            string json = File.ReadAllText(path);
+            MapInfo mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
+
+            if (MatchMaker.instance.HostGame(_matchID, mapInfo.ID, this, publicMatch, out playerIndex))
             {
                 Debug.Log($"<color=green>Game hosted successfully</color>");
                 networkMatch.matchId = _matchID.ToGuid();
@@ -138,6 +143,7 @@ namespace MirrorBasics {
             {
                 Debug.Log($"<color=green>Game Joined successfully</color>");
                 networkMatch.matchId = _matchID.ToGuid();
+
                 TargetJoinGame(true, _matchID, playerIndex);
 
                 //Host
@@ -160,7 +166,55 @@ namespace MirrorBasics {
             matchID = _matchID;
             Debug.Log($"MatchID: {matchID} == {_matchID}");
             UILobby.instance.JoinSuccess(success, _matchID);
+
+            string mapId = currentMatch.mapId;
+            string path = MapSaver.MapDataPath + MapSaver.Online + "/" + mapId;
+            if (Directory.Exists(path))
+            {
+                string json = File.ReadAllText(path + "/" + MapSaver.MapInfo);
+                path = MapSaver.MapDataPath + "/" + "mapToPlay.json";
+
+                File.WriteAllText(path, json);
+                return;
+            }
+
+            path = MapSaver.MapDataPath + MapSaver.Local + "/" + mapId;
+            if (Directory.Exists(path))
+            {
+                string json = File.ReadAllText(path + "/" + MapSaver.MapInfo);
+                path = MapSaver.MapDataPath + "/" + "mapToPlay.json";
+
+                File.WriteAllText(path, json);
+                return;
+            }
+
+            Debug.LogWarning("Start Get Online Map");
+            DownloadingData downloadingMapInfo = new DownloadingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapInfo, new FilterID(mapId), new Projection() );
+            DownloadingData downloadingMapData = new DownloadingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapData, new FilterID(mapId), new MapDataProjection());
+            RequestManager.DownloadingAllData(downloadingMapInfo, ReceiveMapInfo);
+            RequestManager.DownloadingSingleData(downloadingMapData, ReceiveMapData);
+
         }
+
+
+        public void ReceiveMapInfo(MapInfo[] mapInfos)
+        {
+            MapInfo mapInfo = mapInfos[0];
+            string path = MapSaver.MapDataPath + MapSaver.Online + "/" + mapInfo.ID;
+            Directory.CreateDirectory(path);
+            string json = JsonConvert.SerializeObject(mapInfo);
+            File.WriteAllText(path + "/" + MapSaver.MapInfo, json);
+        }
+
+        public void ReceiveMapData(ListJsonData listJsonData)
+        {
+            string path = MapSaver.MapDataPath + MapSaver.Online + "/" + listJsonData.ID;
+            Directory.CreateDirectory(path);
+            string json = JsonConvert.SerializeObject(listJsonData);
+            File.WriteAllText(path + "/" + MapSaver.MapBlocks, json);
+        }
+
+
 
         [Command]
         public void CmdGetRooms()
@@ -308,16 +362,12 @@ namespace MirrorBasics {
         void RpcBeginGame()
         {
             Debug.Log($"MatchID: {matchID} | Beginning | Index { playerIndex}");
-            //Additively load game scene //SceneManager.LoadScene ("Online", LoadSceneMode.Additive); //SceneManager.SetActiveScene(SceneManager.GetSceneByName("Online"));
 
             if (isLocalPlayer)
             {
-                gameObject.GetComponent<Player>().RaceStart();
                 ViewManager.Show<NoUI>();
 
-                Vector3 destination = GameManager.StartPosition.position;
-                Quaternion rotation = Quaternion.identity; //A venir Bryan
-                gameObject.GetComponent<NetworkTransformChild>().OnTeleport(destination, rotation);
+                StartCoroutine(LoadMapScence());
 
             }
             else
@@ -326,6 +376,18 @@ namespace MirrorBasics {
 
             //NetworkManager.singleton.ServerChangeScene("Online");
         }
+
+
+        private IEnumerator LoadMapScence()
+        {
+            AsyncOperation asyncOperation =  SceneManager.LoadSceneAsync("GameMap", LoadSceneMode.Additive);
+            yield return asyncOperation.isDone;
+            yield return new WaitForSeconds(1);
+            GameManager.LanchRace();
+
+        }
+
+
 
 
         public void OnLeaveNetwork()

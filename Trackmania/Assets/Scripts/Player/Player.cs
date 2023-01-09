@@ -38,7 +38,7 @@ public class Player : MonoBehaviour
 
     public void RaceStart()
     {
-        gameObject.GetComponent<NetworkTransformChild>().OnTeleport(GameManager.StartPosition.position, Quaternion.identity);
+        //gameObject.GetComponent<NetworkTransformChild>().OnTeleport(GameManager.StartPosition.position, Quaternion.identity);
         _carController.RaceStart();
         _speedoMeter.Launch();
         _timerCount.Launch();
@@ -64,7 +64,7 @@ public class Player : MonoBehaviour
         ghost.RestartData();
         RaceStop();
 
-        gameObject.GetComponent<NetworkTransformChild>().OnTeleport(GameManager.StartPosition.position, Quaternion.identity);
+        //gameObject.GetComponent<NetworkTransformChild>().OnTeleport(GameManager.StartPosition.position, Quaternion.identity);
         _carController.gameObject.transform.position = GameManager.StartPosition.position;
         _carController.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
 

@@ -21,7 +21,7 @@ public class MedalsScore
         silverMedalScore = 80;
         goldMedalScore = 60;
         authorMedalScore = 40;
-}
+    }
 
 }
 

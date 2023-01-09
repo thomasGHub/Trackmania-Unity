@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using MirrorBasics;
+using Mirror;
 
 public struct RoadPoints
 {
@@ -55,7 +56,6 @@ public class GameManager : MonoBehaviour
         _instance = this;
 
         _playerMap = new PlayerMap();
-        _playerMap.PlayerUX.StartRace.performed += LanchRace;
 
         _mapLoader = new MapLoader(_roadData);
     }
@@ -78,7 +78,9 @@ public class GameManager : MonoBehaviour
         Transform startPoint = _roadPoints.Start.transform;
         //GameObject _playerCar = GameObject.Instantiate(_playerPrefab, startPoint.position, startPoint.rotation);
         //Debug.Log("[Car]" +PlayerNetwork.localPlayer);
-        //_player = PlayerNetwork.localPlayer.gameObject.GetComponent<Player>();//_playerCar.GetComponent<Player>();
+        _player = PlayerNetwork.localPlayer.gameObject.GetComponent<Player>();//_playerCar.GetComponent<Player>();
+        _player.gameObject.GetComponent<NetworkTransformChild>().OnTeleport(startPoint.position, startPoint.rotation);
+
 
         _roadToFunction.Add(_roadData.CheckPoint.GetType(), CheckPointPassed);
         _roadToFunction.Add(_roadData.Goal.GetType(), EndPointPassed);
@@ -86,19 +88,20 @@ public class GameManager : MonoBehaviour
         Debug.Log(_roadData.Goal.GetType());
     }
 
-    private void LanchRace(InputAction.CallbackContext context)
+    public static  void LanchRace()
     {
-        foreach(Road checkPoint in _roadPoints.CheckPoints)
+
+        foreach(Road checkPoint in _instance._roadPoints.CheckPoints)
         {
-            _checkPointPassed[checkPoint] = false;
+            _instance._checkPointPassed[checkPoint] = false;
         }
 
-        _player.RaceStart();
+        _instance._player.RaceStart();
         
-        if (ghost.loadGhost(ghost._pathMapToLoad) != null)
+        if (_instance.ghost.loadGhost(_instance.ghost._pathMapToLoad) != null)
         {
-            Transform startPoint = _roadPoints.Start.transform;
-            Instantiate(_ghostPrefab, startPoint.position, startPoint.rotation);
+            Transform startPoint = _instance._roadPoints.Start.transform;
+            Instantiate(_instance._ghostPrefab, startPoint.position, startPoint.rotation);
         }
     }
 
