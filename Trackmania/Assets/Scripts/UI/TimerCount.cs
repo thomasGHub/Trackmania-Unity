@@ -5,8 +5,23 @@ using UnityEngine;
 using Mirror;
 using MirrorBasics;
 
+
+public class Temps
+{
+    public int _minutes;
+    public int _seconds;
+    public int _miliseconds;
+}
+
+
+
 public class TimerCount : MonoBehaviour
 {
+
+
+
+
+
     [SerializeField] private TextMeshProUGUI _minutesTextMesh;
     [SerializeField] private TextMeshProUGUI _secondsTextMesh;
     [SerializeField] private TextMeshProUGUI _milisecondsTextMesh;
@@ -75,5 +90,17 @@ public class TimerCount : MonoBehaviour
     public void Stop()
     {
         _isRunning = false;
+    }
+
+    public Temps EndCourse()
+    {
+        Temps temps = new Temps();
+        temps._miliseconds = _miliseconds;
+        temps._minutes = _minutes;
+        temps._seconds = _seconds;
+
+        return temps;
+
+
     }
 }

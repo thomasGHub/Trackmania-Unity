@@ -123,8 +123,11 @@ public class GameManager : MonoBehaviour
             if (!value)
                 return;
         }
-
         _player.RaceStop();
+
+        Temps temps = _player.RaceFinish();
+
+        
     }
 
     public static void SetPlayerReference(Player __player )

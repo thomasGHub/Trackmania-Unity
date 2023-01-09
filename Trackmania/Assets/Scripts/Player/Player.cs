@@ -103,6 +103,13 @@ public class Player : MonoBehaviour
         RaceRestart();
     }
 
+
+    public Temps RaceFinish()
+    {
+        return _timerCount.EndCourse();
+    }
+
+
     public void SetCamPriorityNotLocalPlayer()
     {
         for (int i = 0; i <_allCameras.Length; i++)
@@ -111,12 +118,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void DisableNotLocalPlayer()
+    public void DisableNotLocalPlayerCar()
     {
-        Destroy(_carController);
-        //_carController.enabled = false;
+        _carController.isLocalPlayer = false;
 
     }
+
+ 
 
 
 

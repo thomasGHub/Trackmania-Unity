@@ -77,7 +77,7 @@ namespace Car
         private float _scaleValue = 100f; // Value that divide the car Velocity to pass it in 100 Unit per hour
         private float _multiplicatorValue = 1000f; // Value that multiply the speed, turn and friction value
 
-        private Vector3 _carVelocity;
+        [SerializeField] private Vector3 _carVelocity;
         private float _carSpeed; // limitate the call "_carVelocity.magnitude"
 
         private Ghost _ghost;
@@ -90,6 +90,8 @@ namespace Car
         private float _turnInput;
 
         #endregion
+
+        public bool isLocalPlayer = true;
 
         private void Awake()
         {
@@ -105,7 +107,7 @@ namespace Car
             for (int index = 0; index < _skids.Length; index++)
                 _skids[index].trailRenderer.startWidth = _skidWidth;
 
-            if (!PlayerNetwork.localPlayer.isLocalPlayer)
+            if (!isLocalPlayer)
             {
                 return;
             }
@@ -136,16 +138,24 @@ namespace Car
 
         private void FixedUpdate()
         {
-            if (!PlayerNetwork.localPlayer.isLocalPlayer)
-            {
-                return;
-            }
+            
 
             RaycastHit hit;
             Physics.Raycast(_groundRayPoint.position, -transform.up, out hit, _maxRayLenght);
 
             _carVelocity = transform.InverseTransformDirection(_rigidbody.velocity);
             _carSpeed = _carVelocity.magnitude;
+
+            if (hit.collider)  // for network
+            {
+                _grounded = true;
+            }
+
+            if (!isLocalPlayer)
+            {
+                Debug.Log(_carVelocity);
+                return;
+            }
 
             if (hit.collider)
             {
@@ -226,7 +236,7 @@ namespace Car
 
         private void TireVisual()
         {
-            if (!PlayerNetwork.localPlayer.isLocalPlayer)
+            if (!isLocalPlayer)
             {
                 return;
             }
@@ -308,7 +318,7 @@ namespace Car
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!PlayerNetwork.localPlayer.isLocalPlayer)
+            if (!isLocalPlayer)
             {
                 return;
             }

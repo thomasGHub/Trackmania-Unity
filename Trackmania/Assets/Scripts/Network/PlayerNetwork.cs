@@ -60,7 +60,7 @@ namespace MirrorBasics {
 
                 gameObject.GetComponent<Player>().SetCamPriorityNotLocalPlayer();
                 gameObject.GetComponent<Player>().enabled = false;
-                gameObject.GetComponent<Player>().DisableNotLocalPlayer();
+                gameObject.GetComponent<Player>().DisableNotLocalPlayerCar();
 
 
             }
