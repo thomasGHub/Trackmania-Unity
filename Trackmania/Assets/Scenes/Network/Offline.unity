@@ -959,7 +959,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2b5561e66506e94fb239c108cc1a5f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverIP: 127
+  serverIP: 192.168.1.77
   networkManager: {fileID: 1439585979}
   SoloButton: {fileID: 454096911}
   OnlineButton: {fileID: 869690863}

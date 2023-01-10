@@ -99,7 +99,7 @@ namespace MirrorBasics {
         void CmdHostGame(string _matchID, bool publicMatch)
         {
             matchID = _matchID;
-            string path = MapSaver.MapDataPath + "/" + "mapToLoad" + ".json";
+            string path = MapSaver.MapDataPath + "/" + "mapToPlay" + ".json";
             string json = File.ReadAllText(path);
             MapInfo mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
 
@@ -166,36 +166,47 @@ namespace MirrorBasics {
             matchID = _matchID;
             Debug.Log($"MatchID: {matchID} == {_matchID}");
             UILobby.instance.JoinSuccess(success, _matchID);
-
-            string mapId = currentMatch.mapId;
-            string path = MapSaver.MapDataPath + MapSaver.Online + "/" + mapId;
-            if (Directory.Exists(path))
-            {
-                string json = File.ReadAllText(path + "/" + MapSaver.MapInfo);
-                path = MapSaver.MapDataPath + "/" + "mapToPlay.json";
-
-                File.WriteAllText(path, json);
-                return;
-            }
-
-            path = MapSaver.MapDataPath + MapSaver.Local + "/" + mapId;
-            if (Directory.Exists(path))
-            {
-                string json = File.ReadAllText(path + "/" + MapSaver.MapInfo);
-                path = MapSaver.MapDataPath + "/" + "mapToPlay.json";
-
-                File.WriteAllText(path, json);
-                return;
-            }
-
-            Debug.LogWarning("Start Get Online Map");
-            DownloadingData downloadingMapInfo = new DownloadingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapInfo, new FilterID(mapId), new Projection() );
-            DownloadingData downloadingMapData = new DownloadingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapData, new FilterID(mapId), new MapDataProjection());
-            RequestManager.DownloadingAllData(downloadingMapInfo, ReceiveMapInfo);
-            RequestManager.DownloadingSingleData(downloadingMapData, ReceiveMapData);
+            StartCoroutine( GetMap());
 
         }
 
+        private IEnumerator GetMap()
+        {
+            yield return new WaitForSeconds(0.5f); ;
+
+            string mapId = currentMatch.mapId; //BUG NULL
+            string path = MapSaver.MapDataPath + MapSaver.Online + "/" + mapId;
+            Debug.LogWarning("Start Get Online Map01" + mapId);
+            if (Directory.Exists(path))
+            {
+                string json = File.ReadAllText(path + "/" + MapSaver.MapInfo);
+                path = MapSaver.MapDataPath + "/" + "mapToPlay.json";
+
+                File.WriteAllText(path, json);
+            }
+            else
+            {
+                path = MapSaver.MapDataPath + MapSaver.Local + "/" + mapId;
+                if (Directory.Exists(path))
+                {
+                    string json = File.ReadAllText(path + "/" + MapSaver.MapInfo);
+                    path = MapSaver.MapDataPath + "/" + "mapToPlay.json";
+
+                    File.WriteAllText(path, json);
+
+                }
+                else
+                {
+                    Debug.LogWarning("Start Get Online Map");
+                    DownloadingData downloadingMapInfo = new DownloadingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapInfo, new FilterID(mapId), new Projection());
+                    DownloadingData downloadingMapData = new DownloadingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapData, new FilterID(mapId), new MapDataProjection());
+                    RequestManager.DownloadingAllData(downloadingMapInfo, ReceiveMapInfo); // Add request manager to scene
+                    RequestManager.DownloadingSingleData(downloadingMapData, ReceiveMapData);
+                }
+                
+            }
+            
+        }
 
         public void ReceiveMapInfo(MapInfo[] mapInfos)
         {
