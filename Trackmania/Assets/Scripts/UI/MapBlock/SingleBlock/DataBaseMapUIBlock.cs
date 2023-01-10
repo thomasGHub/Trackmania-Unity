@@ -58,9 +58,10 @@ public class DataBaseMapUIBlock : MapUiBlock
         DisableDownload();
     }
 
-    private void GetData(ListJsonData listBlockData)
+    private void GetData(string data)
     {
-        MapSaver.SaveOnlineMap(listBlockData, _mapInfo);
+        SingleListJsonData myDeserializedClass = JsonConvert.DeserializeObject<SingleListJsonData>(data);
+        MapSaver.SaveOnlineMap(myDeserializedClass.ListJsonData, _mapInfo);
         DisableDownload();
     }
 

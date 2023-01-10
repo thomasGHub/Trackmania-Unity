@@ -76,11 +76,9 @@ public class GameManager : MonoBehaviour
         _parentTransform.localScale = _scaleMap;
 
         Transform startPoint = _roadPoints.Start.transform;
-        //GameObject _playerCar = GameObject.Instantiate(_playerPrefab, startPoint.position, startPoint.rotation);
-        //Debug.Log("[Car]" +PlayerNetwork.localPlayer);
+
         _player = PlayerNetwork.localPlayer.gameObject.GetComponent<Player>();//_playerCar.GetComponent<Player>();
         _player.gameObject.GetComponent<NetworkTransformChild>().OnTeleport(startPoint.position, startPoint.rotation);
-
 
         _roadToFunction.Add(_roadData.CheckPoint.GetType(), CheckPointPassed);
         _roadToFunction.Add(_roadData.Goal.GetType(), EndPointPassed);

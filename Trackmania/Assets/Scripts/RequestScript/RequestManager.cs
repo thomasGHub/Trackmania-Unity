@@ -140,7 +140,7 @@ public class RequestManager : MonoBehaviour
         }
     }
 
-    public static IEnumerator DownloadingSingleData(DownloadingData downloadingData, System.Action<ListJsonData> callback = null)
+    public static IEnumerator DownloadingSingleData(DownloadingData downloadingData, System.Action<string> callback = null)
     {
         if (_instance._popUp!=null)
         {
@@ -172,9 +172,7 @@ public class RequestManager : MonoBehaviour
                 Debug.Log("Succes");
                 Debug.Log("Request : " + request.downloadHandler.text);
 
-                SingleElement myDeserializedClass = JsonConvert.DeserializeObject<SingleElement>(request.downloadHandler.text);
-                Debug.Log("MapInfo : " + myDeserializedClass._listJsonData.ID);
-                callback(myDeserializedClass._listJsonData);
+                callback(request.downloadHandler.text);
             }
         }
 

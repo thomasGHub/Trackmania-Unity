@@ -38,10 +38,16 @@ public class MapInfo
     }
 }
 
-public class SingleElement
+public class SingleListJsonData
 {
     [JsonProperty("document")]
-    public ListJsonData _listJsonData { get; set; }
+    public ListJsonData ListJsonData { get; set; }
+}
+
+public class SingleMapInfo
+{
+    [JsonProperty("document")]
+    public MapInfo MapInfo { get; set; }
 }
 
 public class MultipleElement

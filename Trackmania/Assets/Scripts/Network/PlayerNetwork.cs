@@ -203,60 +203,37 @@ namespace MirrorBasics
             yield return new WaitForSeconds(0.5f); ;
 
             string mapId = currentMatch.mapId;
-            string path = MapSaver.MapDataPath + MapSaver.Online + "/" + mapId;
+
+            string path = MapSaver.GetMapDirectory(mapId);
             Debug.LogWarning("Start Get Online Map01 " + mapId);
-            if (Directory.Exists(path))
+
+            if(path != null)
             {
                 string json = File.ReadAllText(path + "/" + MapSaver.MapInfo);
-                path = MapSaver.MapDataPath + "/" + "mapToPlay.json";
-
-                File.WriteAllText(path, json);
+                MapInfo mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
+                MapSaver.SaveMapToPlay(mapInfo);
             }
             else
             {
-                path = MapSaver.MapDataPath + MapSaver.Local + "/" + mapId;
-                if (Directory.Exists(path))
-                {
-                    string json = File.ReadAllText(path + "/" + MapSaver.MapInfo);
-                    path = MapSaver.MapDataPath + "/" + "mapToPlay.json";
-
-                    File.WriteAllText(path, json);
-
-                }
-                else
-                {
-                    Debug.LogWarning("Start Get Online Map");
-                    DownloadingData downloadingMapInfo = new DownloadingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapInfo, new FilterID(mapId), new Projection());
-                    DownloadingData downloadingMapData = new DownloadingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapData, new FilterID(mapId), new MapDataProjection());
-                    StartCoroutine(RequestManager.DownloadingAllData(downloadingMapInfo, ReceiveMapInfo));
-                    StartCoroutine(RequestManager.DownloadingSingleData(downloadingMapData, ReceiveMapData));
-                }
-
+                Debug.LogWarning("Start Get Online Map");
+                DownloadingData downloadingMapInfo = new DownloadingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapInfo, new FilterID(mapId), new Projection());
+                DownloadingData downloadingMapData = new DownloadingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapData, new FilterID(mapId), new MapDataProjection());
+                StartCoroutine(RequestManager.DownloadingSingleData(downloadingMapInfo, ReceiveMapInfo));
+                StartCoroutine(RequestManager.DownloadingSingleData(downloadingMapData, ReceiveMapData));
             }
-
         }
 
-        public void ReceiveMapInfo(MapInfo[] mapInfos)
+        public void ReceiveMapInfo(string data)
         {
-            MapInfo mapInfo = mapInfos[0];
-            Debug.Log("MapInfo : " + mapInfo.ID);
-            string path = MapSaver.MapDataPath + MapSaver.Online + "/" + mapInfo.ID;
-            Directory.CreateDirectory(path);
-            string json = JsonConvert.SerializeObject(mapInfo);
-            File.WriteAllText(path + "/" + MapSaver.MapInfo, json);
-
-            path = MapSaver.MapDataPath + "/" + "mapToPlay.json";
-
-            File.WriteAllText(path, json);
+            SingleMapInfo myDeserializedClass = JsonConvert.DeserializeObject<SingleMapInfo>(data);
+            MapSaver.SaveMapInfo(myDeserializedClass.MapInfo, false);
+            MapSaver.SaveMapToPlay(myDeserializedClass.MapInfo);
         }
 
-        public void ReceiveMapData(ListJsonData listJsonData)
+        public void ReceiveMapData(string data)
         {
-            Debug.Log("MapData : " + listJsonData.ID);
-            string path = MapSaver.MapDataPath + MapSaver.Online + "/" + listJsonData.ID;
-            Directory.CreateDirectory(path);
-            string json = JsonConvert.SerializeObject(listJsonData);
-            File.WriteAllText(path + "/" + MapSaver.MapBlocks, json);
+            SingleListJsonData myDeserializedClass = JsonConvert.DeserializeObject<SingleListJsonData>(data);
+            MapSaver.SaveMapData(myDeserializedClass.ListJsonData, false);
         }
 
 
