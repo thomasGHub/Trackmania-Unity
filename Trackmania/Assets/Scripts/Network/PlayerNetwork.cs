@@ -116,6 +116,11 @@ namespace MirrorBasics {
         [TargetRpc]
         void TargetHostGame(bool success, string _matchID, int _playerIndex)
         {
+            string path = MapSaver.MapDataPath + "/" + "mapToPlay" + ".json";
+            string json = File.ReadAllText(path);
+            MapInfo mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
+            CmdSendMapID(mapInfo.ID);
+
             playerIndex = _playerIndex;
             matchID = _matchID;
             Debug.Log($"MatchID: {matchID} == {_matchID}");
@@ -160,23 +165,12 @@ namespace MirrorBasics {
         [TargetRpc]
         void TargetJoinGame(bool success, string _matchID, int _playerIndex)
         {
-            Debug.Log("playerIndex_________________" + playerIndex);
-            if (playerIndex==1)
-            {
-                string path = MapSaver.MapDataPath + "/" + "mapToPlay" + ".json";
-                string json = File.ReadAllText(path);
-                MapInfo mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
-
-                Debug.Log("Client_________________" + mapInfo.ID);
-                CmdSendMapID(mapInfo.ID);
-            }
-
-
             playerIndex = _playerIndex;
             matchID = _matchID;
             Debug.Log($"MatchID: {matchID} === {_matchID}");
             UILobby.instance.JoinSuccess(success, _matchID);
-            StartCoroutine( GetMap());
+
+            CmdGetMapId();
         }
 
 
@@ -188,7 +182,19 @@ namespace MirrorBasics {
             currentMatch.mapId = _mapID;
         }
 
+        [Command]
+        public void CmdGetMapId()
+        {
+            RpcGetMapId(currentMatch.mapId);
+        }
 
+
+        [TargetRpc]
+        public void RpcGetMapId(string _mapId)
+        {
+            currentMatch.mapId = _mapId;
+            StartCoroutine(GetMap());
+        }
 
 
         private IEnumerator GetMap()
