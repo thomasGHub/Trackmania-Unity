@@ -270,7 +270,7 @@ public class EditorManager : MonoBehaviour
 
     public void preSaveMap()
     {
-        if(_currentMapInfo != null)
+        if(!(_currentMapInfo is null))
         {
             saveMap();
             return;
@@ -297,7 +297,7 @@ public class EditorManager : MonoBehaviour
                 saveObject.rotation = go.transform.rotation;*/
                 listOfBlock.blocks.Add(saveObject);
             }
-        }        if (_currentMapInfo == null)            MapSaver.CreateNewMap(listOfBlock, _inputField.text);        else
+        }        if (_currentMapInfo is null)            MapSaver.CreateNewMap(listOfBlock, _inputField.text);        else
         {
             listOfBlock.ID = _currentMapInfo.ID;
             MapSaver.SaveMap(listOfBlock, _currentMapInfo, true);
