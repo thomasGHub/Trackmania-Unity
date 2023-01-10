@@ -8,7 +8,8 @@ using Car;
 using Newtonsoft.Json;
 using System.IO;
 
-namespace MirrorBasics {
+namespace MirrorBasics
+{
 
     [RequireComponent(typeof(NetworkMatch))]
     public class PlayerNetwork : NetworkBehaviour
@@ -203,7 +204,7 @@ namespace MirrorBasics {
 
             string mapId = currentMatch.mapId; //BUG NULL
             string path = MapSaver.MapDataPath + MapSaver.Online + "/" + mapId;
-            Debug.LogWarning("Start Get Online Map01" + mapId);
+            Debug.LogWarning("Start Get Online Map01 " + mapId);
             if (Directory.Exists(path))
             {
                 string json = File.ReadAllText(path + "/" + MapSaver.MapInfo);
@@ -227,25 +228,31 @@ namespace MirrorBasics {
                     Debug.LogWarning("Start Get Online Map");
                     DownloadingData downloadingMapInfo = new DownloadingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapInfo, new FilterID(mapId), new Projection());
                     DownloadingData downloadingMapData = new DownloadingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapData, new FilterID(mapId), new MapDataProjection());
-                    RequestManager.DownloadingAllData(downloadingMapInfo, ReceiveMapInfo); // Add request manager to scene
-                    RequestManager.DownloadingSingleData(downloadingMapData, ReceiveMapData);
+                    StartCoroutine(RequestManager.DownloadingAllData(downloadingMapInfo, ReceiveMapInfo)); // Add request manager to scene
+                    StartCoroutine(RequestManager.DownloadingSingleData(downloadingMapData, ReceiveMapData));
                 }
-                
+
             }
-            
+
         }
 
         public void ReceiveMapInfo(MapInfo[] mapInfos)
         {
             MapInfo mapInfo = mapInfos[0];
+            Debug.Log("MapInfo : " + mapInfo.ID);
             string path = MapSaver.MapDataPath + MapSaver.Online + "/" + mapInfo.ID;
             Directory.CreateDirectory(path);
             string json = JsonConvert.SerializeObject(mapInfo);
             File.WriteAllText(path + "/" + MapSaver.MapInfo, json);
+
+            path = MapSaver.MapDataPath + "/" + "mapToPlay.json";
+
+            File.WriteAllText(path, json);
         }
 
         public void ReceiveMapData(ListJsonData listJsonData)
         {
+            Debug.Log("MapData : " + listJsonData.ID);
             string path = MapSaver.MapDataPath + MapSaver.Online + "/" + listJsonData.ID;
             Directory.CreateDirectory(path);
             string json = JsonConvert.SerializeObject(listJsonData);
@@ -399,7 +406,7 @@ namespace MirrorBasics {
         [ClientRpc]
         void RpcBeginGame()
         {
-            Debug.Log($"MatchID: {matchID} | Beginning | Index { playerIndex}");
+            Debug.Log($"MatchID: {matchID} | Beginning | Index {playerIndex}");
 
             if (isLocalPlayer)
             {
@@ -418,7 +425,7 @@ namespace MirrorBasics {
 
         private IEnumerator LoadMapScence()
         {
-            AsyncOperation asyncOperation =  SceneManager.LoadSceneAsync("GameMap", LoadSceneMode.Additive);
+            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("GameMap", LoadSceneMode.Additive);
             yield return asyncOperation.isDone;
             yield return new WaitForSeconds(1);
             GameManager.LanchRace();
@@ -456,7 +463,7 @@ namespace MirrorBasics {
             currentMatch.playersScores[playerIndex] = score;
 
 
-            RpcReceiveScore(userName, rank ,score);
+            RpcReceiveScore(userName, rank, score);
         }
 
         [ClientRpc]

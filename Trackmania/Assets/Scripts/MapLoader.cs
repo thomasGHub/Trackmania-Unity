@@ -39,7 +39,7 @@ public class MapLoader
 
         string json = File.ReadAllText(path);
         mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
-        File.Delete(path);
+        //File.Delete(path);
 
         ListBlockData listBlockData = MapSaver.GetMapBlock(mapInfo.ID);
 
