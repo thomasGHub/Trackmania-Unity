@@ -159,20 +159,21 @@ namespace MirrorBasics {
         [TargetRpc]
         void TargetJoinGame(bool success, string _matchID, int _playerIndex)
         {
+            Debug.Log("playerIndex_________________" + playerIndex);
             if (playerIndex==1)
             {
                 string path = MapSaver.MapDataPath + "/" + "mapToPlay" + ".json";
                 string json = File.ReadAllText(path);
                 MapInfo mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
 
-                Debug.Log("Client" + mapInfo.ID);
+                Debug.Log("Client_________________" + mapInfo.ID);
                 CmdSendMapID(mapInfo.ID);
             }
 
 
             playerIndex = _playerIndex;
             matchID = _matchID;
-            Debug.Log($"MatchID: {matchID} == {_matchID}");
+            Debug.Log($"MatchID: {matchID} === {_matchID}");
             UILobby.instance.JoinSuccess(success, _matchID);
             StartCoroutine( GetMap());
         }
@@ -181,7 +182,7 @@ namespace MirrorBasics {
         [Command]
         void CmdSendMapID(string _mapID)
         {
-            Debug.Log("Server" + _mapID);
+            Debug.Log("Server_________________________________" + _mapID);
 
             currentMatch.mapId = _mapID;
         }
