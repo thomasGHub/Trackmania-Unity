@@ -99,11 +99,8 @@ namespace MirrorBasics {
         void CmdHostGame(string _matchID, bool publicMatch)
         {
             matchID = _matchID;
-            string path = MapSaver.MapDataPath + "/" + "mapToPlay" + ".json";
-            string json = File.ReadAllText(path);
-            MapInfo mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
 
-            if (MatchMaker.instance.HostGame(_matchID, mapInfo.ID, this, publicMatch, out playerIndex))
+            if (MatchMaker.instance.HostGame(_matchID, "", this, publicMatch, out playerIndex))
             {
                 Debug.Log($"<color=green>Game hosted successfully</color>");
                 networkMatch.matchId = _matchID.ToGuid();
@@ -162,13 +159,35 @@ namespace MirrorBasics {
         [TargetRpc]
         void TargetJoinGame(bool success, string _matchID, int _playerIndex)
         {
+            if (playerIndex==1)
+            {
+                string path = MapSaver.MapDataPath + "/" + "mapToPlay" + ".json";
+                string json = File.ReadAllText(path);
+                MapInfo mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
+
+                Debug.Log("Client" + mapInfo.ID);
+                CmdSendMapID(mapInfo.ID);
+            }
+
+
             playerIndex = _playerIndex;
             matchID = _matchID;
             Debug.Log($"MatchID: {matchID} == {_matchID}");
             UILobby.instance.JoinSuccess(success, _matchID);
             StartCoroutine( GetMap());
-
         }
+
+
+        [Command]
+        void CmdSendMapID(string _mapID)
+        {
+            Debug.Log("Server" + _mapID);
+
+            currentMatch.mapId = _mapID;
+        }
+
+
+
 
         private IEnumerator GetMap()
         {
