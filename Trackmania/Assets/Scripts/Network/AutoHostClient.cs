@@ -41,15 +41,15 @@ namespace MirrorBasics {
             OnlineButton.onClick.AddListener(() => networkManager.networkAddress = serverIP) ;
             LanButton.onClick.AddListener(() => networkManager.networkAddress = GetLocalIPv4());
 
-            OnlinePlay.onClick.AddListener(() => networkManager.StartHost());
-            LanPlay.onClick.AddListener(() => StartLan());
+            OnlinePlay.onClick.AddListener(() => networkManager.StartClient());
+            LanPlay.onClick.AddListener(() => StartConnect());
 
         }
 
         
 
 
-        public void StartLan()
+        public void StartConnect()
         {
             try
             {
@@ -65,6 +65,10 @@ namespace MirrorBasics {
 
         public string GetLocalIPv4()
         {
+            Debug.Log(Dns.GetHostEntry(Dns.GetHostName())
+                .AddressList.First(
+                    f => f.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                .ToString());
             return Dns.GetHostEntry(Dns.GetHostName())
                 .AddressList.First(
                     f => f.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)

@@ -13,16 +13,18 @@ namespace MirrorBasics {
         public bool publicMatch;
         public bool inMatch;
         public bool matchFull;
+        public string mapId;
         public List<PlayerNetwork> players = new List<PlayerNetwork> ();
         public List<Temps> playersScores = new List<Temps>();
 
-        public Match (string matchID, PlayerNetwork player, bool publicMatch) {
+        public Match (string matchID,string mapId, PlayerNetwork player, bool publicMatch) {
             matchFull = false;
             inMatch = false;
             this.matchID = matchID;
+            this.mapId = mapId;
             this.publicMatch = publicMatch;
             players.Add (player);
-            //playersScores.Add(-1);
+            playersScores.Add(null);
         }
 
         public Match () { }
@@ -42,12 +44,12 @@ namespace MirrorBasics {
             //DontDestroyOnLoad(gameObject);
         }
 
-        public bool HostGame (string _matchID, PlayerNetwork _player, bool publicMatch, out int playerIndex) {
+        public bool HostGame (string _matchID, string _mapId, PlayerNetwork _player, bool publicMatch, out int playerIndex) {
             playerIndex = -1;
 
             if (!matchIDs.Contains (_matchID)) {
                 matchIDs.Add (_matchID);
-                Match match = new Match (_matchID, _player, publicMatch);
+                Match match = new Match (_matchID, _mapId, _player, publicMatch);
                 matches.Add (match);
                 Debug.Log ($"Match generated");
                 _player.currentMatch = match;
@@ -68,7 +70,7 @@ namespace MirrorBasics {
                     if (matches[i].matchID == _matchID) {
                         if (!matches[i].inMatch && !matches[i].matchFull) {
                             matches[i].players.Add (_player);
-                            //matches[i].playersScores.Add (-1);
+                            matches[i].playersScores.Add (null);
                             _player.currentMatch = matches[i];
                             playerIndex = matches[i].players.Count;
 

@@ -3,8 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
-using TMPro;
+using System.Text.RegularExpressions;
+
+using TMPro;
+
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -61,12 +63,16 @@ public class EditorManager : MonoBehaviour
     {
         if (_waitingForName)
         {
-            if (Keyboard.current[Key.Enter].wasPressedThisFrame && letterRegex.IsMatch(_inputField.text))
-            {
+            if (Keyboard.current[Key.Enter].wasPressedThisFrame && letterRegex.IsMatch(_inputField.text))
+
+            {
+
                 _mapName = _inputField.text;
                 print(_mapName);
-                saveMap();
-                _inputField.gameObject.SetActive(false);
+                saveMap();
+
+                _inputField.gameObject.SetActive(false);
+
             }
         }
 
@@ -85,12 +91,12 @@ public class EditorManager : MonoBehaviour
             if (_preview)
             {
                 _goPreview.transform.position = GetPos();
-                if(BlockOnMap(_goPreview) == true)
+                if (BlockOnMap(_goPreview) == true)
                 {
                     _goPreview.GetComponent<Road>().redBlock.SetActive(true);
-               
+
                 }
-                if(BlockOnMap(_goPreview)==false)
+                if (BlockOnMap(_goPreview) == false)
                 {
                     _goPreview.GetComponent<Road>().redBlock.SetActive(false);
                 }
@@ -100,11 +106,11 @@ public class EditorManager : MonoBehaviour
                 }
                 else if (Keyboard.current[Key.Q].wasPressedThisFrame && _height > 0)
                 {
-                    _height-=0.5f;
+                    _height -= 0.5f;
                 }
                 else if (Keyboard.current[Key.E].wasPressedThisFrame)
                 {
-                    _height+=0.5f;
+                    _height += 0.5f;
                 }
                 if (Mouse.current.leftButton.wasPressedThisFrame)
                 {
@@ -129,7 +135,7 @@ public class EditorManager : MonoBehaviour
         {
             if (_deleteMode)
             {
-                Destroy(getObjectInEditor());             
+                Destroy(getObjectInEditor());
             }
             else if (_editMode && _canBeSelected)
             {
@@ -202,7 +208,8 @@ public class EditorManager : MonoBehaviour
             if (hit.transform.gameObject.name != "Plane" && hit.transform.root != previewObj.transform.root)
             {
                 return true;
-            }else return false;
+            }
+            else return false;
         }
         else return false;
     }
@@ -220,7 +227,7 @@ public class EditorManager : MonoBehaviour
         {
             pos.z -= (pos.z % 5);
         }
-        else pos.z += 5 -(pos.z % 5);
+        else pos.z += 5 - (pos.z % 5);
         pos.y = _height;
 
         return pos;
@@ -270,7 +277,7 @@ public class EditorManager : MonoBehaviour
 
     public void preSaveMap()
     {
-        if(!(_currentMapInfo is null))
+        if (!(_currentMapInfo is null))
         {
             saveMap();
             return;
@@ -281,7 +288,8 @@ public class EditorManager : MonoBehaviour
         _waitingForName = true;
     }
 
-    private void saveMap()
+    private void saveMap()
+
     {
         ListJsonData listOfBlock = new ListJsonData();
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
@@ -297,12 +305,15 @@ public class EditorManager : MonoBehaviour
                 saveObject.rotation = go.transform.rotation;*/
                 listOfBlock.blocks.Add(saveObject);
             }
-        }        if (_currentMapInfo is null)            MapSaver.CreateNewMap(listOfBlock, _inputField.text);        else
+        }
+        if (_currentMapInfo is null)
+            MapSaver.CreateNewMap(listOfBlock, _inputField.text);
+        else
         {
             listOfBlock.ID = _currentMapInfo.ID;
             MapSaver.SaveMap(listOfBlock, _currentMapInfo, true);
         }
-            
+
     }
 
     public void loadFile(string id)
@@ -310,7 +321,7 @@ public class EditorManager : MonoBehaviour
         ListBlockData listBlockData = MapSaver.GetMapBlock(id);
 
         foreach (BlockData blockData in listBlockData.blocks)
-        {         
+        {
             Instantiate(_idToPrefab[blockData.id], blockData.position, blockData.rotation);
         }
     }

@@ -142,7 +142,10 @@ public class RequestManager : MonoBehaviour
 
     public static IEnumerator DownloadingSingleData(DownloadingData downloadingData, System.Action<ListJsonData> callback = null)
     {
-        _instance._popUp.SetActive(true);
+        if (_instance._popUp!=null)
+        {
+            _instance._popUp.SetActive(true);
+        }
 
         using (UnityWebRequest request = new UnityWebRequest(_instance._databaseURL + "findOne", "POST"))
         {
@@ -175,12 +178,19 @@ public class RequestManager : MonoBehaviour
             }
         }
 
-        _instance._popUp.SetActive(false);
+        if (_instance._popUp != null)
+        {
+            _instance._popUp.SetActive(false);
+        }
     }
 
     public static IEnumerator DownloadingAllData(RequestData requestData, System.Action<MapInfo[]> callback = null)
     {
-        _instance._popUp.SetActive(true);
+
+        if (_instance._popUp != null)
+        {
+            _instance._popUp.SetActive(true);
+        }
 
         using (UnityWebRequest request = new UnityWebRequest(_instance._databaseURL + "find", "POST"))
         {
@@ -215,6 +225,9 @@ public class RequestManager : MonoBehaviour
             }
         }
 
-        _instance._popUp.SetActive(false);
+        if (_instance._popUp != null)
+        {
+            _instance._popUp.SetActive(false);
+        }
     }
 }

@@ -153,7 +153,7 @@ namespace Car
 
             if (!isLocalPlayer)
             {
-                Debug.Log(_carVelocity);
+                //Debug.Log(_carVelocity);
                 return;
             }
 
