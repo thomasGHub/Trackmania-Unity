@@ -156,6 +156,10 @@ public class LeaderboardManager : MonoBehaviour
 
     public void SendLeaderboard(string leaderboardName, int score)
     {
+        if (! IsNewScore(leaderboardName, score))
+        {
+            return;
+        }
         var request = new UpdatePlayerStatisticsRequest
         {
             Statistics = new List<StatisticUpdate>
@@ -245,17 +249,22 @@ public class LeaderboardManager : MonoBehaviour
         //open file 
         // compare score 
         // return bool
-        if (!File.Exists(leaderboardName))
+        if (!File.Exists(Application.persistentDataPath + "/" + leaderboardName + ".json"))
         {
-            Debug.LogWarning("Possible errer New Score");
+            //Debug.LogWarning("Possible errer New Score ");
             return true;
         }
         MapLeaderboard mapJson = LoadLeaderboard(leaderboardName);
-        if (mapJson.localPlayer.playerScore !=null &&  int.Parse(mapJson.localPlayer.playerScore ) < score)
+        if (mapJson.localPlayer.playerScore != null &&  mapJson.localPlayer.playerScore != "" &&  int.Parse(mapJson.localPlayer.playerScore ) > score)
+        {
+            //Debug.LogWarning(mapJson.localPlayer.playerScore + score);
+            return true;
+        }
+        if (mapJson.localPlayer.playerScore != null && mapJson.localPlayer.playerScore == "")
         {
             return true;
         }
-
+        //Debug.LogWarning("Possible errer Not new Score");
         return false;
     }
 

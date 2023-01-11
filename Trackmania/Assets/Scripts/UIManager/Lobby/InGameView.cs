@@ -62,7 +62,7 @@ public class InGameView : View
         {
             if (dic.Value != -1)
             {
-                Debug.LogWarning("Clé: " + dic.Key + " Valeur: " + dic.Value);
+                //Debug.LogWarning("Clé: " + dic.Key + " Valeur: " + dic.Value);
 
                 GameObject lbActuel = Instantiate(lbPrefab, lbParent);
                 lbActuel.GetComponent<UILeaderboardEntry>().nameText.text = dicNames[dic.Key];
@@ -73,19 +73,6 @@ public class InGameView : View
             
 
         }
-
-
-        //{5,3,6,1}
-
-        //{1,3,5,6}
-
-
-
-
-
-        
-
-
 
 
 

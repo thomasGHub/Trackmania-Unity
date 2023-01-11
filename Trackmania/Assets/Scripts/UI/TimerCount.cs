@@ -20,6 +20,32 @@ public class Temps
     }
     public Temps() { }
 
+    
+    public static bool IsNewTempsBest(Temps newTemps, Temps oldTemps)
+    {
+        int newTempsInt = TempsToInt(newTemps);
+        int oldTempsInt = TempsToInt(oldTemps);
+
+        
+        if (newTempsInt< oldTempsInt || oldTempsInt==0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
+    public static int TempsToInt(Temps temps)
+    {
+        return temps._miliseconds + temps._seconds * 1000 + temps._minutes * 100000;
+
+    }
+
+
+
 }
 
 

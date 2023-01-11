@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
     public static Transform LastCheckPointPassed => _instance._lastCheckPointPassed;
     public static Transform StartPosition => _instance._roadPoints.Start.transform;
 
+    public Temps localBestTemps = new Temps(0,0,0);
+
     #region Ghost
     private List<GhostData> _ghosts = new List<GhostData>();
     Ghost ghost = new Ghost();
@@ -125,16 +127,21 @@ public class GameManager : MonoBehaviour
         _player.RaceStop();
 
         Temps temps = _player.RaceFinish();
-        Debug.Log(temps._minutes + temps._seconds + temps._miliseconds);
-        string playerName = PlayerPrefs.GetString("UserName");
 
-        PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, temps, PlayerNetwork.localPlayer.playerName);
-
-
+        if (Temps.IsNewTempsBest(temps, localBestTemps))
+        {
+            localBestTemps = temps;
+            PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, temps, PlayerNetwork.localPlayer.playerName);
+        }
     }
 
     public static void SetPlayerReference(Player __player )
     {
         _instance._player = __player;
     }
+
+
+
+
+
 }
