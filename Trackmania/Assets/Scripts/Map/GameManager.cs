@@ -82,11 +82,9 @@ public class GameManager : MonoBehaviour
 
         _roadToFunction.Add(_roadData.CheckPoint.GetType(), CheckPointPassed);
         _roadToFunction.Add(_roadData.Goal.GetType(), EndPointPassed);
-
-        Debug.Log(_roadData.Goal.GetType());
     }
 
-    public static  void LanchRace()
+    public static void LanchRace()
     {
 
         foreach(Road checkPoint in _instance._roadPoints.CheckPoints)
@@ -128,16 +126,10 @@ public class GameManager : MonoBehaviour
 
         Temps temps = _player.RaceFinish();
         string playerName = PlayerPrefs.GetString("UserName");
-
-        //PlayerNetwork.localPlayer.CmdSendScore(playerName, temps);
-
-
     }
 
     public static void SetPlayerReference(Player __player )
     {
         _instance._player = __player;
     }
-
-
 }

@@ -5,17 +5,22 @@ using UnityEngine.UI;
 
 public class ConnectMenuView : View
 {
+    [SerializeField] private GameObject _leaveNetwork;
+
     public Button CreateButton;
 
     public override void Initialize()
     {
+
+
         CreateButton.onClick.AddListener(()=> OnCreate());
     }
     
 
     void OnCreate()
     {
-        ViewManager.Show<CreateMenuView>(true, false);
+        _leaveNetwork.SetActive(true);
+        ViewManager.Show<CreateMenuView>(true, true);
     }
     
 }
