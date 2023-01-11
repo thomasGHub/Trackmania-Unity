@@ -32,6 +32,7 @@ using MirrorBasics;
         [SerializeField] private float _skidWidth = 0.3f;
 
         [Header("Car stats")]
+        [SerializeField] private Rigidbody[] _whellsRigidbody;
         [SerializeField] private Transform _centerOfMass;
         [SerializeField] private Transform _frictionPoint;
         [SerializeField] private float _speed = 2000f;
@@ -313,7 +314,21 @@ using MirrorBasics;
             _ghost._isInRace = false;
         }
 
-        private void OnTriggerEnter(Collider other)
+        public void Teleportation(Transform destination)
+        {
+            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.angularVelocity = Vector3.zero;
+            transform.position = destination.position;
+            transform.rotation = destination.rotation;
+
+            foreach (Rigidbody wheelRigidbody in _whellsRigidbody)
+            {
+                wheelRigidbody.velocity = Vector3.zero;
+                wheelRigidbody.angularVelocity = Vector3.zero;
+            }
+        }
+
+    private void OnTriggerEnter(Collider other)
         {
             if (!isLocalPlayer)
             {

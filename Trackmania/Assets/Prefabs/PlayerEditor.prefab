@@ -99,6 +99,11 @@ AudioSource:
   m_CorrespondingSourceObject: {fileID: 3329236082497907728, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
   m_PrefabInstance: {fileID: 8782533497790304743}
   m_PrefabAsset: {fileID: 0}
+--- !u!54 &6328121787514971987 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 3329236082049939124, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
+  m_PrefabInstance: {fileID: 8782533497790304743}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6328121787544465804 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3329236082020442219, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
@@ -112,6 +117,11 @@ TrailRenderer:
 --- !u!198 &6328121787780495213 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 3329236081778517642, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
+  m_PrefabInstance: {fileID: 8782533497790304743}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &6328121786152549390 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 3329236081123716585, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
   m_PrefabInstance: {fileID: 8782533497790304743}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &6328121787805939775 stripped
@@ -129,6 +139,11 @@ ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 3329236081450079661, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
   m_PrefabInstance: {fileID: 8782533497790304743}
   m_PrefabAsset: {fileID: 0}
+--- !u!54 &6328121787723201788 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 3329236081704185115, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
+  m_PrefabInstance: {fileID: 8782533497790304743}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6328121786402834267 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3329236080878753468, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
@@ -137,6 +152,11 @@ Transform:
 --- !u!4 &6328121787133741500 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3329236082155247707, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
+  m_PrefabInstance: {fileID: 8782533497790304743}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &6328121787485413616 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 3329236081944621335, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
   m_PrefabInstance: {fileID: 8782533497790304743}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &6328121786435090369 stripped
@@ -238,6 +258,23 @@ MonoBehaviour:
   - {fileID: 7309901711920149579}
   - {fileID: 7417863035240902981}
   - {fileID: 4351037737860169155}
+--- !u!114 &5971550909778413300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4459051319959435873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: d955b4c7165223542b512bea1afbd24c
+  hasSpawned: 0
 --- !u!114 &3527037554346837552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,6 +304,11 @@ MonoBehaviour:
   - trailRenderer: {fileID: 6328121785967199317}
     particleSystem: {fileID: 6328121785967199306}
   _skidWidth: 0.3
+  _whellsRigidbody:
+  - {fileID: 6328121787514971987}
+  - {fileID: 6328121786152549390}
+  - {fileID: 6328121787723201788}
+  - {fileID: 6328121787485413616}
   _centerOfMass: {fileID: 6328121786138823046}
   _frictionPoint: {fileID: 6328121786510075167}
   _speed: 2000

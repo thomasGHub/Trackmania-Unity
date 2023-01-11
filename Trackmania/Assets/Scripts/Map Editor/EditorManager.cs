@@ -150,7 +150,6 @@ public class EditorManager : MonoBehaviour
                         _preview = false;
                         _goPreview = null;
                         StartCoroutine(TimerCanBeSelected());
-
                     }
                 }
             }
@@ -293,6 +292,7 @@ public class EditorManager : MonoBehaviour
         if (!(_currentMapInfo is null))
         {
             saveMap();
+            SceneManager.LoadScene("EditMap");
             return;
         }
         _inputField.gameObject.SetActive(true);

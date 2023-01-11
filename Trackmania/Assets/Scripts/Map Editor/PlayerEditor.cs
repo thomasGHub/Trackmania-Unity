@@ -64,11 +64,14 @@ public class PlayerEditor : MonoBehaviour
         ghost.RestartData();
         RaceStop();
 
-        //gameObject.GetComponent<NetworkTransformChild>().OnTeleport(ValidMapEditor.StartPosition.position, Quaternion.identity);
-        _carController.gameObject.transform.position = ValidMapEditor.StartPosition.position;
-        _carController.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        ResetVehicle(ValidMapEditor.StartPosition);
 
         RaceStart();
+    }
+
+    private void ResetVehicle(Transform destination)
+    {
+        _carController.Teleportation(destination);
     }
 
     private void CameraSwitch(InputAction.CallbackContext context)
@@ -93,8 +96,7 @@ public class PlayerEditor : MonoBehaviour
 
         else
         {
-            _carController.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            _carController.gameObject.transform.position = respawnPoint.position;
+            ResetVehicle(respawnPoint);
         }
     }
 
