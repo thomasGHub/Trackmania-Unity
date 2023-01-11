@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class ConnectMenuView : View
 {
-    [SerializeField] private GameObject _leaveNetwork;
-
     public Button CreateButton;
 
     public override void Initialize()
@@ -19,7 +17,6 @@ public class ConnectMenuView : View
 
     void OnCreate()
     {
-        _leaveNetwork.SetActive(true);
         ViewManager.Show<CreateMenuView>(true, true);
     }
     
