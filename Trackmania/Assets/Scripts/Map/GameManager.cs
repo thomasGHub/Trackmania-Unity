@@ -105,6 +105,7 @@ public class GameManager : MonoBehaviour
 
     public static void VehiclePassPoint(Road roadScript)
     {
+        Debug.Log(roadScript.GetType());
         _instance._roadToFunction[roadScript.GetType()].Invoke(roadScript);
     }
 

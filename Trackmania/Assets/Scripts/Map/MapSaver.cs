@@ -21,7 +21,7 @@ public class MapSaver
     public static string Local => _local;
     public static string Online => _online;
 
-    public static void CreateNewMap(ListJsonData listBlock, string mapName)
+    public static void CreateNewMap(ListJsonData listBlock, string mapName, int bronzeMedal, int silverMedal,int goldMedal,int authorMedal)
     {
         CheckMapFolder();
         string path;
@@ -36,7 +36,7 @@ public class MapSaver
         } while (Directory.Exists(path));
 
         Directory.CreateDirectory(path);
-        MapInfo mapInfo = new MapInfo(id.ToString(), mapName, PlayerPrefs.GetString("UserName"));
+        MapInfo mapInfo = new MapInfo(id.ToString(), mapName, PlayerPrefs.GetString("UserName"), bronzeMedal, silverMedal, goldMedal, authorMedal);
         listBlock.ID = id.ToString();
         mapInfo.DateTime = DateTime.Now;
         mapInfo.IsModified = true;

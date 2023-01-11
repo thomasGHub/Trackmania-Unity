@@ -13,7 +13,13 @@ public class MapInfo
     public bool IsPublished { get; set; }
     public bool IsModified { get; set; }
 
-    public MapInfo(string iD, string name, string author)
+    public int BronzeMedal { get; set; }
+    public int SilverMedal { get; set; }
+    public int GoldMedal { get; set; }
+    public int AuthorMedal { get; set; }
+
+
+    public MapInfo(string iD, string name, string author, int bronzeMedal, int silverMedal, int goldMedal, int authorMedal)
     {
         ID = iD;
         Name = name;
@@ -21,6 +27,11 @@ public class MapInfo
         DateTime = DateTime.Now;
         IsPublished = false;
         IsModified = false;
+        BronzeMedal = bronzeMedal;
+        SilverMedal = silverMedal;
+        GoldMedal = goldMedal;
+        AuthorMedal = authorMedal;
+
     }
 
     public static bool operator != (MapInfo a, MapInfo b)
