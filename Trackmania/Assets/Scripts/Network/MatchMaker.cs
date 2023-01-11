@@ -15,7 +15,7 @@ namespace MirrorBasics {
         public bool matchFull;
         public string mapId;
         public List<PlayerNetwork> players = new List<PlayerNetwork> ();
-        public List<Temps> playersScores = new List<Temps>();
+        //public List<Temps> playersScores = new List<Temps>();
 
         public Match (string matchID,string mapId, PlayerNetwork player, bool publicMatch) {
             matchFull = false;
@@ -24,7 +24,8 @@ namespace MirrorBasics {
             this.mapId = mapId;
             this.publicMatch = publicMatch;
             players.Add (player);
-            playersScores.Add(null);
+            //Temps temps = new Temps(0,0,0);
+            //playersScores.Add(temps);
         }
 
         public Match () { }
@@ -36,7 +37,6 @@ namespace MirrorBasics {
 
         public readonly SyncList<Match> matches = new SyncList<Match> ();
         public readonly SyncList<String> matchIDs = new SyncList<String> ();
-
         [SerializeField] int maxMatchPlayers = 12;
 
         void Start () {
@@ -70,7 +70,7 @@ namespace MirrorBasics {
                     if (matches[i].matchID == _matchID) {
                         if (!matches[i].inMatch && !matches[i].matchFull) {
                             matches[i].players.Add (_player);
-                            matches[i].playersScores.Add (null);
+                            //matches[i].playersScores.Add (null);
                             _player.currentMatch = matches[i];
                             playerIndex = matches[i].players.Count;
 
@@ -166,7 +166,7 @@ namespace MirrorBasics {
                     if (matches[i].players.Count > playerIndex)
                     {
                         matches[i].players.RemoveAt(playerIndex);
-                        matches[i].playersScores.RemoveAt(playerIndex);
+                        //matches[i].playersScores.RemoveAt(playerIndex);
                     }
                     Debug.Log ($"PlayerNetwork disconnected from match {_matchID} | {matches[i].players.Count} players remaining");
 

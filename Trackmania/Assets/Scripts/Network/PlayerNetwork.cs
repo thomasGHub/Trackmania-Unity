@@ -410,7 +410,7 @@ namespace MirrorBasics
 
             if (isLocalPlayer)
             {
-                ViewManager.Show<NoUI>();
+                ViewManager.Show<InGameView>();
 
                 StartCoroutine(LoadMapScence());
 
@@ -456,24 +456,20 @@ namespace MirrorBasics
 
 
         [Command]
-        public void CmdSendScore(string userName, Temps score, PlayerNetwork player)
+        public void CmdSendScore(int _playerIndex, Temps _score, string _playerName)
         {
-            int rank = 0;
-            int playerIndex = currentMatch.players.IndexOf(player);
-            currentMatch.playersScores[playerIndex] = score;
-
-
-            RpcReceiveScore(userName, rank, score);
+            RpcReceiveScore(_playerIndex, _score, _playerName);
         }
 
         [ClientRpc]
-        void RpcReceiveScore(string userName, int rank, Temps score)
+        void RpcReceiveScore(int _playerIndex, Temps _score, string _playerName)
         {
-            if (isLocalPlayer)
-            {
-                InGameView.instance.DoLeadarboardInGameView();
-
-            }
+            Debug.LogWarning("SetScoreLocalPlayerNetwork"+ this.playerIndex);
+            //PlayerNetwork.localPlayer.currentMatch.playersScores[playerIndex - 1] = _score;
+            InGameView.instance.dicTemps[playerIndex - 1] = _score;
+            InGameView.instance.dicNames[playerIndex - 1] = _playerName;
+            InGameView.instance.DoLeadarboardInGameView();
+            
         }
 
     }

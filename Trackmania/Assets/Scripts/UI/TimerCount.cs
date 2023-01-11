@@ -5,12 +5,21 @@ using UnityEngine;
 using Mirror;
 using MirrorBasics;
 
-
+[System.Serializable]
 public class Temps
 {
     public int _minutes;
     public int _seconds;
     public int _miliseconds;
+
+    public Temps(int __miliseconds, int __seconds, int __minutes)
+    {
+        _minutes = __miliseconds;
+        _seconds = __seconds;
+        _miliseconds = __miliseconds;
+    }
+    public Temps() { }
+
 }
 
 
@@ -94,7 +103,7 @@ public class TimerCount : MonoBehaviour
 
     public Temps EndCourse()
     {
-        Temps temps = new Temps();
+        Temps temps = new Temps(0,0,0);
         temps._miliseconds = _miliseconds;
         temps._minutes = _minutes;
         temps._seconds = _seconds;

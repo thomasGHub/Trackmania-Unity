@@ -5,6 +5,7 @@ using UnityEngine;
 public class InGameLeaderboard : MonoBehaviour
 {
     public static InGameLeaderboard instance;
+
     private void Awake()
     {
         instance = this;

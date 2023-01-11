@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using MirrorBasics;
+using System.Linq;
 
 public class InGameView : View
 {
@@ -13,6 +15,10 @@ public class InGameView : View
     public GameObject lbPrefab;
 
 
+    public Dictionary<int, Temps> dicTemps = new Dictionary<int, Temps>();
+    public Dictionary<int, string> dicNames = new Dictionary<int, string>();
+    public Dictionary<int, int> dicInt = new Dictionary<int, int>();
+
 
     private void Awake()
     {
@@ -23,37 +29,42 @@ public class InGameView : View
 
     public override void Initialize()
     {
-        
+        lbParent.gameObject.GetComponent<Image>().enabled = false;
     }
 
     public void DoLeadarboardInGameView()
     {
         DestroyLeaderboard();
-
-        //List<int> scoresInt = new List<int>();
-        //for (int i = 0; i < PlayerNetwork.localPlayer.currentMatch.playersScores.Count; i++)
-        //{
-        //    scoresInt.Add(TempsToInt(PlayerNetwork.localPlayer.currentMatch.playersScores[i]));
-        //}
-
-        for (int i = 0; i < PlayerNetwork.localPlayer.currentMatch.playersScores.Count; i++)
+        for (int i = 0; i < dicTemps.Count; i++)
         {
-            GameObject lbActuel = Instantiate(lbPrefab, lbParent);
-            lbActuel.GetComponent<UILeaderboardEntry>().nameText.text = PlayerNetwork.localPlayer.currentMatch.players[i].playerName;
-            lbActuel.GetComponent<UILeaderboardEntry>().placeText.text = PlayerNetwork.localPlayer.currentMatch.players[i].playerIndex.ToString();
-            lbActuel.GetComponent<UILeaderboardEntry>().valueText.text = TempsToString( PlayerNetwork.localPlayer.currentMatch.playersScores[i] );
+            dicInt[i] = TempsToInt(dicTemps[i]);
+        }
 
-            for (int ii = 0; ii < PlayerNetwork.localPlayer.currentMatch.playersScores.Count; ii++)
+        foreach (KeyValuePair<int, int> dic in dicInt.OrderBy(key => key.Value))
+        {
+            if (dic.Value != -1)
             {
-                if (PlayerNetwork.localPlayer.currentMatch.players[ii].playerIndex == i+1)
-                {
-                    //do
-                }
+                Debug.LogWarning("Clé: " + dic.Key + " Valeur: " + dic.Value);
+
+                GameObject lbActuel = Instantiate(lbPrefab, lbParent);
+                lbActuel.GetComponent<UILeaderboardEntry>().nameText.text = dicNames[dic.Key];
+                lbActuel.GetComponent<UILeaderboardEntry>().placeText.text = dic.Key.ToString();
+                lbActuel.GetComponent<UILeaderboardEntry>().valueText.text = TempsToString(dicTemps[dic.Key]);
             }
 
+            
 
-            //lbs.Add(lbActuel);
         }
+
+
+        //{5,3,6,1}
+
+        //{1,3,5,6}
+
+
+
+
+
         
 
 
@@ -65,21 +76,43 @@ public class InGameView : View
 
     public  int TempsToInt(Temps score)
     {
-        int intScore = score._miliseconds;
-        intScore += score._seconds * 1000;
-        intScore += score._minutes * 100000;
+        if (score!=null)
+        {
+            int intScore = score._miliseconds;
+            intScore += score._seconds * 1000;
+            intScore += score._minutes * 100000;
 
-        return intScore;
+            return intScore;
+        }
+        else
+        {
+            Debug.LogWarning("SCORE NULL");
+            return -1;
+        }
+        
     }
 
     public string TempsToString(Temps score)
     {
-        return score._seconds +"." + score._minutes +":" + score._miliseconds;
+        if (score!=null)
+        {
+            return score._minutes + "." + score._seconds + ":" + score._miliseconds;
+
+        }
+        else
+        {
+            return "";
+        }
     }
+
+
+
 
 
     public void DestroyLeaderboard()
     {
+        lbParent.gameObject.GetComponent<Image>().enabled = true;
+
         foreach (Transform item in lbParent)
         {
             Destroy(item.gameObject);
