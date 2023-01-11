@@ -3,6 +3,7 @@ using Car;
 using Cinemachine;
 using UnityEngine.InputSystem;
 using Mirror;
+using System.Collections;
 
 public class Player : MonoBehaviour
 {
@@ -64,11 +65,14 @@ public class Player : MonoBehaviour
         ghost.RestartData();
         RaceStop();
 
-        //gameObject.GetComponent<NetworkTransformChild>().OnTeleport(GameManager.StartPosition.position, Quaternion.identity);
-        _carController.gameObject.transform.position = GameManager.StartPosition.position;
-        _carController.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        ResetVehicle(GameManager.StartPosition);
 
         RaceStart();
+    }
+
+    private void ResetVehicle(Transform destination)
+    {
+        _carController.Teleportation(destination);
     }
 
     private void CameraSwitch(InputAction.CallbackContext context)
@@ -93,8 +97,7 @@ public class Player : MonoBehaviour
 
         else
         {
-            _carController.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            _carController.gameObject.transform.position = respawnPoint.position;
+            ResetVehicle(respawnPoint);
         }
     }
 

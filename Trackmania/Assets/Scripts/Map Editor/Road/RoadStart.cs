@@ -5,6 +5,7 @@ using UnityEngine;
 public class RoadStart : Road
 {
     public GameObject startPos;
+
     private void Start()
     {
         id = 6;

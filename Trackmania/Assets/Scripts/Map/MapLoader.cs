@@ -36,7 +36,7 @@ public class MapLoader
             gameObject = GameObject.Instantiate(_roadPrefabDict[blockData.id], blockData.position, blockData.rotation, parent);
 
             if (blockData.id == _roadData.Start.id)
-              roadPoints.Start = gameObject.GetComponent<Road>();
+              roadPoints.Start = gameObject.GetComponent<RoadStart>();
 
             if(blockData.id == _roadData.Goal.id)
                 roadPoints.End = gameObject.GetComponent<Road>();

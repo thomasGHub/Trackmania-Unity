@@ -8,7 +8,7 @@ using Mirror;
 
 public struct RoadPoints
 {
-    public Road Start;
+    public RoadStart Start;
     public Road End;
     public Road[] CheckPoints;
 }
