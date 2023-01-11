@@ -35,12 +35,12 @@ public class MainMenuView : View
 
     void CreateClicked()
     {
-        //Load scene
+        SceneManager.LoadScene("EditMap");
     }
 
     void MarketPlaceClicked()
     {
-
+        SceneManager.LoadScene("Marketplace");
     }
 
     void SettingsClicked()
