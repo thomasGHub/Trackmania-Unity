@@ -8,7 +8,7 @@ using Mirror;
 
 public struct RoadPoints
 {
-    public RoadStart Start;
+    public Road Start;
     public Road End;
     public Road[] CheckPoints;
 }
@@ -103,6 +103,7 @@ public class GameManager : MonoBehaviour
 
     public static void VehiclePassPoint(Road roadScript)
     {
+        Debug.Log(roadScript.GetType());
         _instance._roadToFunction[roadScript.GetType()].Invoke(roadScript);
     }
 

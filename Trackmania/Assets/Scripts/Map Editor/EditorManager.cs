@@ -10,6 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class EditorManager : MonoBehaviour
@@ -38,16 +39,26 @@ public class EditorManager : MonoBehaviour
     [SerializeField] private GameObject _UI;
     [SerializeField] private GameObject _car;
     [SerializeField] private TMP_InputField _inputField;
+    [SerializeField] private TMP_InputField _inputFieldBronzeMedal;
+    [SerializeField] private TMP_InputField _inputFieldSilverMedal;
+    [SerializeField] private TMP_InputField _inputFieldGoldMedal;
+    [SerializeField] private TMP_InputField _inputFieldAuthorMedal;
+
     #endregion
 
     #region JSON
     [SerializeField] private RoadData _roadData;
     private string _mapName;
+    private int _bronzeMedal;
+    private int _silverMedal;
+    private int _goldMedal;
+    private int _authorMedal;
     private string _mapToLoadFile = "mapToLoad.json";
     #endregion
 
-    private bool _waitingForName = false;
+    private bool _waitingForInfo = false;
     private Regex letterRegex = new Regex(@"[a-zA-Z]");
+    private Regex numberRegex = new Regex(@"[1-9]");
 
     private void Start()
     {
@@ -61,24 +72,37 @@ public class EditorManager : MonoBehaviour
 
     private void Update()
     {
-        if (_waitingForName)
+        if (_waitingForInfo)
         {
-            if (Keyboard.current[Key.Enter].wasPressedThisFrame && letterRegex.IsMatch(_inputField.text))
+            if (Keyboard.current[Key.Enter].wasPressedThisFrame && letterRegex.IsMatch(_inputField.text) 
+                && numberRegex.IsMatch(_inputFieldBronzeMedal.text)
+                && numberRegex.IsMatch(_inputFieldSilverMedal.text)
+                && numberRegex.IsMatch(_inputFieldGoldMedal.text)
+                && numberRegex.IsMatch(_inputFieldAuthorMedal.text))
 
             {
 
                 _mapName = _inputField.text;
+                _bronzeMedal = (int)Int64.Parse(_inputFieldBronzeMedal.text);
+                _silverMedal = (int)Int64.Parse(_inputFieldSilverMedal.text);
+                _goldMedal = (int)Int64.Parse(_inputFieldGoldMedal.text);
+                _authorMedal = (int)Int64.Parse(_inputFieldAuthorMedal.text);
                 print(_mapName);
+                print(_bronzeMedal);
                 saveMap();
 
                 _inputField.gameObject.SetActive(false);
+                _inputFieldBronzeMedal.gameObject.SetActive(false);
+                _inputFieldSilverMedal.gameObject.SetActive(false);
+                _inputFieldGoldMedal.gameObject.SetActive(false);
+                _inputFieldAuthorMedal.gameObject.SetActive(false);
+
+                SceneManager.LoadScene("EditMap");
 
             }
         }
 
-        ShowHideUI();
-
-        if (!_freePos && _selectedBlock != null && _editMode)
+        if (!_freePos && _selectedBlock != null && _editMode && !_waitingForInfo)
         {
             if (!_preview)
             {
@@ -258,34 +282,26 @@ public class EditorManager : MonoBehaviour
         _canBeSelected = true;
     }
 
-    public void TestMap()
+    public void preSaveMap()
     {
-        if (_currentCar != null)
-        {
-            Destroy(_currentCar);
-            _UI.SetActive(true);
-        }
-        else
-        {
-            _roadStart = UnityEngine.Object.FindObjectOfType<RoadStart>().GetComponent<RoadStart>().startPos;
-            Vector3 _posStart = new Vector3(_roadStart.transform.position.x, _roadStart.transform.position.y, _roadStart.transform.position.z);
-            _currentCar = Instantiate(_car, _posStart, Quaternion.identity);
-            _currentCar.GetComponent<Player>().RaceStart();
-            _UI.SetActive(false);
-        }
+        ShowHideUI();
+        ValidMapEditor.LanchRace();
     }
 
-    public void preSaveMap()
+    public void setInfo()
     {
         if (!(_currentMapInfo is null))
         {
             saveMap();
             return;
         }
-
         _inputField.gameObject.SetActive(true);
+        _inputFieldBronzeMedal.gameObject.SetActive(true);
+        _inputFieldSilverMedal.gameObject.SetActive(true);
+        _inputFieldGoldMedal.gameObject.SetActive(true);
+        _inputFieldAuthorMedal.gameObject.SetActive(true);
 
-        _waitingForName = true;
+        _waitingForInfo = true;
     }
 
     private void saveMap()
@@ -298,16 +314,11 @@ public class EditorManager : MonoBehaviour
             if (go.GetComponent<Road>() != null)
             {
                 JsonData saveObject = new JsonData(go.GetComponent<Road>().id, go.transform.position, go.transform.rotation);
-                /*
-                saveObject.id = go.GetComponent<Road>().id;
-                Debug.Log("saveObject Id : " + saveObject.id);
-                saveObject.position = go.transform.position;
-                saveObject.rotation = go.transform.rotation;*/
                 listOfBlock.blocks.Add(saveObject);
             }
         }
         if (_currentMapInfo is null)
-            MapSaver.CreateNewMap(listOfBlock, _inputField.text);
+            MapSaver.CreateNewMap(listOfBlock, _inputField.text, _bronzeMedal, _silverMedal, _goldMedal, _authorMedal);
         else
         {
             listOfBlock.ID = _currentMapInfo.ID;
@@ -342,16 +353,13 @@ public class EditorManager : MonoBehaviour
 
     private void ShowHideUI()
     {
-        if (Keyboard.current[Key.Y].wasPressedThisFrame)
+        if (_UI.activeInHierarchy)
         {
-            if (_UI.activeInHierarchy)
-            {
-                _UI.SetActive(false);
-            }
-            else
-            {
-                _UI.SetActive(true);
-            }
+            _UI.SetActive(false);
+        }
+        else
+        {
+            _UI.SetActive(true);
         }
     }
 }
