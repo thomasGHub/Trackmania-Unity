@@ -20,14 +20,14 @@ public class Temps
     }
     public Temps() { }
 
-    
+
     public static bool IsNewTempsBest(Temps newTemps, Temps oldTemps)
     {
         int newTempsInt = TempsToInt(newTemps);
         int oldTempsInt = TempsToInt(oldTemps);
 
-        
-        if (newTempsInt< oldTempsInt || oldTempsInt==0)
+
+        if (newTempsInt < oldTempsInt || oldTempsInt == 0)
         {
             return true;
         }
@@ -38,17 +38,41 @@ public class Temps
 
     }
 
-    public static int TempsToInt(Temps temps)
+
+    public static int TempsToInt(Temps score)
     {
-        return temps._miliseconds + temps._seconds * 1000 + temps._minutes * 100000;
+        if (score != null)
+        {
+            int intScore = score._miliseconds;
+            intScore += score._seconds * 1000;
+            intScore += score._minutes * 100000;
+
+            return intScore;
+        }
+        else
+        {
+            Debug.LogWarning("SCORE NULL");
+            return -1;
+        }
 
     }
 
+    public static string TempsToString(Temps score)
+    {
+        if (score != null)
+        {
+            return score._minutes + "." + score._seconds + ":" + score._miliseconds;
 
+        }
+        else
+        {
+            return "";
+        }
+
+
+    }
 
 }
-
-
 
 public class TimerCount : MonoBehaviour
 {
@@ -138,4 +162,5 @@ public class TimerCount : MonoBehaviour
 
 
     }
+
 }
