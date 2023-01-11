@@ -25,7 +25,9 @@ public class MapInfo
 
     public static bool operator != (MapInfo a, MapInfo b)
     {
-        return !(a == b);
+        return a.ID != b.ID || a.Name != b.Name || a.Author != b.Author
+            || a.DateTime != b.DateTime || a.IsPublished != b.IsPublished
+            || a.IsModified != b.IsModified;
     }
 
     public static bool operator == (MapInfo a, MapInfo b)
@@ -36,10 +38,16 @@ public class MapInfo
     }
 }
 
-public class SingleElement
+public class SingleListJsonData
 {
     [JsonProperty("document")]
-    public ListJsonData _listJsonData { get; set; }
+    public ListJsonData ListJsonData { get; set; }
+}
+
+public class SingleMapInfo
+{
+    [JsonProperty("document")]
+    public MapInfo MapInfo { get; set; }
 }
 
 public class MultipleElement

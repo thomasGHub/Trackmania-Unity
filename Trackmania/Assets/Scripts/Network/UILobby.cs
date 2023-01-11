@@ -23,6 +23,7 @@ namespace MirrorBasics {
         [SerializeField] GameObject UIPlayerPrefab;
         [SerializeField] Text matchIDText;
         [SerializeField] GameObject beginGameButton;
+        [SerializeField] GameObject PermanentView;
 
         GameObject localPlayerLobbyUI;
 
@@ -129,6 +130,7 @@ namespace MirrorBasics {
 
         public void BeginGame () {
             PlayerNetwork.localPlayer.BeginGame ();
+            PermanentView.SetActive(false);
             
         }
 
