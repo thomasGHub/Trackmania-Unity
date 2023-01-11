@@ -17,7 +17,14 @@ public class CreateMenuView : View
         HostPrivate.SetActive(false);
     }
 
-    
+    private void OnEnable()
+    {
+        scrollViewMap.SetActive(true);
+        HostPublic.SetActive(false);
+        HostPrivate.SetActive(false);
+    }
+
+
     public void ActiveButton()
     {
         HostPublic.SetActive(true);
