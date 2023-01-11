@@ -250,8 +250,8 @@ public class LeaderboardManager : MonoBehaviour
             Debug.LogWarning("Possible errer New Score");
             return true;
         }
-        MapLeaderboard mapJson = LoadLeaderboard(leaderboardName );
-        if (int.Parse(mapJson.localPlayer.playerScore ) < score)
+        MapLeaderboard mapJson = LoadLeaderboard(leaderboardName);
+        if (mapJson.localPlayer.playerScore !=null &&  int.Parse(mapJson.localPlayer.playerScore ) < score)
         {
             return true;
         }

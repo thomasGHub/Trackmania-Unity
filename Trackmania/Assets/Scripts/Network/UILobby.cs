@@ -149,8 +149,12 @@ namespace MirrorBasics {
         public IEnumerator MainMenu()
         {
             DisconnectGame();
-            yield return new WaitForSeconds(1f);
-            NetworkManager.singleton.OnDestroySelf();
+            yield return new WaitForSeconds(1);
+            NetworkManager.singleton.StopHost();
+
+            //NetworkManager.singleton.OnDestroySelf();
+            yield return new WaitForSeconds(1);
+
             SceneManager.LoadScene("Offline");
         }
 

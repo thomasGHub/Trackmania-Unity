@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using MirrorBasics;
 using System.Linq;
+using UnityEngine.InputSystem;
 
 public class InGameView : View
 {
@@ -19,6 +20,8 @@ public class InGameView : View
     public Dictionary<int, string> dicNames = new Dictionary<int, string>();
     public Dictionary<int, int> dicInt = new Dictionary<int, int>();
 
+    public Trackmania inputActions;
+
 
     private void Awake()
     {
@@ -30,7 +33,22 @@ public class InGameView : View
     public override void Initialize()
     {
         lbParent.gameObject.GetComponent<Image>().enabled = false;
+
+        inputActions = new Trackmania();
+        inputActions.UI.Escape.performed += Escaping;
     }
+
+
+    public void OnEnable()
+    {
+        inputActions.UI.Escape.Enable();
+    }
+
+    public void OnDisable()
+    {
+        inputActions.UI.Escape.Disable();
+    }
+
 
     public void DoLeadarboardInGameView()
     {
@@ -120,6 +138,10 @@ public class InGameView : View
     }
 
 
+    public void Escaping(InputAction.CallbackContext context)
+    {
 
+
+    }
 
 }

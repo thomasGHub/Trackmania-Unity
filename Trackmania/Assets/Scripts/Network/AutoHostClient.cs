@@ -65,10 +65,7 @@ namespace MirrorBasics {
 
         public string GetLocalIPv4()
         {
-            Debug.Log(Dns.GetHostEntry(Dns.GetHostName())
-                .AddressList.First(
-                    f => f.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                .ToString());
+            //Debug.Log(Dns.GetHostEntry(Dns.GetHostName()).AddressList.First(f => f.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).ToString());
             return Dns.GetHostEntry(Dns.GetHostName())
                 .AddressList.First(
                     f => f.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
