@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using MirrorBasics;
+using Mirror;
 
 public struct RoadPoints
 {
@@ -16,13 +18,13 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
 
     [Header("Start")]
-    [SerializeField] private GameObject _playerPrefab;
+    //[SerializeField] private GameObject _playerPrefab;
     [SerializeField] private Vector3 _scaleMap;
 
     [Header("LoadMap")]
     [SerializeField] private Transform _parentTransform;
     [SerializeField] private RoadData _roadData;
-    [SerializeField] private string _nameOfMapFile;
+    [SerializeField] private string _nameOfMapFile = "mapToPlay";
 
     private Player _player;
     private PlayerMap _playerMap;
@@ -54,7 +56,6 @@ public class GameManager : MonoBehaviour
         _instance = this;
 
         _playerMap = new PlayerMap();
-        _playerMap.PlayerUX.StartRace.performed += LanchRace;
 
         _mapLoader = new MapLoader(_roadData);
     }
@@ -71,30 +72,32 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        _roadPoints = _mapLoader.LoadMap(_nameOfMapFile, _parentTransform);
+        _roadPoints = _mapLoader.LoadMap(_nameOfMapFile , _parentTransform);
         _parentTransform.localScale = _scaleMap;
 
         Transform startPoint = _roadPoints.Start.transform;
-        GameObject _playerCar = GameObject.Instantiate(_playerPrefab, startPoint.position, startPoint.rotation);
-        _player = _playerCar.GetComponent<Player>();
+
+        _player = PlayerNetwork.localPlayer.gameObject.GetComponent<Player>();//_playerCar.GetComponent<Player>();
+        _player.gameObject.GetComponent<NetworkTransformChild>().OnTeleport(startPoint.position, startPoint.rotation);
 
         _roadToFunction.Add(_roadData.CheckPoint.GetType(), CheckPointPassed);
         _roadToFunction.Add(_roadData.Goal.GetType(), EndPointPassed);
     }
 
-    private void LanchRace(InputAction.CallbackContext context)
+    public static void LanchRace()
     {
-        foreach(Road checkPoint in _roadPoints.CheckPoints)
+
+        foreach(Road checkPoint in _instance._roadPoints.CheckPoints)
         {
-            _checkPointPassed[checkPoint] = false;
+            _instance._checkPointPassed[checkPoint] = false;
         }
 
-        _player.RaceStart();
+        _instance._player.RaceStart();
         
-        if (ghost.loadGhost(ghost._pathMapToLoad) != null)
+        if (_instance.ghost.loadGhost(_instance.ghost._pathMapToLoad) != null)
         {
-            Transform startPoint = _roadPoints.Start.transform;
-            Instantiate(_ghostPrefab, startPoint.position, startPoint.rotation);
+            Transform startPoint = _instance._roadPoints.Start.transform;
+            Instantiate(_instance._ghostPrefab, startPoint.position, startPoint.rotation);
         }
     }
 
@@ -119,8 +122,19 @@ public class GameManager : MonoBehaviour
             if (!value)
                 return;
         }
-
         _player.RaceStop();
+
+        Temps temps = _player.RaceFinish();
+        Debug.Log(temps._minutes + temps._seconds + temps._miliseconds);
+        string playerName = PlayerPrefs.GetString("UserName");
+
+        PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, temps, PlayerNetwork.localPlayer.playerName);
+
+
     }
 
+    public static void SetPlayerReference(Player __player )
+    {
+        _instance._player = __player;
+    }
 }

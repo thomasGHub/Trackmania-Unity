@@ -305,6 +305,15 @@ public partial class @Trackmania : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Escape"",
+                    ""type"": ""Button"",
+                    ""id"": ""c41813ce-48de-4fa4-ba55-a47d810d89e5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -725,6 +734,87 @@ public partial class @Trackmania : IInputActionCollection2, IDisposable
                     ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5ca8e153-9127-4b13-845a-550ae003c928"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""680cbbbd-5bc2-4915-a85b-85c2bc988147"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d5352cd6-a44c-4ca8-968b-a3c3b4fb628b"",
+                    ""path"": ""<XInputController>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""UIV2"",
+            ""id"": ""cb0a51a1-99e6-441c-9979-618815566135"",
+            ""actions"": [
+                {
+                    ""name"": ""ShowHide"",
+                    ""type"": ""Button"",
+                    ""id"": ""051e5971-6ea5-4a14-ae95-d13d8ba84b3d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Rotate"",
+                    ""type"": ""Button"",
+                    ""id"": ""141a5d22-3e5f-44b6-87a0-cea910540985"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""691314b8-16fc-411d-b286-b7741a0f8811"",
+                    ""path"": ""<Keyboard>/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShowHide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""062e6b06-6fb5-42ab-954c-47abe6eefffd"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -809,6 +899,11 @@ public partial class @Trackmania : IInputActionCollection2, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        m_UI_Escape = m_UI.FindAction("Escape", throwIfNotFound: true);
+        // UIV2
+        m_UIV2 = asset.FindActionMap("UIV2", throwIfNotFound: true);
+        m_UIV2_ShowHide = m_UIV2.FindAction("ShowHide", throwIfNotFound: true);
+        m_UIV2_Rotate = m_UIV2.FindAction("Rotate", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -927,6 +1022,7 @@ public partial class @Trackmania : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_RightClick;
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
+    private readonly InputAction m_UI_Escape;
     public struct UIActions
     {
         private @Trackmania m_Wrapper;
@@ -941,6 +1037,7 @@ public partial class @Trackmania : IInputActionCollection2, IDisposable
         public InputAction @RightClick => m_Wrapper.m_UI_RightClick;
         public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
+        public InputAction @Escape => m_Wrapper.m_UI_Escape;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -980,6 +1077,9 @@ public partial class @Trackmania : IInputActionCollection2, IDisposable
                 @TrackedDeviceOrientation.started -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceOrientation;
+                @Escape.started -= m_Wrapper.m_UIActionsCallbackInterface.OnEscape;
+                @Escape.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnEscape;
+                @Escape.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnEscape;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -1014,10 +1114,54 @@ public partial class @Trackmania : IInputActionCollection2, IDisposable
                 @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
+                @Escape.started += instance.OnEscape;
+                @Escape.performed += instance.OnEscape;
+                @Escape.canceled += instance.OnEscape;
             }
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // UIV2
+    private readonly InputActionMap m_UIV2;
+    private IUIV2Actions m_UIV2ActionsCallbackInterface;
+    private readonly InputAction m_UIV2_ShowHide;
+    private readonly InputAction m_UIV2_Rotate;
+    public struct UIV2Actions
+    {
+        private @Trackmania m_Wrapper;
+        public UIV2Actions(@Trackmania wrapper) { m_Wrapper = wrapper; }
+        public InputAction @ShowHide => m_Wrapper.m_UIV2_ShowHide;
+        public InputAction @Rotate => m_Wrapper.m_UIV2_Rotate;
+        public InputActionMap Get() { return m_Wrapper.m_UIV2; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UIV2Actions set) { return set.Get(); }
+        public void SetCallbacks(IUIV2Actions instance)
+        {
+            if (m_Wrapper.m_UIV2ActionsCallbackInterface != null)
+            {
+                @ShowHide.started -= m_Wrapper.m_UIV2ActionsCallbackInterface.OnShowHide;
+                @ShowHide.performed -= m_Wrapper.m_UIV2ActionsCallbackInterface.OnShowHide;
+                @ShowHide.canceled -= m_Wrapper.m_UIV2ActionsCallbackInterface.OnShowHide;
+                @Rotate.started -= m_Wrapper.m_UIV2ActionsCallbackInterface.OnRotate;
+                @Rotate.performed -= m_Wrapper.m_UIV2ActionsCallbackInterface.OnRotate;
+                @Rotate.canceled -= m_Wrapper.m_UIV2ActionsCallbackInterface.OnRotate;
+            }
+            m_Wrapper.m_UIV2ActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @ShowHide.started += instance.OnShowHide;
+                @ShowHide.performed += instance.OnShowHide;
+                @ShowHide.canceled += instance.OnShowHide;
+                @Rotate.started += instance.OnRotate;
+                @Rotate.performed += instance.OnRotate;
+                @Rotate.canceled += instance.OnRotate;
+            }
+        }
+    }
+    public UIV2Actions @UIV2 => new UIV2Actions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1081,5 +1225,11 @@ public partial class @Trackmania : IInputActionCollection2, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+        void OnEscape(InputAction.CallbackContext context);
+    }
+    public interface IUIV2Actions
+    {
+        void OnShowHide(InputAction.CallbackContext context);
+        void OnRotate(InputAction.CallbackContext context);
     }
 }

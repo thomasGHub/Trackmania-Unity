@@ -1,27 +1,16 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
+
+using TMPro;
+
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using Quaternion = UnityEngine.Quaternion;
-using Vector3 = UnityEngine.Vector3;
-
-[Serializable]
-public class ListBlock
-{
-    public List<jsonData> blocks = new List<jsonData>();
-}
-
-[Serializable]
-public class jsonData
-{
-    public int id;
-    public Vector3 position;
-    public Quaternion rotation;
-}
 
 public class EditorManager : MonoBehaviour
 {
@@ -36,6 +25,7 @@ public class EditorManager : MonoBehaviour
     private float _height = 0;
     [SerializeField] private List<GameObject> _blockList = new List<GameObject>();
     private Dictionary<int, GameObject> _idToPrefab;
+    private MapInfo _currentMapInfo = null;
     #endregion
 
     #region UI
@@ -47,14 +37,17 @@ public class EditorManager : MonoBehaviour
     [SerializeField] private Image _deleteSelected;
     [SerializeField] private GameObject _UI;
     [SerializeField] private GameObject _car;
+    [SerializeField] private TMP_InputField _inputField;
     #endregion
 
     #region JSON
     [SerializeField] private RoadData _roadData;
-    private string _json;
-    private string _pathMapToLoad = "/test.json";
+    private string _mapName;
+    private string _mapToLoadFile = "mapToLoad.json";
     #endregion
 
+    private bool _waitingForName = false;
+    private Regex letterRegex = new Regex(@"[a-zA-Z]");
 
     private void Start()
     {
@@ -62,25 +55,28 @@ public class EditorManager : MonoBehaviour
         _deleteSelected.enabled = false;
 
         _idToPrefab = _roadData.GenerateDict();
+
+        CheckMapToLoad();
     }
+
     private void Update()
     {
-        if (Keyboard.current[Key.T].wasPressedThisFrame)
+        if (_waitingForName)
         {
-            loadFile(_pathMapToLoad);
+            if (Keyboard.current[Key.Enter].wasPressedThisFrame && letterRegex.IsMatch(_inputField.text))
+
+            {
+
+                _mapName = _inputField.text;
+                print(_mapName);
+                saveMap();
+
+                _inputField.gameObject.SetActive(false);
+
+            }
         }
 
-        if (Keyboard.current[Key.Y].wasPressedThisFrame)
-        {
-            if (_UI.activeInHierarchy)
-            {
-                _UI.SetActive(false);
-            }
-            else
-            {
-                _UI.SetActive(true);
-            }
-        }
+        ShowHideUI();
 
         if (!_freePos && _selectedBlock != null && _editMode)
         {
@@ -95,12 +91,12 @@ public class EditorManager : MonoBehaviour
             if (_preview)
             {
                 _goPreview.transform.position = GetPos();
-                if(BlockOnMap(_goPreview) == true)
+                if (BlockOnMap(_goPreview) == true)
                 {
                     _goPreview.GetComponent<Road>().redBlock.SetActive(true);
-               
+
                 }
-                if(BlockOnMap(_goPreview)==false)
+                if (BlockOnMap(_goPreview) == false)
                 {
                     _goPreview.GetComponent<Road>().redBlock.SetActive(false);
                 }
@@ -110,11 +106,11 @@ public class EditorManager : MonoBehaviour
                 }
                 else if (Keyboard.current[Key.Q].wasPressedThisFrame && _height > 0)
                 {
-                    _height-=0.5f;
+                    _height -= 0.5f;
                 }
                 else if (Keyboard.current[Key.E].wasPressedThisFrame)
                 {
-                    _height+=0.5f;
+                    _height += 0.5f;
                 }
                 if (Mouse.current.leftButton.wasPressedThisFrame)
                 {
@@ -139,7 +135,7 @@ public class EditorManager : MonoBehaviour
         {
             if (_deleteMode)
             {
-                Destroy(getObjectInEditor());             
+                Destroy(getObjectInEditor());
             }
             else if (_editMode && _canBeSelected)
             {
@@ -154,6 +150,7 @@ public class EditorManager : MonoBehaviour
             editMode();
         }
     }
+
     public void Hello()
     {
         print(_selectedBlock);
@@ -211,7 +208,8 @@ public class EditorManager : MonoBehaviour
             if (hit.transform.gameObject.name != "Plane" && hit.transform.root != previewObj.transform.root)
             {
                 return true;
-            }else return false;
+            }
+            else return false;
         }
         else return false;
     }
@@ -229,7 +227,7 @@ public class EditorManager : MonoBehaviour
         {
             pos.z -= (pos.z % 5);
         }
-        else pos.z += 5 -(pos.z % 5);
+        else pos.z += 5 - (pos.z % 5);
         pos.y = _height;
 
         return pos;
@@ -242,6 +240,7 @@ public class EditorManager : MonoBehaviour
         _deleteMode = false;
         _deleteSelected.enabled = false;
     }
+
     public void deleteMode()
     {
         _editMode = false;
@@ -276,33 +275,83 @@ public class EditorManager : MonoBehaviour
         }
     }
 
-    public void saveMap()
+    public void preSaveMap()
     {
-        ListBlock listOfBlock = new ListBlock();
+        if (!(_currentMapInfo is null))
+        {
+            saveMap();
+            return;
+        }
+
+        _inputField.gameObject.SetActive(true);
+
+        _waitingForName = true;
+    }
+
+    private void saveMap()
+
+    {
+        ListJsonData listOfBlock = new ListJsonData();
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
         foreach (GameObject go in allObjects)
         {
             if (go.GetComponent<Road>() != null)
             {
-                jsonData saveObject = new jsonData();
+                JsonData saveObject = new JsonData(go.GetComponent<Road>().id, go.transform.position, go.transform.rotation);
+                /*
                 saveObject.id = go.GetComponent<Road>().id;
+                Debug.Log("saveObject Id : " + saveObject.id);
                 saveObject.position = go.transform.position;
-                saveObject.rotation = go.transform.rotation;
+                saveObject.rotation = go.transform.rotation;*/
                 listOfBlock.blocks.Add(saveObject);
             }
         }
-        _json += JsonUtility.ToJson(listOfBlock);
-        print(_json);
-        File.WriteAllText(Application.persistentDataPath + "/test.json", _json);
+        if (_currentMapInfo is null)
+            MapSaver.CreateNewMap(listOfBlock, _inputField.text);
+        else
+        {
+            listOfBlock.ID = _currentMapInfo.ID;
+            MapSaver.SaveMap(listOfBlock, _currentMapInfo, true);
+        }
+
     }
-    public void loadFile(string _pathMapToLoad)
+
+    public void loadFile(string id)
     {
-        string path = Application.persistentDataPath + _pathMapToLoad;
-        string jsonStr = File.ReadAllText(path);
-        ListBlock mySampleFile = JsonUtility.FromJson<ListBlock>(jsonStr);
-        foreach (jsonData jsonData in mySampleFile.blocks)
-        {         
-            Instantiate(_idToPrefab[jsonData.id], jsonData.position, jsonData.rotation);
+        ListBlockData listBlockData = MapSaver.GetMapBlock(id);
+
+        foreach (BlockData blockData in listBlockData.blocks)
+        {
+            Instantiate(_idToPrefab[blockData.id], blockData.position, blockData.rotation);
+        }
+    }
+
+    public void CheckMapToLoad()
+    {
+        string path = MapSaver.MapDataPath + "/" + _mapToLoadFile;
+        if (File.Exists(path))
+        {
+            string content = File.ReadAllText(path);
+            _currentMapInfo = JsonConvert.DeserializeObject<MapInfo>(content);
+
+
+            File.Delete(path);
+            loadFile(_currentMapInfo.ID);
+        }
+    }
+
+    private void ShowHideUI()
+    {
+        if (Keyboard.current[Key.Y].wasPressedThisFrame)
+        {
+            if (_UI.activeInHierarchy)
+            {
+                _UI.SetActive(false);
+            }
+            else
+            {
+                _UI.SetActive(true);
+            }
         }
     }
 }

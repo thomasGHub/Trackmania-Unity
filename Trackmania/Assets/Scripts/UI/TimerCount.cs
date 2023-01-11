@@ -2,9 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Mirror;
+using MirrorBasics;
+
+[System.Serializable]
+public class Temps
+{
+    public int _minutes;
+    public int _seconds;
+    public int _miliseconds;
+
+    public Temps(int __miliseconds, int __seconds, int __minutes)
+    {
+        _minutes = __miliseconds;
+        _seconds = __seconds;
+        _miliseconds = __miliseconds;
+    }
+    public Temps() { }
+
+}
+
+
 
 public class TimerCount : MonoBehaviour
 {
+
+
+
+
+
     [SerializeField] private TextMeshProUGUI _minutesTextMesh;
     [SerializeField] private TextMeshProUGUI _secondsTextMesh;
     [SerializeField] private TextMeshProUGUI _milisecondsTextMesh;
@@ -61,8 +87,29 @@ public class TimerCount : MonoBehaviour
         _isRunning = true;
     }
 
+    public void ShowUI(bool show)
+    {
+        Debug.Log("ShowUI" + show + " "+ PlayerNetwork.localPlayer.gameObject.name);
+        _minutesTextMesh.gameObject.SetActive(show);
+        _secondsTextMesh.gameObject.SetActive(show);
+        _milisecondsTextMesh.gameObject.SetActive(show);
+    }
+
+
     public void Stop()
     {
         _isRunning = false;
+    }
+
+    public Temps EndCourse()
+    {
+        Temps temps = new Temps(0,0,0);
+        temps._miliseconds = _miliseconds;
+        temps._minutes = _minutes;
+        temps._seconds = _seconds;
+
+        return temps;
+
+
     }
 }

@@ -2,12 +2,13 @@ using UnityEngine;
 using Car;
 using Cinemachine;
 using UnityEngine.InputSystem;
+using Mirror;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private CarController _carController;
     [SerializeField] private SpeedoMeter _speedoMeter;
-    [SerializeField] private TimerCount _timerCount;
+    public TimerCount _timerCount;
 
     [Header("Car Camera")]
     [SerializeField] private CinemachineVirtualCamera[] _allCameras;
@@ -27,6 +28,7 @@ public class Player : MonoBehaviour
         _playerMap.PlayerUX.CameraSwitch.performed += CameraSwitch;
         _playerMap.PlayerMovement.Respawn.performed += Respawn;
         _playerMap.PlayerMovement.Restart.performed += RaceRestart;
+
     }
 
     private void OnDisable()
@@ -36,6 +38,7 @@ public class Player : MonoBehaviour
 
     public void RaceStart()
     {
+        //gameObject.GetComponent<NetworkTransformChild>().OnTeleport(GameManager.StartPosition.position, Quaternion.identity);
         _carController.RaceStart();
         _speedoMeter.Launch();
         _timerCount.Launch();
@@ -51,7 +54,7 @@ public class Player : MonoBehaviour
         _timerCount.Stop();
         _playerMap.PlayerUX.CameraSwitch.Disable();
         _playerMap.PlayerMovement.Respawn.Disable();
-        _playerMap.PlayerMovement.Restart.Disable();
+        //_playerMap.PlayerMovement.Restart.Disable();
     }
 
     public void RaceRestart()
@@ -61,6 +64,7 @@ public class Player : MonoBehaviour
         ghost.RestartData();
         RaceStop();
 
+        //gameObject.GetComponent<NetworkTransformChild>().OnTeleport(GameManager.StartPosition.position, Quaternion.identity);
         _carController.gameObject.transform.position = GameManager.StartPosition.position;
         _carController.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
@@ -71,7 +75,7 @@ public class Player : MonoBehaviour
     {
         int cameraIndex = (int)(Mathf.Floor(context.ReadValue<float>())) - 1;
 
-        if(cameraIndex < _allCameras.Length)
+        if (cameraIndex < _allCameras.Length)
         {
             _allCameras[_currentIndex].Priority = -1;
             _allCameras[cameraIndex].Priority = 1;
@@ -99,5 +103,31 @@ public class Player : MonoBehaviour
         RaceRestart();
     }
 
-    
+
+    public Temps RaceFinish()
+    {
+        return _timerCount.EndCourse();
+    }
+
+
+    public void SetCamPriorityNotLocalPlayer()
+    {
+        for (int i = 0; i <_allCameras.Length; i++)
+        {
+            _allCameras[i].Priority = -10;
+        }
+    }
+
+    public void DisableNotLocalPlayerCar()
+    {
+        _carController.isLocalPlayer = false;
+
+    }
+
+ 
+
+
+
+
+
 }
