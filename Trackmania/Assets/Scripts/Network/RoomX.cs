@@ -26,7 +26,7 @@ public class RoomX : MonoBehaviour
 
     public void SetRoomUI(List<string> match)
     {
-        roomName.text = $"{match[0]} nb:{match[1]}";
+        roomName.text = $"{match[0]} {match[1]}/12";
         roomID = match[2];
     }
 
