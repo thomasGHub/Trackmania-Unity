@@ -414,7 +414,8 @@ namespace MirrorBasics
 
         public void OnLeaveNetwork()
         {
-            NetworkManager.singleton.StopHost();
+            //NetworkManager.singleton.StopHost();
+            DisconnectGame();
         }
 
         [Command]

@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace MirrorBasics {
@@ -58,7 +60,7 @@ namespace MirrorBasics {
             BeginGameButton.onClick.AddListener(() => BeginGame());
             CancelMatchButton.onClick.AddListener(() => DisconnectGame());
             CancelSearchButton.onClick.AddListener(() => CancelSearchGame());
-            LeaveButton.onClick.AddListener(() => PlayerNetwork.localPlayer.OnLeaveNetwork());
+            LeaveButton.onClick.AddListener(() => StartCoroutine(MainMenu()));
 
         }
 
@@ -142,6 +144,14 @@ namespace MirrorBasics {
             searching = false;
             ViewManager.Show<ConnectMenuView>();
 
+        }
+
+        public IEnumerator MainMenu()
+        {
+            DisconnectGame();
+            yield return new WaitForSeconds(1f);
+            NetworkManager.singleton.OnDestroySelf();
+            SceneManager.LoadScene("Offline");
         }
 
         public void SearchGameSuccess (bool success, string matchID) {

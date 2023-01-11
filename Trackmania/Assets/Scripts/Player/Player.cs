@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
         _timerCount.Stop();
         _playerMap.PlayerUX.CameraSwitch.Disable();
         _playerMap.PlayerMovement.Respawn.Disable();
-        _playerMap.PlayerMovement.Restart.Disable();
+        //_playerMap.PlayerMovement.Restart.Disable();
     }
 
     public void RaceRestart()

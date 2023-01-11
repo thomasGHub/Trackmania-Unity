@@ -75,8 +75,6 @@ public class MainMenuView : View
         SceneManager.LoadScene("Login", LoadSceneMode.Single);
         yield return new WaitForSeconds(1);
         ViewManager.Show<AuthentificationStartView>();
-
-
     }
 
 
