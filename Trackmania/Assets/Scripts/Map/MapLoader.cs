@@ -6,8 +6,11 @@ using Newtonsoft.Json;
 public class MapLoader
 {
     private RoadData _roadData;
-
     private Dictionary<int, GameObject> _roadPrefabDict;
+
+    private MapInfo _mapInfo;
+
+    public MapInfo MapInfo => _mapInfo;
 
     public MapLoader(RoadData roadData)
     {
@@ -22,14 +25,13 @@ public class MapLoader
 
         GameObject gameObject;
         List<Road> checkPointsList = new List<Road>();
-        MapInfo mapInfo;
-        string path = MapSaver.MapDataPath + "/" + _fileName + ".json";
+        string path = MapSaver.MapDataPath + "/" + _fileName;
 
         string json = File.ReadAllText(path);
-        mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
+        _mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
         //File.Delete(path);
 
-        ListBlockData listBlockData = MapSaver.GetMapBlock(mapInfo.ID);
+        ListBlockData listBlockData = MapSaver.GetMapBlock(_mapInfo.ID);
 
         foreach (BlockData blockData in listBlockData.blocks)
         {
