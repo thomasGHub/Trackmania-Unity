@@ -226,14 +226,14 @@ namespace MirrorBasics
         public void ReceiveMapInfo(string data)
         {
             SingleMapInfo myDeserializedClass = JsonConvert.DeserializeObject<SingleMapInfo>(data);
-            MapSaver.SaveMapInfo(myDeserializedClass.MapInfo, false);
+            MapSaver.SaveMapInfo(myDeserializedClass.MapInfo);
             MapSaver.SaveMapToPlay(myDeserializedClass.MapInfo);
         }
 
         public void ReceiveMapData(string data)
         {
             SingleListJsonData myDeserializedClass = JsonConvert.DeserializeObject<SingleListJsonData>(data);
-            MapSaver.SaveMapData(myDeserializedClass.ListJsonData, false);
+            MapSaver.SaveMapData(myDeserializedClass.ListJsonData);
         }
 
 

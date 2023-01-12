@@ -14,7 +14,7 @@ public class Temps
 
     public Temps(int __miliseconds, int __seconds, int __minutes)
     {
-        _minutes = __miliseconds;
+        _minutes = __minutes;
         _seconds = __seconds;
         _miliseconds = __miliseconds;
     }
@@ -74,13 +74,18 @@ public class Temps
     {
         if (score != null)
         {
-            return score._minutes + "." + score._seconds + ":" + score._miliseconds;
-
+            return score._minutes.ToString("D2") + ":" + score._seconds.ToString("D2") + ":" + score._miliseconds.ToString("D3");
         }
         else
         {
             return "";
         }
+    }
+
+    public static string IntToString(int score)
+    {
+        Temps temps = Temps.IntToTemps(score);
+        return Temps.TempsToString(temps);
     }
 
 }

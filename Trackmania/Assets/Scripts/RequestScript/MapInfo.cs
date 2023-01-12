@@ -18,6 +18,8 @@ public class MapInfo
     public int GoldMedal { get; set; }
     public int AuthorMedal { get; set; }
 
+    public MapWorldRecord WorldRecord { get; set; }
+
 
     public MapInfo(string iD, string name, string author, int bronzeMedal, int silverMedal, int goldMedal, int authorMedal)
     {
@@ -31,6 +33,26 @@ public class MapInfo
         SilverMedal = silverMedal;
         GoldMedal = goldMedal;
         AuthorMedal = authorMedal;
+
+        WorldRecord = new MapWorldRecord();
+
+    }
+
+    [JsonConstructor]
+    public MapInfo(string iD, string name, string author, int bronzeMedal, int silverMedal, int goldMedal, int authorMedal, MapWorldRecord worldRecord)
+    {
+        ID = iD;
+        Name = name;
+        Author = author;
+        DateTime = DateTime.Now;
+        IsPublished = false;
+        IsModified = false;
+        BronzeMedal = bronzeMedal;
+        SilverMedal = silverMedal;
+        GoldMedal = goldMedal;
+        AuthorMedal = authorMedal;
+
+        WorldRecord = worldRecord;
 
     }
 
@@ -49,6 +71,12 @@ public class MapInfo
     }
 }
 
+public class SingleWorldRecord
+{
+    [JsonProperty("document")]
+    public MapWorldRecord WorldRecord { get; set; }
+}
+
 public class SingleListJsonData
 {
     [JsonProperty("document")]
@@ -65,4 +93,35 @@ public class MultipleElement
 {
     [JsonProperty("documents")]
     public MapInfo[] _allMapInfo { get; set; }
+}
+
+public class PersonalMapTime
+{
+    public string ID { get; private set; }
+    public int Time { get; private set; }
+
+    public PersonalMapTime(string iD, int time)
+    {
+        ID = iD;
+        Time = time;
+    }
+}
+
+public class MapWorldRecord
+{
+    public string Author { get; private set; }
+    public int Time { get; private set; }
+
+    [JsonConstructor]
+    public MapWorldRecord(string author, int time)
+    {
+        Author = author;
+        Time = time;
+    }
+
+    public MapWorldRecord()
+    {
+        Author = null;
+        Time = -1;
+    }
 }

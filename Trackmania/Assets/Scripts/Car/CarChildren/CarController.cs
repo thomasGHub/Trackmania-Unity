@@ -295,6 +295,9 @@ namespace Car
         public void RaceStart()
         {
             _playerMap.PlayerMovement.Enable();
+            _engineSoundHighPitched.enabled = true;
+            _engineSoundLowPitched.enabled = true;
+            _skidSound.enabled = true;
         }
 
         public void RaceStop()

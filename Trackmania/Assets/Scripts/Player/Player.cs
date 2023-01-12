@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private CarController _carController;
     [SerializeField] private SpeedoMeter _speedoMeter;
+    [SerializeField] private GameObject _UI;
     public TimerCount _timerCount;
 
     [Header("Car Camera")]
@@ -48,6 +49,7 @@ public class Player : MonoBehaviour
         _playerMap.PlayerUX.CameraSwitch.Enable();
         _playerMap.PlayerMovement.Respawn.Enable();
         _playerMap.PlayerMovement.Restart.Enable();
+        _UI.SetActive(true);
     }
 
     public void RaceStop()

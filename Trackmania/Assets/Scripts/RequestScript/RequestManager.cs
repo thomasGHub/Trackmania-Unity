@@ -72,7 +72,10 @@ public class RequestManager : MonoBehaviour
 
     public static IEnumerator UpdatingdData(RequestData requestData, System.Action callback = null)
     {
-        _instance._popUp.SetActive(true);
+        if (_instance._popUp != null)
+        {
+            _instance._popUp.SetActive(true);
+        }
 
         using (UnityWebRequest request = new UnityWebRequest(_instance._databaseURL + "updateOne", "POST"))
         {
@@ -80,7 +83,6 @@ public class RequestManager : MonoBehaviour
             request.SetRequestHeader("api-key", _instance._apiKey);
 
             string json = requestData.Stringnify();
-            Debug.Log(json);
             byte[] bodyRaw = Encoding.ASCII.GetBytes(json);
 
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
@@ -104,7 +106,10 @@ public class RequestManager : MonoBehaviour
             }
         }
 
-        _instance._popUp.SetActive(false);
+        if(_instance._popUp != null)
+        {
+            _instance._popUp.SetActive(false);
+        }
     }
 
     public static IEnumerator SendingNewData(RequestData requestData, System.Action callback = null)

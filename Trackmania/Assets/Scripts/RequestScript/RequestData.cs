@@ -38,6 +38,22 @@ public class UpdateMapInfo : Update
         _data = data;
     }
 }
+
+public class WorldRecordData
+{
+    [JsonProperty("WorldRecord")]
+    private MapWorldRecord WorldRecord;
+
+    public WorldRecordData(MapWorldRecord worldRecord)
+    {
+        WorldRecord = worldRecord;
+    }
+
+    public WorldRecordData(string author, int time)
+    {
+        WorldRecord = new MapWorldRecord(author, time);
+    }
+}
 #endregion
 
 public class Projection
@@ -56,6 +72,31 @@ public class MapDataProjection : Projection
     {
         _id = 1;
         _blocks = 1;
+    }
+}
+
+public class WorldRecordProjection : Projection
+{
+    [JsonProperty("WorldRecord")]
+    public MapWorldRecordProjection WorldRecord { get; set; }
+    
+    public WorldRecordProjection()
+    {
+        WorldRecord = new MapWorldRecordProjection();
+    }
+}
+
+public class MapWorldRecordProjection
+{
+    [JsonProperty("Author")]
+    public int Author { get; private set; }
+    [JsonProperty("Time")]
+    public int Time { get; private set; }
+
+    public MapWorldRecordProjection()
+    {
+        Author = 1;
+        Time = 1;
     }
 }
 
