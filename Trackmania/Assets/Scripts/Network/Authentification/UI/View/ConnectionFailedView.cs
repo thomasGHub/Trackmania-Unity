@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class ConnectionFailedView : View
 {
@@ -23,7 +24,8 @@ public class ConnectionFailedView : View
 
     void PlayOfflineClicked()
     {
-
+        PlayerPrefs.SetString("PlayOffline", "true");
+        SceneManager.LoadScene("Offline", LoadSceneMode.Single);
 
     }
 

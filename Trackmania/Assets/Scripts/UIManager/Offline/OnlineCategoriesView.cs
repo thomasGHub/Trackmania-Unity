@@ -15,6 +15,17 @@ public class OnlineCategoriesView : View
         OnlineButton.onClick.AddListener(() => OnOnlineClicked());
         LanButton.onClick.AddListener(() => OnLanClicked());
         BackButton.onClick.AddListener(() => OnBack());
+
+        OfflineMode();
+    }
+
+    private void OfflineMode()
+    {
+        if (PlayerPrefs.HasKey("PlayOffline"))
+        {
+            OnlineButton.interactable = false;
+            LanButton.interactable = false;
+        }
     }
 
     void OnHide()

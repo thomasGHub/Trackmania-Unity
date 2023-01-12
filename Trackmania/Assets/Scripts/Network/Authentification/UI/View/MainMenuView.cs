@@ -23,9 +23,18 @@ public class MainMenuView : View
         MarketPLaceButton.onClick.AddListener(() => MarketPlaceClicked());
         SettingsButton.onClick.AddListener(() => SettingsClicked());
         DeconnectionButton.onClick.AddListener(() => OnDeconnection());
+
+        OfflineMode();
     }
 
-
+    private void OfflineMode()
+    {
+        if (PlayerPrefs.HasKey("PlayOffline"))
+        {
+            MarketPLaceButton.interactable = false;
+            DeconnectionButton.interactable = false;
+        }
+    }
 
     void PlayClicked()
     {
