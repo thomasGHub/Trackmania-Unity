@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
     private PlayerMap _playerMap;
     private int _currentIndex;
 
+    public CarController PlayerCar => _carController;
+
     private void Awake()
     {
         _playerMap = new PlayerMap();
@@ -60,9 +62,8 @@ public class Player : MonoBehaviour
 
     public void RaceRestart()
     {
+        GameManager.RaceRestart();
 
-        Ghost ghost = new Ghost();
-        ghost.RestartData();
         RaceStop();
 
         ResetVehicle(GameManager.StartPosition);

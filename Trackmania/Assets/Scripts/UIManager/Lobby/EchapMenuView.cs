@@ -35,16 +35,13 @@ public class EchapMenuView : View
 
     public void LeaveRoom()
     {
-        PlayerNetwork.localPlayer.DisconnectGame();
-        ViewManager.Show<ConnectMenuView>();
-        SceneManager.UnloadSceneAsync("GameMap");
+        StartCoroutine( UILobby.instance.MainMenu() );
     }
 
 
     public void Escaping(InputAction.CallbackContext context)
     {
-
-
+        ViewManager.Show<InGameView>();
     }
 
 

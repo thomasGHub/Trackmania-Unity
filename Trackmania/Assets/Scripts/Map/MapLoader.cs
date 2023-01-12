@@ -29,6 +29,8 @@ public class MapLoader
 
         string json = File.ReadAllText(path);
         _mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
+
+        Debug.Log("Map ID : " + _mapInfo.ID);
         //File.Delete(path);
 
         ListBlockData listBlockData = MapSaver.GetMapBlock(_mapInfo.ID);

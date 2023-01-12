@@ -20,17 +20,73 @@ public class Temps
     }
     public Temps() { }
 
+
+    public static bool IsNewTempsBest(Temps newTemps, Temps oldTemps)
+    {
+        int newTempsInt = TempsToInt(newTemps);
+        int oldTempsInt = TempsToInt(oldTemps);
+
+
+        if (newTempsInt < oldTempsInt || oldTempsInt == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
+
+    public static int TempsToInt(Temps score)
+    {
+        if (score != null)
+        {
+            int intScore = score._miliseconds;
+            intScore += score._seconds * 1000;
+            intScore += score._minutes * 100000;
+
+            return intScore;
+        }
+        else
+        {
+            Debug.LogWarning("SCORE NULL");
+            return -1;
+        }
+
+    }
+
+    public static Temps IntToTemps(int score)
+    {
+        int minutes = Mathf.FloorToInt(score / 100000);
+        score -= minutes * 100000;
+
+        int seconds = Mathf.FloorToInt(score / 1000);
+        score -= seconds * 1000;
+
+        int miliseconds = score;
+
+        return new Temps(miliseconds, seconds, minutes);
+    }
+
+    public static string TempsToString(Temps score)
+    {
+        if (score != null)
+        {
+            return score._minutes + "." + score._seconds + ":" + score._miliseconds;
+
+        }
+        else
+        {
+            return "";
+        }
+    }
+
 }
-
-
 
 public class TimerCount : MonoBehaviour
 {
-
-
-
-
-
     [SerializeField] private TextMeshProUGUI _minutesTextMesh;
     [SerializeField] private TextMeshProUGUI _secondsTextMesh;
     [SerializeField] private TextMeshProUGUI _milisecondsTextMesh;
@@ -112,4 +168,5 @@ public class TimerCount : MonoBehaviour
 
 
     }
+
 }

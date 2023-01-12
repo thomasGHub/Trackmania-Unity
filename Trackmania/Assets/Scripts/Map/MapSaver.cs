@@ -10,6 +10,7 @@ public class MapSaver
     private static string _mapDataPath = Application.persistentDataPath + "/MapData";
     private static string _mapBlocks = "/MapBlocks.json";
     private static string _mapInfo = "/MapInfo.json";
+    private static string _mapGhostInfo = "/MapGhostInfo.json";
     private static string _mapToPlay = "/mapToPlay.json";
     private static string _local = "/Local";
     private static string _online = "/Online";
@@ -17,6 +18,7 @@ public class MapSaver
     public static string MapDataPath => _mapDataPath;
     public static string MapBlocks => _mapBlocks;
     public static string MapInfo => _mapInfo;
+    public static string MapGhostInfo => _mapGhostInfo;
     public static string MapToPlay => _mapToPlay;
     public static string Local => _local;
     public static string Online => _online;

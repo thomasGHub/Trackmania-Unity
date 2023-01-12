@@ -9,25 +9,76 @@ public class GhostController : MonoBehaviour
     private List<GhostData> _ghosts = new List<GhostData>();
     private Rigidbody _GhostRb;
     Ghost ghost = new Ghost();
+
+    private bool _isInit = false;
+    private bool _isFinish = false;
+    private int _index = 0;
+    private float _lerpTime;
+    private float _startTime;
+
+    private Vector3 _startPosition;
+    private Quaternion _startRotation;
+
+    private Vector3 _targetPosition;
+    private Quaternion _targetRotation;
+
     private void Awake()
     {
         _GhostRb = GetComponent<Rigidbody>();
-        _ghosts = ghost.loadGhost(ghost._pathMapToLoad);
-    }
-    private void Start()
-    {
-        StartCoroutine(_raceGhost(ghost));
+        _lerpTime = new Ghost()._timeBetweenGetData;
     }
 
-    IEnumerator _raceGhost(Ghost ghost)
+    public void Init(List<GhostData> ghostDatas)
     {
-        foreach(GhostData ghostData in _ghosts)
+        _ghosts = ghostDatas;
+        _isInit = true;
+
+        ChangeLerpValue();
+    }
+
+    public void Update()
+    {
+        if(_isInit && !_isFinish)
         {
-            _GhostRb.DOMove(ghostData.position, ghost._timeBetweenGetData);
-            _GhostRb.DORotate(ghostData.rotation.eulerAngles, ghost._timeBetweenGetData);
-            yield return new WaitForSeconds(ghost._timeBetweenGetData);
+
+            if ((Time.time - _startTime) < _lerpTime)
+            {
+                _GhostRb.transform.position = Vector3.Lerp(_startPosition, _targetPosition, (Time.time - _startTime) / _lerpTime);
+                _GhostRb.transform.rotation = Quaternion.Lerp(_startRotation, _targetRotation, (Time.time - _startTime) / _lerpTime);
+            }
+            else
+            {
+                _index++;
+
+                if(_index == _ghosts.Count)
+                {
+                    _isFinish = true;
+                    return;
+                }
+
+                ChangeLerpValue();
+            }
         }
     }
 
+    private void ChangeLerpValue()
+    {
+        _startPosition = _GhostRb.transform.position;
+        _startRotation = _GhostRb.transform.rotation;
 
+        _targetPosition = _ghosts[_index].position;
+        _targetRotation = _ghosts[_index].rotation;
+
+        _startTime = Time.time;
+    }
+
+    public void Restart(Transform destination)
+    {
+        _GhostRb.transform.position = destination.position;
+        _GhostRb.transform.rotation = destination.rotation;
+
+        _index = 0;
+
+        ChangeLerpValue();
+    }
 }

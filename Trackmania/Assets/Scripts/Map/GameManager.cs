@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using MirrorBasics;
 using Mirror;
+using System.Collections;
 
 public struct RoadPoints
 {
@@ -38,11 +39,15 @@ public class GameManager : MonoBehaviour
     public static Transform LastCheckPointPassed => _instance._lastCheckPointPassed;
     public static Transform StartPosition => _instance._roadPoints.Start.transform;
 
+    public Temps localBestTemps = new Temps(0,0,0);
+
     #region Ghost
-    private List<GhostData> _ghosts = new List<GhostData>();
-    Ghost ghost = new Ghost();
     [SerializeField]
     private GameObject _ghostPrefab;
+
+    private Ghost _ghost;
+    private IEnumerator _ghostSaveCoroutine;
+    private GhostController _ghostController;
     #endregion
 
     private void Awake()
@@ -82,28 +87,53 @@ public class GameManager : MonoBehaviour
 
         _roadToFunction.Add(_roadData.CheckPoint.GetType(), CheckPointPassed);
         _roadToFunction.Add(_roadData.Goal.GetType(), EndPointPassed);
+
+        _ghost = new Ghost(_player.PlayerCar.transform, _mapLoader.MapInfo.ID);
     }
 
     public static void LanchRace()
     {
-
         foreach(Road checkPoint in _instance._roadPoints.CheckPoints)
         {
             _instance._checkPointPassed[checkPoint] = false;
         }
 
-        _instance._player.RaceStart();
-        
-        if (_instance.ghost.loadGhost(_instance.ghost._pathMapToLoad) != null)
+        List<GhostData> ghostData = _instance._ghost.loadGhost();
+
+        if (ghostData != null)
         {
             Transform startPoint = _instance._roadPoints.Start.transform;
-            Instantiate(_instance._ghostPrefab, startPoint.position, startPoint.rotation);
+            GameObject gameObject = Instantiate(_instance._ghostPrefab, startPoint.position, startPoint.rotation);
+            _instance._ghostController = gameObject.GetComponent<GhostController>();
+            _instance._ghostController.Init(ghostData);
         }
+
+        _instance._ghost._isInRace = true;
+        if (_instance._ghostSaveCoroutine == null)
+        {
+            _instance._ghostSaveCoroutine = _instance._ghost.GetData();
+            _instance.StartCoroutine(_instance._ghostSaveCoroutine);
+        }
+
+        _instance._player.RaceStart();
+    }
+
+    public static void RaceRestart()
+    {
+        foreach (Road checkPoint in _instance._roadPoints.CheckPoints)
+        {
+            _instance._checkPointPassed[checkPoint] = false;
+        }
+
+        _instance._ghost.RestartData();
+        if(_instance._ghostSaveCoroutine != null)
+            _instance._ghostController.Restart(StartPosition);
+
+        _instance._player.RaceStart();
     }
 
     public static void VehiclePassPoint(Road roadScript)
     {
-        Debug.Log(roadScript.GetType());
         _instance._roadToFunction[roadScript.GetType()].Invoke(roadScript);
     }
 
@@ -126,16 +156,23 @@ public class GameManager : MonoBehaviour
         _player.RaceStop();
 
         Temps temps = _player.RaceFinish();
-        Debug.Log(temps._minutes + temps._seconds + temps._miliseconds);
-        string playerName = PlayerPrefs.GetString("UserName");
 
-        PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, temps, PlayerNetwork.localPlayer.playerName);
+        if (Temps.IsNewTempsBest(temps, localBestTemps))
+        {
+            localBestTemps = temps;
+            PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, temps, PlayerNetwork.localPlayer.playerName);
+        }
 
-
+        _ghost._isInRace = false;
     }
 
     public static void SetPlayerReference(Player __player )
     {
         _instance._player = __player;
     }
+
+
+
+
+
 }

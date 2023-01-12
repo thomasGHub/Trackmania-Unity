@@ -178,7 +178,7 @@ namespace MirrorBasics
         [Command]
         void CmdSendMapID(string _mapID)
         {
-            Debug.Log("Server_________________________________" + _mapID);
+            //Debug.Log("Server_________________________________" + _mapID);
 
             currentMatch.mapId = _mapID;
         }
@@ -406,7 +406,6 @@ namespace MirrorBasics
             yield return asyncOperation.isDone;
             yield return new WaitForSeconds(1);
             GameManager.LanchRace();
-
         }
 
 
@@ -442,7 +441,7 @@ namespace MirrorBasics
         [ClientRpc]
         void RpcReceiveScore(int _playerIndex, Temps _score, string _playerName)
         {
-            Debug.LogWarning("SetScoreLocalPlayerNetwork"+ this.playerIndex);
+            //Debug.LogWarning("SetScoreLocalPlayerNetwork"+ this.playerIndex);
             //PlayerNetwork.localPlayer.currentMatch.playersScores[playerIndex - 1] = _score;
             InGameView.instance.dicTemps[playerIndex - 1] = _score;
             InGameView.instance.dicNames[playerIndex - 1] = _playerName;

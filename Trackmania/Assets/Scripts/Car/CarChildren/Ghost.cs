@@ -13,11 +13,17 @@ public class GhostData
 {
     public Vector3 position;
     public Quaternion rotation;
+
+    public GhostData(Vector3 position, Quaternion rotation)
+    {
+        this.position = position;
+        this.rotation = rotation;
+    }
 }
 public class Ghost
 {
-    public string _pathMapToLoad = "/testGhost.json";
     public float _timeBetweenGetData = 0.15f;
+    private string _path;
     private string _json;
     public bool _isInRace = false;
     GhostList ghostList = new GhostList();
@@ -25,9 +31,12 @@ public class Ghost
     public Ghost()
     {
     }
-    public Ghost(Transform transform)
+    public Ghost(Transform transform, string mapID)
     {
         _transform = transform;
+        _path = MapSaver.GetMapDirectory(mapID) + MapSaver.MapGhostInfo;
+
+        Debug.Log("Map ID : " + mapID + " , path : " + _path);
     }
     public IEnumerator GetData()
     {
@@ -36,7 +45,7 @@ public class Ghost
             yield return new WaitForSeconds(_timeBetweenGetData);
             saveData();
         }
-        sendGhostData(_pathMapToLoad);
+        sendGhostData();
     }
     public void RestartData()
     {
@@ -45,26 +54,26 @@ public class Ghost
 
     private void saveData()
     {
-        GhostData saveGhost = new GhostData();
+        GhostData saveGhost = new GhostData(_transform.position, _transform.rotation);
         saveGhost.position = _transform.position;
         saveGhost.rotation = _transform.rotation;
         ghostList.GhostPos.Add(saveGhost);
     }
-    private void sendGhostData(string _pathMapToLoad)
+    private void sendGhostData()
     {
         if (ghostList.GhostPos.Count > 0)
         {
             _json += JsonUtility.ToJson(ghostList);
-            Debug.Log("test : " + _json);
-            File.WriteAllText(Application.persistentDataPath + _pathMapToLoad, _json);
+            File.WriteAllText(_path, _json);
         }
     }
-    public List<GhostData> loadGhost(string _pathMapToLoad)
+    public List<GhostData> loadGhost()
     {
-        string path = Application.persistentDataPath + _pathMapToLoad;
-        if(File.Exists(path))
+        Debug.Log("Loading Ghost " + _path);
+        if (File.Exists(_path))
         {
-            string jsonStr = File.ReadAllText(path);
+            Debug.Log("File Found");
+            string jsonStr = File.ReadAllText(_path);
             GhostList mySampleFile = JsonUtility.FromJson<GhostList>(jsonStr);
             return mySampleFile.GhostPos;
         }

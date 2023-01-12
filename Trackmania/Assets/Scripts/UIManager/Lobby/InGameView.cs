@@ -55,74 +55,24 @@ public class InGameView : View
         DestroyLeaderboard();
         for (int i = 0; i < dicTemps.Count; i++)
         {
-            dicInt[i] = TempsToInt(dicTemps[i]);
+            dicInt[i] = Temps.TempsToInt(dicTemps[i]);
         }
 
         foreach (KeyValuePair<int, int> dic in dicInt.OrderBy(key => key.Value))
         {
             if (dic.Value != -1)
             {
-                Debug.LogWarning("Clé: " + dic.Key + " Valeur: " + dic.Value);
+                //Debug.LogWarning("Clé: " + dic.Key + " Valeur: " + dic.Value);
 
                 GameObject lbActuel = Instantiate(lbPrefab, lbParent);
                 lbActuel.GetComponent<UILeaderboardEntry>().nameText.text = dicNames[dic.Key];
                 lbActuel.GetComponent<UILeaderboardEntry>().placeText.text = dic.Key.ToString();
-                lbActuel.GetComponent<UILeaderboardEntry>().valueText.text = TempsToString(dicTemps[dic.Key]);
+                lbActuel.GetComponent<UILeaderboardEntry>().valueText.text = Temps.TempsToString(dicTemps[dic.Key]);
             }
-
-            
-
-        }
-
-
-        //{5,3,6,1}
-
-        //{1,3,5,6}
-
-
-
-
-
-        
-
-
-
-
-
-
-    }
-
-    public  int TempsToInt(Temps score)
-    {
-        if (score!=null)
-        {
-            int intScore = score._miliseconds;
-            intScore += score._seconds * 1000;
-            intScore += score._minutes * 100000;
-
-            return intScore;
-        }
-        else
-        {
-            Debug.LogWarning("SCORE NULL");
-            return -1;
-        }
-        
-    }
-
-    public string TempsToString(Temps score)
-    {
-        if (score!=null)
-        {
-            return score._minutes + "." + score._seconds + ":" + score._miliseconds;
-
-        }
-        else
-        {
-            return "";
         }
     }
 
+    
 
 
 
@@ -140,7 +90,7 @@ public class InGameView : View
 
     public void Escaping(InputAction.CallbackContext context)
     {
-
+        ViewManager.Show<EchapMenuView>();
 
     }
 

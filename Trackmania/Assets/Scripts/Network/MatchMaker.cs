@@ -138,7 +138,7 @@ namespace MirrorBasics {
                     matches[i].inMatch = true;
                     foreach (var player in matches[i].players) {
                         player.StartGame ();
-                        Debug.Log("Start " + player.playerIndex);
+                        //Debug.Log("Start " + player.playerIndex);
                     }
                     break;
                 }

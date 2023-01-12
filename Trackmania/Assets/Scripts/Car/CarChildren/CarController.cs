@@ -81,9 +81,6 @@ namespace Car
         [SerializeField] private Vector3 _carVelocity;
         private float _carSpeed; // limitate the call "_carVelocity.magnitude"
 
-        private Ghost _ghost;
-        private IEnumerator _ghostSaveCoroutine;
-
         #region Input Variable
 
         private float _speedInput;
@@ -97,7 +94,6 @@ namespace Car
         {
             _playerMap = new PlayerMap();
             _rigidbody = GetComponent<Rigidbody>();
-            _ghost = new Ghost(transform);
         }
 
         private void Start()
@@ -299,18 +295,11 @@ namespace Car
         public void RaceStart()
         {
             _playerMap.PlayerMovement.Enable();
-            _ghost._isInRace = true;
-            if (_ghostSaveCoroutine == null)
-            {
-                _ghostSaveCoroutine = _ghost.GetData();
-                StartCoroutine(_ghostSaveCoroutine);
-            }
         }
 
         public void RaceStop()
         {
             _playerMap.PlayerMovement.Disable();
-            _ghost._isInRace = false;
         }
 
         public void Teleportation(Transform destination)
