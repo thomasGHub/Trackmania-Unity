@@ -35,8 +35,6 @@ public class Ghost
     {
         _transform = transform;
         _path = MapSaver.GetMapDirectory(mapID) + MapSaver.MapGhostInfo;
-
-        Debug.Log("Map ID : " + mapID + " , path : " + _path);
     }
     public IEnumerator GetData()
     {
@@ -69,10 +67,8 @@ public class Ghost
     }
     public List<GhostData> loadGhost()
     {
-        Debug.Log("Loading Ghost " + _path);
         if (File.Exists(_path))
         {
-            Debug.Log("File Found");
             string jsonStr = File.ReadAllText(_path);
             GhostList mySampleFile = JsonUtility.FromJson<GhostList>(jsonStr);
             return mySampleFile.GhostPos;

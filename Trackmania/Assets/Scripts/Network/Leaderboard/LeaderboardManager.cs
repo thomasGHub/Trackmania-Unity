@@ -176,7 +176,6 @@ public class LeaderboardManager : MonoBehaviour
 
     private void OnLeaderboardSend(UpdatePlayerStatisticsResult obj)
     {
-
         Debug.Log("Successfull leaderboard sent");
     }
 

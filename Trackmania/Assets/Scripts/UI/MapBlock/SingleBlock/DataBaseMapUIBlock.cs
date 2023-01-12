@@ -8,12 +8,19 @@ using Newtonsoft.Json;
 
 public class DataBaseMapUIBlock : MapUiBlock
 {
+    [SerializeField] private TextMeshProUGUI _username;
+    [SerializeField] private TextMeshProUGUI _time;
+    [SerializeField] private TextMeshProUGUI _worldRecord;
+    [SerializeField] private GameObject[] _worldRecordChild;
+
     [Header("Download")]
     [SerializeField] private Button _downloadButton;
     [SerializeField] private Button _updateButton;
     [SerializeField] private TextMeshProUGUI _downloadText;
     [SerializeField] private string _alreadyDownloadString = "Already Download";
     [SerializeField] private string _updateString = "Update";
+
+
 
     public override void Init(MapInfo mapInfo)
     {
@@ -24,6 +31,20 @@ public class DataBaseMapUIBlock : MapUiBlock
         }
 
         base.Init(mapInfo);
+
+        if (mapInfo.WorldRecord.Author != null)
+        {
+            _username.text = mapInfo.WorldRecord.Author;
+            _time.text = Temps.IntToString(mapInfo.WorldRecord.Time);
+        }
+        else
+        {
+            _worldRecord.text = "No World Record";
+            foreach (GameObject gameObject in _worldRecordChild)
+            {
+                gameObject.SetActive(false);
+            }
+        }
 
         //DataBase version different than stocked version
         if (Directory.Exists(MapSaver.MapDataPath + MapSaver.Online + "/" + mapInfo.ID))

@@ -11,6 +11,7 @@ public class MapSaver
     private static string _mapBlocks = "/MapBlocks.json";
     private static string _mapInfo = "/MapInfo.json";
     private static string _mapGhostInfo = "/MapGhostInfo.json";
+    private static string _mapPersonalTimeInfo = "/MapPersonalTimeInfo.json";
     private static string _mapToPlay = "/mapToPlay.json";
     private static string _local = "/Local";
     private static string _online = "/Online";
@@ -19,6 +20,7 @@ public class MapSaver
     public static string MapBlocks => _mapBlocks;
     public static string MapInfo => _mapInfo;
     public static string MapGhostInfo => _mapGhostInfo;
+    public static string MapPersonalTimeInfo => _mapPersonalTimeInfo;
     public static string MapToPlay => _mapToPlay;
     public static string Local => _local;
     public static string Online => _online;
@@ -77,9 +79,9 @@ public class MapSaver
         File.WriteAllText(path + _mapInfo, _json);
     }
 
-    public static void SaveMapInfo(MapInfo mapInfo, bool isLocal)
+    public static void SaveMapInfo(MapInfo mapInfo)
     {
-        string path = GeneratePath(mapInfo.ID, isLocal);
+        string path = GetMapDirectory(mapInfo.ID);
 
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
@@ -88,9 +90,9 @@ public class MapSaver
         File.WriteAllText(path + "/" + MapSaver.MapInfo, json);
     }
 
-    public static void SaveMapData(ListJsonData listJsonData, bool isLocal)
+    public static void SaveMapData(ListJsonData listJsonData)
     {
-        string path = GeneratePath(listJsonData.ID, isLocal);
+        string path = GetMapDirectory(listJsonData.ID);;
 
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
@@ -105,6 +107,33 @@ public class MapSaver
 
         string json = JsonConvert.SerializeObject(mapInfo);
         File.WriteAllText(path + "/" + MapSaver.MapBlocks, json);
+    }
+
+    public static bool SavePersonalTime(MapInfo mapInfo, int time)
+    {
+        string path = GetMapDirectory(mapInfo.ID) + "/" + _mapPersonalTimeInfo;
+        string json;
+        PersonalMapTime personalMapTime;
+
+        if (File.Exists(path))
+        {
+            json = File.ReadAllText(path);
+            personalMapTime = JsonConvert.DeserializeObject<PersonalMapTime>(json);
+        }
+        else
+        {
+            personalMapTime = new PersonalMapTime(mapInfo.ID, int.MaxValue);
+        }
+
+        if (time < personalMapTime.Time)
+        {
+            personalMapTime = new PersonalMapTime(mapInfo.ID, time);
+            json = JsonConvert.SerializeObject(personalMapTime);
+            File.WriteAllText(path, json);
+            return true;
+        }
+
+        return false;
     }
 
     public static ListBlockData GetMapBlock(string id)
@@ -144,17 +173,5 @@ public class MapSaver
         }
 
         return null;
-    }
-
-    public static string GeneratePath(string mapID, bool isLocal)
-    {
-        string path;
-
-        if (isLocal)
-            path = _mapDataPath + _local + "/" + mapID;
-        else
-            path = _mapDataPath + _online + "/" + mapID;
-
-        return path;
     }
 }

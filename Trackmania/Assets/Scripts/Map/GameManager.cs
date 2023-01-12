@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 using MirrorBasics;
 using Mirror;
 using System.Collections;
+using Newtonsoft.Json;
 
 public struct RoadPoints
 {
@@ -39,7 +40,9 @@ public class GameManager : MonoBehaviour
     public static Transform LastCheckPointPassed => _instance._lastCheckPointPassed;
     public static Transform StartPosition => _instance._roadPoints.Start.transform;
 
-    public Temps localBestTemps = new Temps(0,0,0);
+    private Temps localBestTemps = new Temps(0,0,0);
+    private Temps _currentTemps;
+
 
     #region Ghost
     [SerializeField]
@@ -155,15 +158,54 @@ public class GameManager : MonoBehaviour
         }
         _player.RaceStop();
 
-        Temps temps = _player.RaceFinish();
+        _currentTemps = _player.RaceFinish();
 
-        if (Temps.IsNewTempsBest(temps, localBestTemps))
+        if (Temps.IsNewTempsBest(_currentTemps, localBestTemps))
         {
-            localBestTemps = temps;
-            PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, temps, PlayerNetwork.localPlayer.playerName);
+            localBestTemps = _currentTemps;
+            PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, _currentTemps, PlayerNetwork.localPlayer.playerName);
         }
 
+        SavePersonalTime();
+
         _ghost._isInRace = false;
+    }
+
+    private void SavePersonalTime()
+    {
+        if(MapSaver.SavePersonalTime(_mapLoader.MapInfo, Temps.TempsToInt(_currentTemps)))
+        {
+            StartCoroutine(SaveWorldRecord());
+        }
+    }
+
+    private IEnumerator SaveWorldRecord()
+    {
+        DownloadingData downloadingData = new DownloadingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapInfo,
+            new FilterID(_mapLoader.MapInfo.ID), new WorldRecordProjection());
+        StartCoroutine(RequestManager.DownloadingSingleData(downloadingData, GetWorldRecord));
+
+        yield return null;
+    }
+
+    private void GetWorldRecord(string data)
+    {
+        SingleWorldRecord mapWorldRecord = JsonConvert.DeserializeObject<SingleWorldRecord>(data);
+
+        if(mapWorldRecord.WorldRecord == null) //Map not publish
+        {
+            return;
+        }
+
+        if(Temps.TempsToInt(_currentTemps) < mapWorldRecord.WorldRecord.Time || mapWorldRecord.WorldRecord.Time == -1)
+        {
+            MapWorldRecord personalWorldRecord = new MapWorldRecord(PlayerPrefs.GetString("UserName"), Temps.TempsToInt(_currentTemps));
+            UpdatingData updatingData = new UpdatingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapInfo, new WorldRecordData(personalWorldRecord), new FilterID(_mapLoader.MapInfo.ID));
+            StartCoroutine(RequestManager.UpdatingdData(updatingData));
+            MapInfo mapInfo = _mapLoader.MapInfo;
+            mapInfo.WorldRecord = personalWorldRecord;
+            MapSaver.SaveMapInfo(mapInfo);
+        }
     }
 
     public static void SetPlayerReference(Player __player )
