@@ -117,7 +117,7 @@ namespace MirrorBasics
         [TargetRpc]
         void TargetHostGame(bool success, string _matchID, int _playerIndex)
         {
-            string path = MapSaver.MapDataPath + "/" + "mapToPlay" + ".json";
+            string path = MapSaver.MapDataPath + MapSaver.MapToPlay ;
             string json = File.ReadAllText(path);
             MapInfo mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
             CmdSendMapID(mapInfo.ID);
