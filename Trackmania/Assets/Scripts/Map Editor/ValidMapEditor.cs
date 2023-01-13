@@ -38,7 +38,6 @@ public class ValidMapEditor : MonoBehaviour
     {
         _instance._roadToFunction.Add(_instance._roadData.CheckPoint.GetType(), _instance.CheckPointPassed);
         _instance._roadToFunction.Add(_instance._roadData.Goal.GetType(), _instance.EndPointPassed);
-        _instance._parentTransform.localScale = _instance._scaleMap;
 
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
         foreach (GameObject go in allObjects)
@@ -49,6 +48,9 @@ public class ValidMapEditor : MonoBehaviour
                 go.transform.SetParent(_instance._parentTransform);
             }
         }
+
+        _instance._parentTransform.localScale = _instance._scaleMap;
+
         List<Road> roadList = new List<Road>();
         foreach (Road road in _instance._roads)
         {
@@ -99,7 +101,10 @@ public class ValidMapEditor : MonoBehaviour
 
         Temps temps = _player.RaceFinish();
         _playerMap.PlayerUX.StartRace.Disable();
-        foreach(Road road in _roads)
+
+        _instance._parentTransform.localScale = new Vector3(1, 1, 1);
+
+        foreach (Road road in _roads)
         {
             road.transform.SetParent(null);
         }

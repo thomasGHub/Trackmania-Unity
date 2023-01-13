@@ -12,7 +12,6 @@ public class SoloMenuView : View
     {
         SoloCampaign.onClick.AddListener(()=> PlayCampaign()) ;
         SoloMapPerso.onClick.AddListener(()=> PlayMapPerso()) ;
-        SoloMapDL.onClick.AddListener(()=> PlayMapDL());
     }
 
     void PlayCampaign()
@@ -24,9 +23,5 @@ public class SoloMenuView : View
     void PlayMapPerso()
     {
         ViewManager.Show<SoloMapPersoMenuView>(true, false);
-    }
-    void PlayMapDL()
-    {
-        ViewManager.Show<SoloMapDLMenuView>(true, false);
     }
 }

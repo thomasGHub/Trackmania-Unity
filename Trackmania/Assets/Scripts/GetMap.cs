@@ -44,4 +44,21 @@ public static class GetMap
 
         return _allMapInfo;
     }
+
+    public static List<MapInfo> GetCampaignMap()
+    {
+        string folderPath = MapSaver.MapDataPath + MapSaver.Campaign;
+        string[] directoriesPath = Directory.GetDirectories(folderPath);
+        string file;
+
+        List<MapInfo> _allMapInfo = new List<MapInfo>();
+
+        for (int index = 0; index < directoriesPath.Length; index++)
+        {
+            file = File.ReadAllText(directoriesPath[index] + MapSaver.MapInfo);
+            _allMapInfo.Add(JsonConvert.DeserializeObject<MapInfo>(file));
+        }
+
+        return _allMapInfo;
+    }
 }

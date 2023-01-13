@@ -15,6 +15,7 @@ public class MapSaver
     private static string _mapToPlay = "/mapToPlay.json";
     private static string _local = "/Local";
     private static string _online = "/Online";
+    private static string _campaign = "/Campaign";
 
     public static string MapDataPath => _mapDataPath;
     public static string MapBlocks => _mapBlocks;
@@ -24,6 +25,7 @@ public class MapSaver
     public static string MapToPlay => _mapToPlay;
     public static string Local => _local;
     public static string Online => _online;
+    public static string Campaign => _campaign;
 
     public static void CreateNewMap(ListJsonData listBlock, string mapName, int bronzeMedal, int silverMedal,int goldMedal,int authorMedal)
     {
@@ -154,6 +156,9 @@ public class MapSaver
 
         if (!Directory.Exists(_mapDataPath + _online))
             Directory.CreateDirectory(_mapDataPath + _online);
+
+        if (!Directory.Exists(_mapDataPath + _campaign))
+            Directory.CreateDirectory(_mapDataPath + _campaign);
     }
 
     public static string GetMapDirectory(string mapID)

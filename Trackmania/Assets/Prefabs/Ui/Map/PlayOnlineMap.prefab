@@ -1935,7 +1935,7 @@ GameObject:
   - component: {fileID: 3455986691529936418}
   - component: {fileID: 1075493925901650880}
   m_Layer: 5
-  m_Name: PlayMap
+  m_Name: PlayOnlineMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

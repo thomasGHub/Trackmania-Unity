@@ -231,12 +231,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scaleMap: {x: 3, y: 3, z: 3}
+  _soloPlayerPrefab: {fileID: 8672112971869868918, guid: ce874bf93c383414bbbce5280c2f3997, type: 3}
   _parentTransform: {fileID: 1018774225}
   _roadData: {fileID: 11400000, guid: e3db2ed44fbfa084d905417d54d431a5, type: 2}
-  localBestTemps:
-    _minutes: 0
-    _seconds: 0
-    _miliseconds: 0
   _ghostPrefab: {fileID: 4697973029636274235, guid: 47a25cdef337d0e468939b51274a30aa, type: 3}
 --- !u!4 &589299269
 Transform:
