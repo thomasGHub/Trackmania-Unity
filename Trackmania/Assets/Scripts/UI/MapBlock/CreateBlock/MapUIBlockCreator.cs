@@ -9,9 +9,6 @@ public class MapUIBlockCreator : MonoBehaviour
     [SerializeField] protected Transform _parentTransform;
     [SerializeField] protected GameObject _mapDataPrefab;
 
-
-    [SerializeField, Range(0, 500)] protected int _spaceBetweenBlock;
-
     protected List<MapInfo> _allMapInfo = new List<MapInfo>();
 
     protected virtual void Init()

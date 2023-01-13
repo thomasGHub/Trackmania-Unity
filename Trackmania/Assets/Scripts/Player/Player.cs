@@ -2,8 +2,6 @@ using UnityEngine;
 using Car;
 using Cinemachine;
 using UnityEngine.InputSystem;
-using Mirror;
-using System.Collections;
 
 public class Player : MonoBehaviour
 {
@@ -42,7 +40,6 @@ public class Player : MonoBehaviour
 
     public void RaceStart()
     {
-        //gameObject.GetComponent<NetworkTransformChild>().OnTeleport(GameManager.StartPosition.position, Quaternion.identity);
         _carController.RaceStart();
         _speedoMeter.Launch();
         _timerCount.Launch();

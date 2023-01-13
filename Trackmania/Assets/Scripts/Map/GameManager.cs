@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     [Header("Start")]
     //[SerializeField] private GameObject _playerPrefab;
     [SerializeField] private Vector3 _scaleMap;
+    [SerializeField] private GameObject _soloPlayerPrefab;
 
     [Header("LoadMap")]
     [SerializeField] private Transform _parentTransform;
@@ -85,8 +86,16 @@ public class GameManager : MonoBehaviour
 
         Transform startPoint = _roadPoints.Start.transform;
 
-        _player = PlayerNetwork.localPlayer.gameObject.GetComponent<Player>();//_playerCar.GetComponent<Player>();
-        _player.gameObject.GetComponent<NetworkTransformChild>().OnTeleport(startPoint.position, startPoint.rotation);
+        if(PlayerPrefs.GetInt("Multi") == 1)
+        {
+            _player = PlayerNetwork.localPlayer.gameObject.GetComponent<Player>();//_playerCar.GetComponent<Player>();
+            _player.gameObject.GetComponent<NetworkTransformChild>().OnTeleport(startPoint.position, startPoint.rotation);
+        }
+        else
+        {
+            GameObject go = Instantiate(_soloPlayerPrefab, startPoint.position, startPoint.rotation);
+            _player = go.GetComponent<Player>();
+        }
 
         _roadToFunction.Add(_roadData.CheckPoint.GetType(), CheckPointPassed);
         _roadToFunction.Add(_roadData.Goal.GetType(), EndPointPassed);
@@ -118,7 +127,7 @@ public class GameManager : MonoBehaviour
             _instance.StartCoroutine(_instance._ghostSaveCoroutine);
         }
 
-        _instance._player.RaceStart();
+       _instance._player.RaceStart();
     }
 
     public static void RaceRestart()
