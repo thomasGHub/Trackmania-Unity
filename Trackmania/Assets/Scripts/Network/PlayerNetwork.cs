@@ -389,7 +389,7 @@ namespace MirrorBasics
             {
                 ViewManager.Show<InGameView>();
 
-                StartCoroutine(LoadMapScence());
+                StartCoroutine(LoadMapScene());
 
             }
             else
@@ -400,7 +400,7 @@ namespace MirrorBasics
         }
 
 
-        private IEnumerator LoadMapScence()
+        private IEnumerator LoadMapScene()
         {
             AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("GameMap", LoadSceneMode.Additive);
             yield return asyncOperation.isDone;
