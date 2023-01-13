@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
         _ghost = new Ghost(_player.PlayerCar.transform, _mapLoader.MapInfo.ID);
     }
 
-    public static void LanchRace()
+    public static void LaunchRace()
     {
         foreach(Road checkPoint in _instance._roadPoints.CheckPoints)
         {

@@ -405,7 +405,7 @@ namespace MirrorBasics
             AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("GameMap", LoadSceneMode.Additive);
             yield return asyncOperation.isDone;
             yield return new WaitForSeconds(1);
-            GameManager.LanchRace();
+            GameManager.LaunchRace();
         }
 
 
