@@ -19,7 +19,6 @@ public class PlayOnlineMapUiBlock : MapUiBlock
     {
         base.Init(mapInfo);
 
-        Debug.Log("Author : " + mapInfo.WorldRecord.Author + " , Time : " + mapInfo.WorldRecord.Time);
         if(mapInfo.WorldRecord.Author != null)
         {
             _username.text = mapInfo.WorldRecord.Author;

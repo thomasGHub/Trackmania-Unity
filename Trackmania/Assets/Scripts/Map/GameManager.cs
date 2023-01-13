@@ -132,6 +132,8 @@ public class GameManager : MonoBehaviour
 
     public static void RaceRestart()
     {
+        _instance._lastCheckPointPassed = null;
+
         foreach (Road checkPoint in _instance._roadPoints.CheckPoints)
         {
             _instance._checkPointPassed[checkPoint] = false;
@@ -172,7 +174,8 @@ public class GameManager : MonoBehaviour
         if (Temps.IsNewTempsBest(_currentTemps, localBestTemps))
         {
             localBestTemps = _currentTemps;
-            PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, _currentTemps, PlayerNetwork.localPlayer.playerName);
+            if(PlayerPrefs.GetInt("Multi") == 1)
+                PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, _currentTemps, PlayerNetwork.localPlayer.playerName);
         }
 
         SavePersonalTime();

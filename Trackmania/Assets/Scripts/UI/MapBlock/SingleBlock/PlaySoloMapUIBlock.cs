@@ -11,7 +11,6 @@ public class PlaySoloMapUIBlock : PlayOnlineMapUiBlock
 {
     protected override void PlayMap()
     {
-
         StartCoroutine(LaunchGame());
     }
 
@@ -26,5 +25,8 @@ public class PlaySoloMapUIBlock : PlayOnlineMapUiBlock
         yield return new WaitForSeconds(1f);
 
         GameManager.LanchRace();
+
+        ViewManager.Show<InGameOfflineView>();
+        PermananentMenuView.ActivateView(false);
     }
 }
