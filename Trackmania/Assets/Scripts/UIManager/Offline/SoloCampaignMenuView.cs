@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using System.Text;
+using PlayFab.MultiplayerModels;
 
 public enum MedalsType { None, Bronze, Silver, Gold, Author}
 
@@ -35,6 +36,10 @@ public class SoloCampaignMenuView : View
     public float updateLeaderBoardEverySecond;
     public bool isWorldCategory = false;
 
+    [Header("MapLoading")]
+    [SerializeField] private GameObject _mapDataPrefab;
+    [SerializeField] private Transform _parentTransform;
+
 
     [Header("Debug")]
     public TMP_InputField LeaderboardNameInput;
@@ -60,10 +65,20 @@ public class SoloCampaignMenuView : View
 
         LeaderboardSendDebugButton.onClick.AddListener(() => OnSendLeaderboardEntrydebug());
 
-
+        LoadCampaignMap();
     }
 
+    private void LoadCampaignMap()
+    {
+        List<MapInfo> allMapInfos = GetMap.GetCampaignMap();
 
+        for(int index = 0; index < allMapInfos.Count; index++)
+        {
+            GameObject mapUIBlock = Instantiate(_mapDataPrefab, _parentTransform);
+            CampaignButtonUI campaignButton = mapUIBlock.GetComponent<CampaignButtonUI>();
+            campaignButton.Init(allMapInfos[index], index + 1);
+        }
+    }
 
     public void GetLocalRank()
     {
@@ -72,7 +87,7 @@ public class SoloCampaignMenuView : View
         for (int number = 1; number < LevelButton.Length +1; number++)
         {
             LeaderboardManager.instance.GetLeaderboardAroundPlayer("Leaderboard" + number);
-            DisplayMedals(number-1);
+            //DisplayMedals(number-1);
         }
 
         
@@ -248,53 +263,6 @@ public class SoloCampaignMenuView : View
             //newGo.GetComponent<UILeaderboardEntry>().valueText.text = mapLeaderboard.playerScores[i].playerScore;
         }
     }
-
-
-    public void DisplayMedals(int number)
-    {
-        MapLeaderboard localLeaderboard = LeaderboardManager.instance.LoadLeaderboard("Leaderboard" + (number+1));
-        if (localLeaderboard!=null && localLeaderboard.localPlayer!=null && localLeaderboard.localPlayer.playerScore != string.Empty)
-        {
-            var tempColor = new Color(1f, 1f, 1f, 1f); ;
-            LevelButton[number].GetComponent<CampaignButtonUI>().imageMedal.color = tempColor;
-            if (int.Parse(localLeaderboard.localPlayer.playerScore) < localLeaderboard.medalsScore.authorMedalScore)
-            {
-                
-                LevelButton[number].GetComponent<CampaignButtonUI>().imageMedal.sprite = author;
-            }
-            else if (int.Parse(localLeaderboard.localPlayer.playerScore) < localLeaderboard.medalsScore.goldMedalScore)
-            {
-                LevelButton[number].GetComponent<CampaignButtonUI>().imageMedal.sprite = gold;
-
-            }
-            else if(int.Parse(localLeaderboard.localPlayer.playerScore) < localLeaderboard.medalsScore.silverMedalScore)
-            {
-                LevelButton[number].GetComponent<CampaignButtonUI>().imageMedal.sprite = silver;
-
-            }
-            else if (int.Parse(localLeaderboard.localPlayer.playerScore) < localLeaderboard.medalsScore.bronzeMedalScore)
-            {
-                LevelButton[number].GetComponent<CampaignButtonUI>().imageMedal.sprite = bronze;
-
-            }
-            else
-            {
-                tempColor = new Color(1f, 1f, 1f, 0f); ;
-                LevelButton[number].GetComponent<CampaignButtonUI>().imageMedal.color = tempColor;
-                LevelButton[number].GetComponent<CampaignButtonUI>().imageMedal.sprite = null;
-            }
-
-        }
-        else
-        {
-            var tempColor = new Color(1f, 1f, 1f, 0f); ;
-            LevelButton[number].GetComponent<CampaignButtonUI>().imageMedal.color = tempColor;
-            LevelButton[number].GetComponent<CampaignButtonUI>().imageMedal.sprite = null;
-        }
-
-    }
-
-
 
     public void OnSendLeaderboardEntrydebug()
     {

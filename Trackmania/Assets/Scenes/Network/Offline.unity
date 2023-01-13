@@ -8707,6 +8707,8 @@ MonoBehaviour:
   rowsParent: {fileID: 1241186815}
   updateLeaderBoardEverySecond: 10
   isWorldCategory: 0
+  _mapDataPrefab: {fileID: 2373639041749945471, guid: baabc6373521b9c44918dd0d406bec02, type: 3}
+  _parentTransform: {fileID: 925984826}
   LeaderboardNameInput: {fileID: 769562317}
   LeaderboardScoreInput: {fileID: 1704097491}
   LeaderboardSendDebugButton: {fileID: 538091967}
@@ -13310,7 +13312,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &537292791694541523
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13433,6 +13435,7 @@ MonoBehaviour:
   imageMedal: {fileID: 537292793059635378}
   top: {fileID: 537292792106836666}
   rankText: {fileID: 537292792824640655}
+  _button: {fileID: 0}
 --- !u!114 &537292791723986252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13800,6 +13803,7 @@ MonoBehaviour:
   imageMedal: {fileID: 537292792757288686}
   top: {fileID: 537292791873105126}
   rankText: {fileID: 537292793126468307}
+  _button: {fileID: 0}
 --- !u!1 &537292791995845774
 GameObject:
   m_ObjectHideFlags: 0
@@ -13819,7 +13823,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &537292791995845775
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15559,6 +15563,7 @@ MonoBehaviour:
   imageMedal: {fileID: 537292793347391245}
   top: {fileID: 537292792352517381}
   rankText: {fileID: 537292793649560368}
+  _button: {fileID: 0}
 --- !u!222 &537292792481680737
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15683,7 +15688,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &537292792538145828
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -16464,7 +16469,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &537292792931182629
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16513,6 +16518,7 @@ MonoBehaviour:
   imageMedal: {fileID: 537292792090384964}
   top: {fileID: 537292793076861004}
   rankText: {fileID: 537292791654260345}
+  _button: {fileID: 0}
 --- !u!114 &537292792931182634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16629,7 +16635,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &537292792977733208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16647,6 +16653,7 @@ MonoBehaviour:
   imageMedal: {fileID: 537292791642194997}
   top: {fileID: 537292792836363837}
   rankText: {fileID: 537292792078319624}
+  _button: {fileID: 0}
 --- !u!222 &537292792977733209
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -17225,7 +17232,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &537292793268900821
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17274,6 +17281,7 @@ MonoBehaviour:
   imageMedal: {fileID: 537292792423850420}
   top: {fileID: 537292793678705596}
   rankText: {fileID: 537292792390477193}
+  _button: {fileID: 0}
 --- !u!114 &537292793268900826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17656,6 +17664,7 @@ MonoBehaviour:
   imageMedal: {fileID: 537292792602178714}
   top: {fileID: 537292793488058002}
   rankText: {fileID: 537292792232997031}
+  _button: {fileID: 0}
 --- !u!1 &537292793358878458
 GameObject:
   m_ObjectHideFlags: 0
@@ -17675,7 +17684,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &537292793358878459
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17718,7 +17727,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &537292793361288627
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17841,6 +17850,7 @@ MonoBehaviour:
   imageMedal: {fileID: 537292792599936978}
   top: {fileID: 537292793486142938}
   rankText: {fileID: 537292792230657007}
+  _button: {fileID: 0}
 --- !u!1 &537292793486142936
 GameObject:
   m_ObjectHideFlags: 0
@@ -18528,6 +18538,7 @@ MonoBehaviour:
   imageMedal: {fileID: 537292792350110509}
   top: {fileID: 537292793336455461}
   rankText: {fileID: 537292792450594576}
+  _button: {fileID: 0}
 --- !u!222 &537292793744277825
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -18652,4 +18663,4 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
