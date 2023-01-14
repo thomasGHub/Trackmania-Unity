@@ -11,6 +11,7 @@ public class UserAccountManager : MonoBehaviour
 {
     public static UserAccountManager instance;
     public static UnityEvent OnSignInSuccess = new UnityEvent();
+    public static UnityEvent DownloadMapEnd = new UnityEvent();
     public static UnityEvent<string> OnSignInFailed = new UnityEvent<string>();
     public static UnityEvent OnRegisterSuccess = new UnityEvent();
     public static UnityEvent<string> OnRegisterFailed = new UnityEvent<string>();
@@ -28,6 +29,9 @@ public class UserAccountManager : MonoBehaviour
     private GameObject rowPrefab;
     private Transform rowsParent;
 
+    private bool _isSignIn = false;
+    private bool _isMapDownload = false;
+
 
     private void Awake()
     {
@@ -38,7 +42,8 @@ public class UserAccountManager : MonoBehaviour
     private void Start()
     {
         //OnSignInSuccess.AddListener(()=> StartCoroutine(GameViewStart()));
-        OnSignInSuccess.AddListener(ChangeScene);
+        OnSignInSuccess.AddListener(SignInSucces);
+        DownloadMapEnd.AddListener(MapDownloaded);
         OnRegisterSuccess.AddListener(()=>SubmitName(playerName)); 
         OnRegisterSuccess.AddListener(()=> SignIn(playerName, playerPassword));
         OnSignInFailed.AddListener(SignInFailedChangeView);
@@ -299,6 +304,21 @@ public class UserAccountManager : MonoBehaviour
         //SignIn(playerName, playerPassword);
     }
 
+    private void SignInSucces()
+    {
+        _isSignIn = true;
+
+        if (_isMapDownload)
+            ChangeScene();
+    }
+
+    private void MapDownloaded()
+    {
+        _isMapDownload = true;
+
+        if (_isSignIn)
+            ChangeScene();
+    }
 
     void ChangeScene()
     {

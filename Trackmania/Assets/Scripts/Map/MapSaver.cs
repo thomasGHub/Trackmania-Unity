@@ -12,6 +12,7 @@ public class MapSaver
     private static string _mapInfo = "/MapInfo.json";
     private static string _mapGhostInfo = "/MapGhostInfo.json";
     private static string _mapPersonalTimeInfo = "/MapPersonalTimeInfo.json";
+    private static string _mapLeaderBoardData = "/Leaderboard.json";
     private static string _mapToPlay = "/mapToPlay.json";
     private static string _local = "/Local";
     private static string _online = "/Online";
@@ -22,6 +23,7 @@ public class MapSaver
     public static string MapInfo => _mapInfo;
     public static string MapGhostInfo => _mapGhostInfo;
     public static string MapPersonalTimeInfo => _mapPersonalTimeInfo;
+    public static string MapLeaderBoardData => _mapLeaderBoardData;
     public static string MapToPlay => _mapToPlay;
     public static string Local => _local;
     public static string Online => _online;
@@ -177,6 +179,25 @@ public class MapSaver
             return path;
         }
 
+        path = MapSaver.MapDataPath + MapSaver.Campaign + "/" + mapID;
+
+        if (Directory.Exists(path))
+        {
+            return path;
+        }
+
         return null;
+    }
+
+    public static bool IsCampaignMap(string mapID)
+    {
+        string path = MapSaver.MapDataPath + MapSaver.Campaign + "/" + mapID;
+
+        if (Directory.Exists(path))
+        {
+            return true;
+        }
+
+        return false;
     }
 }

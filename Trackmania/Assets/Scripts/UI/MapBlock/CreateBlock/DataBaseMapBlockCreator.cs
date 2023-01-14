@@ -1,6 +1,8 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 public class DataBaseMapBlockCreator : MapUIBlockCreator
@@ -27,9 +29,10 @@ public class DataBaseMapBlockCreator : MapUIBlockCreator
         yield return null;
     }
 
-    private void ReceiveData(MapInfo[] data)
+    private void ReceiveData(string data)
     {
-        _allDataBaseMap = data;
+        MultipleMapInfo myDeserializedClass = JsonConvert.DeserializeObject<MultipleMapInfo>(data);
+        _allDataBaseMap = myDeserializedClass.AllMapInfo;
     }
 
 }

@@ -7,6 +7,7 @@ using MirrorBasics;
 using Mirror;
 using System.Collections;
 using Newtonsoft.Json;
+using System.IO;
 
 public struct RoadPoints
 {
@@ -178,12 +179,56 @@ public class GameManager : MonoBehaviour
                 PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, _currentTemps, PlayerNetwork.localPlayer.playerName);
         }
 
-        SavePersonalTime();
+
+        if(SavePersonalTime(Temps.TempsToInt(_currentTemps)))
+        {
+            if (MapSaver.IsCampaignMap(_mapLoader.MapInfo.ID))
+            {
+                LeaderboardManager.instance.SendLeaderboard(_mapLoader.MapInfo.ID, Temps.TempsToInt(_currentTemps));
+            }
+            else
+            {
+                SaveWordlRecord();
+            }
+        }
+
+        
+        
 
         _ghost._isInRace = false;
     }
 
-    private void SavePersonalTime()
+    private bool SavePersonalTime(int score)
+    {
+        string path = MapSaver.GetMapDirectory(_mapLoader.MapInfo.ID) + MapSaver.MapPersonalTimeInfo;
+        string json;
+        PersonalMapTime personalMapTime;
+
+        Debug.LogWarning(_mapLoader.MapInfo.ID);
+
+        if (File.Exists(path))
+        {
+            json = File.ReadAllText(path);
+            personalMapTime = JsonConvert.DeserializeObject<PersonalMapTime>(json);
+        }
+        else
+        {
+            personalMapTime = new PersonalMapTime(_mapLoader.MapInfo.ID, int.MaxValue);
+        }
+        
+        
+        if(score < personalMapTime.Time)
+        {
+            personalMapTime.Time = score;
+            json = JsonConvert.SerializeObject(personalMapTime);
+            File.WriteAllText(path, json);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void SaveWordlRecord()
     {
         if(MapSaver.SavePersonalTime(_mapLoader.MapInfo, Temps.TempsToInt(_currentTemps)))
         {

@@ -15,6 +15,7 @@ public class DatabaseInformation
     public DatabaseInformation()
     {
         DatabaseToString[Database.Trackmania] = "TrackmaniaDB";
+        DatabaseToString[Database.TrackmaniaCampaign] = "TrackmaniaCampaign";
 
         SourceToString[Source.TrackmaniaDB] = "TrackmaniaDatabase";
 
@@ -25,7 +26,8 @@ public class DatabaseInformation
 
 public enum Database
 {
-    Trackmania
+    Trackmania,
+    TrackmaniaCampaign
 }
 
 public enum Source
@@ -187,7 +189,7 @@ public class RequestManager : MonoBehaviour
         }
     }
 
-    public static IEnumerator DownloadingAllData(RequestData requestData, System.Action<MapInfo[]> callback = null)
+    public static IEnumerator DownloadingAllData(RequestData requestData, System.Action<string> callback = null)
     {
 
         if (_instance._popUp != null)
@@ -220,11 +222,9 @@ public class RequestManager : MonoBehaviour
             {
                 Debug.Log("Succes");
                 _instance._data = request.downloadHandler.text;
-                MultipleElement myDeserializedClass = JsonConvert.DeserializeObject<MultipleElement>(request.downloadHandler.text);
                 Debug.Log("Request : " + request.downloadHandler.text);
-                Debug.Log("MapInfo : " + myDeserializedClass._allMapInfo.Length);
 
-                callback(myDeserializedClass._allMapInfo);
+                callback(request.downloadHandler.text);
             }
         }
 

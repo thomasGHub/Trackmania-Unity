@@ -483,7 +483,7 @@ MonoBehaviour:
   bronze: {fileID: -1988573097682183849, guid: 065f31736b67f1b439da7aa59d8be773, type: 3}
   silver: {fileID: -6466751825803957674, guid: 065f31736b67f1b439da7aa59d8be773, type: 3}
   gold: {fileID: -8025254543956680280, guid: 065f31736b67f1b439da7aa59d8be773, type: 3}
-  author: {fileID: -8025254543956680280, guid: 065f31736b67f1b439da7aa59d8be773, type: 3}
+  author: {fileID: -76948049025046263, guid: 9307337e88efc6248af0372e0dffa027, type: 3}
   buttonNumber: 1
   numberText: {fileID: 2373639040812280087}
   imageMedal: {fileID: 2373639040993312287}

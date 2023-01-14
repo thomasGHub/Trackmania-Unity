@@ -8703,6 +8703,7 @@ MonoBehaviour:
   LeaderboardTitle: {fileID: 280693529}
   LeaderBoardLocal: {fileID: 1487145193}
   LeaderBoardWorld: {fileID: 978828250}
+  ChooseMap: {fileID: 98066384}
   rowPrefab: {fileID: 427715799756022447, guid: 4174f2a23109f9045aa0df17bf8dfe92, type: 3}
   rowsParent: {fileID: 1241186815}
   updateLeaderBoardEverySecond: 10
@@ -13430,6 +13431,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7690b7f392050bf4e91d5b1808d501f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bronze: {fileID: 0}
+  silver: {fileID: 0}
+  gold: {fileID: 0}
+  author: {fileID: 0}
   buttonNumber: 0
   numberText: {fileID: 537292792901707706}
   imageMedal: {fileID: 537292793059635378}
@@ -13798,6 +13803,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7690b7f392050bf4e91d5b1808d501f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bronze: {fileID: 0}
+  silver: {fileID: 0}
+  gold: {fileID: 0}
+  author: {fileID: 0}
   buttonNumber: 0
   numberText: {fileID: 537292793204582886}
   imageMedal: {fileID: 537292792757288686}
@@ -15558,6 +15567,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7690b7f392050bf4e91d5b1808d501f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bronze: {fileID: 0}
+  silver: {fileID: 0}
+  gold: {fileID: 0}
+  author: {fileID: 0}
   buttonNumber: 0
   numberText: {fileID: 537292793687828485}
   imageMedal: {fileID: 537292793347391245}
@@ -16513,6 +16526,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7690b7f392050bf4e91d5b1808d501f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bronze: {fileID: 0}
+  silver: {fileID: 0}
+  gold: {fileID: 0}
+  author: {fileID: 0}
   buttonNumber: 0
   numberText: {fileID: 537292791723986252}
   imageMedal: {fileID: 537292792090384964}
@@ -16648,6 +16665,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7690b7f392050bf4e91d5b1808d501f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bronze: {fileID: 0}
+  silver: {fileID: 0}
+  gold: {fileID: 0}
+  author: {fileID: 0}
   buttonNumber: 0
   numberText: {fileID: 537292792037954365}
   imageMedal: {fileID: 537292791642194997}
@@ -17276,6 +17297,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7690b7f392050bf4e91d5b1808d501f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bronze: {fileID: 0}
+  silver: {fileID: 0}
+  gold: {fileID: 0}
+  author: {fileID: 0}
   buttonNumber: 0
   numberText: {fileID: 537292792330188476}
   imageMedal: {fileID: 537292792423850420}
@@ -17659,6 +17684,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7690b7f392050bf4e91d5b1808d501f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bronze: {fileID: 0}
+  silver: {fileID: 0}
+  gold: {fileID: 0}
+  author: {fileID: 0}
   buttonNumber: 0
   numberText: {fileID: 537292792151729042}
   imageMedal: {fileID: 537292792602178714}
@@ -17845,6 +17874,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7690b7f392050bf4e91d5b1808d501f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bronze: {fileID: 0}
+  silver: {fileID: 0}
+  gold: {fileID: 0}
+  author: {fileID: 0}
   buttonNumber: 0
   numberText: {fileID: 537292792153581786}
   imageMedal: {fileID: 537292792599936978}
@@ -18533,6 +18566,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7690b7f392050bf4e91d5b1808d501f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bronze: {fileID: 0}
+  silver: {fileID: 0}
+  gold: {fileID: 0}
+  author: {fileID: 0}
   buttonNumber: 0
   numberText: {fileID: 537292792538145829}
   imageMedal: {fileID: 537292792350110509}
