@@ -13,10 +13,14 @@ public class InGameOfflineView : View
 
     public Trackmania inputActions;
 
+    private void Awake()
+    {
+        inputActions = new Trackmania();
+    }
 
     public override void Initialize()
     {
-        inputActions = new Trackmania();
+       
         inputActions.UI.Escape.performed += Escaping;
     }
 
