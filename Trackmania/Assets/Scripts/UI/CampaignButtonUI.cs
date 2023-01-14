@@ -138,6 +138,10 @@ public class CampaignButtonUI : MonoBehaviour, IPointerEnterHandler
     public void UpdateRankText()
     {
         string path = MapSaver.GetMapDirectory(_mapInfo.ID) + MapSaver.MapLeaderBoardData;
+        if (!File.Exists(path))
+        {
+            return;
+        }
         string json = File.ReadAllText(path);
         MapLeaderboard mapLeaderboard = JsonConvert.DeserializeObject<MapLeaderboard>(json);
 
