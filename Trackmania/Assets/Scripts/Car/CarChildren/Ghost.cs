@@ -43,7 +43,6 @@ public class Ghost
             yield return new WaitForSeconds(_timeBetweenGetData);
             saveData();
         }
-        sendGhostData();
     }
     public void RestartData()
     {
@@ -57,11 +56,11 @@ public class Ghost
         saveGhost.rotation = _transform.rotation;
         ghostList.GhostPos.Add(saveGhost);
     }
-    private void sendGhostData()
+    public void sendGhostData()
     {
         if (ghostList.GhostPos.Count > 0)
         {
-            _json += JsonUtility.ToJson(ghostList);
+            _json = JsonUtility.ToJson(ghostList);
             File.WriteAllText(_path, _json);
         }
     }

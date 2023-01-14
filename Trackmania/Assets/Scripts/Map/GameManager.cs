@@ -145,6 +145,20 @@ public class GameManager : MonoBehaviour
 
     public static void RaceRestart()
     {
+        List<GhostData> ghostData = _instance._ghost.loadGhost();
+
+        if(ghostData != null)
+        {
+            if(_instance._ghostController == null)
+            {
+                Transform startPoint = _instance._roadPoints.Start.transform;
+                GameObject gameObject = Instantiate(_instance._ghostPrefab, startPoint.position, startPoint.rotation);
+                _instance._ghostController = gameObject.GetComponent<GhostController>();
+            }
+            _instance._ghostController.Init(ghostData);
+        }
+            
+
         _instance._lastCheckPointPassed = null;
 
         foreach (Road checkPoint in _instance._roadPoints.CheckPoints)
@@ -196,6 +210,7 @@ public class GameManager : MonoBehaviour
 
         if(SavePersonalTime(Temps.TempsToInt(_currentTemps)))
         {
+            _ghost.sendGhostData();
             if (MapSaver.IsCampaignMap(_mapLoader.MapInfo.ID))
             {
                 LeaderboardManager.instance.SendLeaderboard(_mapLoader.MapInfo.ID, Temps.TempsToInt(_currentTemps));
