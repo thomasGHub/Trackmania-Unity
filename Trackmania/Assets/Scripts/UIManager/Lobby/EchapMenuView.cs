@@ -12,11 +12,15 @@ public class EchapMenuView : View
 
     public Trackmania inputActions;
 
+    private void Awake()
+    {
+        inputActions = new Trackmania();
+    }
+
     public override void Initialize()
     {
         LeaveRoomButton.onClick.AddListener(()=> LeaveRoom());
 
-        inputActions = new Trackmania();
         inputActions.UI.Escape.performed += Escaping;
     }
 
@@ -29,9 +33,6 @@ public class EchapMenuView : View
     {
         inputActions.UI.Escape.Disable();
     }
-
-
-
 
     public void LeaveRoom()
     {

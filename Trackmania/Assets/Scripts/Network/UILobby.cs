@@ -117,7 +117,8 @@ namespace MirrorBasics {
             if (localPlayerLobbyUI != null) Destroy (localPlayerLobbyUI);
             PlayerNetwork.localPlayer.DisconnectGame ();
 
-            ViewManager.Show<ConnectMenuView>();
+            ViewManager.Show<PopUpView>(false, false);
+            //ViewManager.Show<ConnectMenuView>();
             //lobbyCanvas.SetActive(false);
             lobbySelectables.ForEach (x => x.interactable = true);
         }
@@ -147,14 +148,25 @@ namespace MirrorBasics {
 
         public IEnumerator MainMenu()
         {
-            DisconnectGame();
-            yield return new WaitForSeconds(1);
+
+            if (GameManager.GetInstance()==null)
+            {
+                Debug.LogWarning("Offline1");
+                DisconnectGame();
+                yield return new WaitForSeconds(1);
+            }
             NetworkManager.singleton.StopHost();
+            
+            Debug.LogWarning("Offline2");
 
-            //NetworkManager.singleton.OnDestroySelf();
-            yield return new WaitForSeconds(1);
+            ////NetworkManager.singleton.OnDestroySelf();
+            //yield return new WaitForSeconds(1);
 
-            SceneManager.LoadScene("Offline");
+            //Debug.LogWarning("Offline3");
+
+            //SceneManager.LoadScene("Offline");
+            //Debug.LogWarning("Offline4");
+
         }
 
         public void SearchGameSuccess (bool success, string matchID) {

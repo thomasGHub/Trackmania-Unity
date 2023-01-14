@@ -21,7 +21,7 @@ public class OnlineCategoriesView : View
 
     private void OfflineMode()
     {
-        if (PlayerPrefs.HasKey("PlayOffline"))
+        if (PlayerPrefs.HasKey("PlayOffline") && PlayerPrefs.GetString("PlayOffline") == "true")
         {
             OnlineButton.interactable = false;
             LanButton.interactable = false;
