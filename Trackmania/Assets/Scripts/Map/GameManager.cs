@@ -121,14 +121,26 @@ public class GameManager : MonoBehaviour
             _instance._ghostController.Init(ghostData);
         }
 
+        _instance._player.StartCountDown();
+    }
+
+    public static void RaceStart()
+    {
+        if(_instance._ghostController != null)
+        {
+            Debug.Log("StartRace");
+            _instance._ghostController.StartRace();
+        }
+
         _instance._ghost._isInRace = true;
+
         if (_instance._ghostSaveCoroutine == null)
         {
             _instance._ghostSaveCoroutine = _instance._ghost.GetData();
             _instance.StartCoroutine(_instance._ghostSaveCoroutine);
         }
 
-       _instance._player.RaceStart();
+        _instance._player.RaceStart();
     }
 
     public static void RaceRestart()
@@ -141,10 +153,12 @@ public class GameManager : MonoBehaviour
         }
 
         _instance._ghost.RestartData();
-        if(_instance._ghostSaveCoroutine != null)
+
+        if(_instance._ghostController != null)
             _instance._ghostController.Restart(StartPosition);
 
-        _instance._player.RaceStart();
+        _instance._player.StartCountDown();
+        //_instance._player.RaceStart();
     }
 
     public static void VehiclePassPoint(Road roadScript)

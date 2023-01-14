@@ -116,7 +116,14 @@ public class CampaignButtonUI : MonoBehaviour, IPointerEnterHandler
 
     private void LoadMap()
     {
+        SoloCampaignMenuView.instance.DisableButton();
+        ViewManager.Show<PopUpView>(false, false);
         StartCoroutine(LaunchGame());   
+    }
+
+    public void DisableButton()
+    {
+        _button.interactable = false;
     }
     
     private IEnumerator LaunchGame()

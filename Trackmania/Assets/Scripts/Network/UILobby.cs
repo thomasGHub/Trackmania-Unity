@@ -133,7 +133,6 @@ namespace MirrorBasics {
         public void BeginGame () {
             PlayerNetwork.localPlayer.BeginGame ();
             PermanentView.SetActive(false);
-            
         }
 
         public void SearchGame () {
