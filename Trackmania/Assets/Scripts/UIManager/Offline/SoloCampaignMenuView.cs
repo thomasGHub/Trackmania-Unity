@@ -370,12 +370,6 @@ public class SoloCampaignMenuView : View
         return myString.ToString();
     }
 
-    public void DisableButton()
-    {
-        foreach(string key in _allCampaignMapBlocks.Keys)
-        {
-            _allCampaignMapBlocks[key].DisableButton();
-        }
-    }
+
 
 }

@@ -291,4 +291,10 @@ public class GameManager : MonoBehaviour
         return _instance;
     }
 
+    public static void DestroyPlayer()
+    {
+        Destroy(_instance._player.gameObject);
+    }
+
+
 }

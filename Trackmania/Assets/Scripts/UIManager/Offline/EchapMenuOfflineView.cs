@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using MirrorBasics;
-using System.Linq;
+using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
-public class InGameOfflineView : View
+public class EchapMenuOfflineView : View
 {
-
-    
+    public Button LeaveRoomButton;
 
     public Trackmania inputActions;
 
+    private void Awake()
+    {
+        inputActions = new Trackmania();
+    }
 
     public override void Initialize()
     {
-        inputActions = new Trackmania();
+        LeaveRoomButton.onClick.AddListener(() => LeaveRoom());
+
         inputActions.UI.Escape.performed += Escaping;
     }
-
 
     public void OnEnable()
     {
@@ -31,12 +34,19 @@ public class InGameOfflineView : View
         inputActions.UI.Escape.Disable();
     }
 
-
+    public void LeaveRoom()
+    {
+        PermananentMenuView.ActivateView(true);
+        ViewManager.Show<MainMenuView>();
+        GameManager.DestroyPlayer();
+        SceneManager.UnloadSceneAsync("GameMap");
+    }
 
 
     public void Escaping(InputAction.CallbackContext context)
     {
-        ViewManager.Show<EchapMenuOfflineView>();
-
+        ViewManager.Show<InGameOfflineView>();
     }
+
+
 }
