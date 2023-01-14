@@ -148,6 +148,8 @@ namespace MirrorBasics {
 
         public IEnumerator MainMenu()
         {
+            Debug.LogWarning("Offline1");
+
             DisconnectGame();
             yield return new WaitForSeconds(1);
             NetworkManager.singleton.StopHost();
@@ -155,7 +157,11 @@ namespace MirrorBasics {
             //NetworkManager.singleton.OnDestroySelf();
             yield return new WaitForSeconds(1);
 
+            Debug.LogWarning("Offline2");
+
             SceneManager.LoadScene("Offline");
+            Debug.LogWarning("Offline3");
+
         }
 
         public void SearchGameSuccess (bool success, string matchID) {
