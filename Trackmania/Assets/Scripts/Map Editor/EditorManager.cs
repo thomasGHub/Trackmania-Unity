@@ -43,6 +43,7 @@ public class EditorManager : MonoBehaviour
     [SerializeField] private TMP_InputField _inputFieldSilverMedal;
     [SerializeField] private TMP_InputField _inputFieldGoldMedal;
     [SerializeField] private TMP_InputField _inputFieldAuthorMedal;
+    [SerializeField] private Button _back;
 
     #endregion
 
@@ -285,6 +286,7 @@ public class EditorManager : MonoBehaviour
     {
         ShowHideUI();
         ValidMapEditor.LanchRace();
+        _back.gameObject.SetActive(true);
     }
 
     public void setInfo()
@@ -361,5 +363,15 @@ public class EditorManager : MonoBehaviour
         {
             _UI.SetActive(true);
         }
+    }
+
+    public void Menu()
+    {
+        SceneManager.LoadScene("EditMap");
+    }
+
+    public void Back()
+    {
+        _back.gameObject.SetActive(false);
     }
 }
