@@ -166,7 +166,7 @@ public class UserAccountManager : MonoBehaviour
             {
                 Debug.Log($"Success Login with PC Device ID");
                 ViewManager.Show<GameView>();
-                Debug.Log($"Nice{response.PlayFabId}");
+                //Debug.Log($"Nice{response.PlayFabId}");
                 playfabID = response.PlayFabId;
                 entityID = response.EntityToken.Entity.Id;
                 entityType = response.EntityToken.Entity.Type;
@@ -300,7 +300,7 @@ public class UserAccountManager : MonoBehaviour
 
     private void OnDisplayNameUpdate(UpdateUserTitleDisplayNameResult obj)
     {
-        Debug.Log("Update display name!");
+        //Debug.Log("Update display name!");
         //SignIn(playerName, playerPassword);
     }
 

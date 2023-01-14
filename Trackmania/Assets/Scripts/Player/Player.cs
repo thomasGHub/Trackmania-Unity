@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        _allCameras[0].Priority = 1;
+        //_allCameras[0].Priority = 1;
 
         _playerMap.PlayerUX.CameraSwitch.performed += CameraSwitch;
         _playerMap.PlayerMovement.Respawn.performed += Respawn;
@@ -80,7 +80,7 @@ public class Player : MonoBehaviour
         if (cameraIndex < _allCameras.Length)
         {
             _allCameras[_currentIndex].Priority = -1;
-            _allCameras[cameraIndex].Priority = 1;
+            _allCameras[cameraIndex].Priority = 2;
 
             _currentIndex = cameraIndex;
         }
@@ -117,6 +117,14 @@ public class Player : MonoBehaviour
         {
             _allCameras[i].Priority = -10;
         }
+    }
+
+    public void SetCamPriorityLocalPlayer()
+    {
+        _allCameras[0].Priority = 1;
+        _allCameras[1].Priority = 0;
+        _allCameras[2].Priority = 0;
+
     }
 
     public void DisableNotLocalPlayerCar()

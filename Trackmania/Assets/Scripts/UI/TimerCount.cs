@@ -150,7 +150,7 @@ public class TimerCount : MonoBehaviour
 
     public void ShowUI(bool show)
     {
-        Debug.Log("ShowUI" + show + " "+ PlayerNetwork.localPlayer.gameObject.name);
+        //Debug.Log("ShowUI" + show + " "+ PlayerNetwork.localPlayer.gameObject.name);
         _minutesTextMesh.gameObject.SetActive(show);
         _secondsTextMesh.gameObject.SetActive(show);
         _milisecondsTextMesh.gameObject.SetActive(show);

@@ -51,7 +51,7 @@ namespace MirrorBasics {
                 matchIDs.Add (_matchID);
                 Match match = new Match (_matchID, _mapId, _player, publicMatch);
                 matches.Add (match);
-                Debug.Log ($"Match generated");
+                //Debug.Log ($"Match generated");
                 _player.currentMatch = match;
                 playerIndex = 1;
                 return true;

@@ -41,7 +41,17 @@ namespace MirrorBasics
             }
             else
             {
+
+                Debug.Log($"OnStart __________");
+
                 gameObject.GetComponent<Player>()._timerCount.ShowUI(false);
+
+
+                gameObject.GetComponent<Player>().SetCamPriorityNotLocalPlayer();
+                gameObject.GetComponent<Player>().enabled = false;
+                gameObject.GetComponent<Player>().DisableNotLocalPlayerCar();
+
+
             }
         }
 
@@ -60,16 +70,17 @@ namespace MirrorBasics
                 localPlayer = this;
                 //GameManager.SetPlayerReference(gameObject.GetComponent<Player>());
                 CmdSendName(PlayerPrefs.GetString("UserName"));
+                gameObject.GetComponent<Player>().SetCamPriorityLocalPlayer();
+                
             }
             else
             {
-                Debug.Log($"Spawning other player UI Prefab");
+                Debug.Log($"Spawn other player Prefab");
                 playerLobbyUI = UILobby.instance.SpawnPlayerUIPrefab(this);
 
                 gameObject.GetComponent<Player>().SetCamPriorityNotLocalPlayer();
                 gameObject.GetComponent<Player>().enabled = false;
                 gameObject.GetComponent<Player>().DisableNotLocalPlayerCar();
-
 
             }
         }
@@ -383,12 +394,12 @@ namespace MirrorBasics
         [ClientRpc]
         void RpcBeginGame()
         {
-            Debug.Log($"MatchID: {matchID} | Beginning | Index {playerIndex}");
+            //Debug.Log($"MatchID: {matchID} | Beginning | Index {playerIndex}");
 
             if (isLocalPlayer)
             {
                 ViewManager.Show<InGameView>();
-
+                LobbyPermanentView.ActivateView(false);
                 StartCoroutine(LoadMapScence());
 
             }

@@ -203,7 +203,7 @@ public class RequestManager : MonoBehaviour
             request.SetRequestHeader("api-key", "p0wgTxTbPwPkwoSjGkzIuRtRmkAtFDPxCOd1Tv0qNxXTaXEvPqlRFTgjHqWbo9nw");
 
             string json = requestData.Stringnify();
-            Debug.Log(json);
+            //Debug.Log(json);
             byte[] bodyRaw = Encoding.ASCII.GetBytes(json);
 
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
@@ -220,9 +220,9 @@ public class RequestManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Succes");
+                //Debug.Log("Succes");
                 _instance._data = request.downloadHandler.text;
-                Debug.Log("Request : " + request.downloadHandler.text);
+                //Debug.Log("Request : " + request.downloadHandler.text);
 
                 callback(request.downloadHandler.text);
             }
