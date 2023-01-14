@@ -151,16 +151,19 @@ namespace MirrorBasics {
             Debug.LogWarning("Offline1");
 
             DisconnectGame();
+
             yield return new WaitForSeconds(1);
+            Debug.LogWarning("Offline2");
+
             NetworkManager.singleton.StopHost();
 
             //NetworkManager.singleton.OnDestroySelf();
             yield return new WaitForSeconds(1);
 
-            Debug.LogWarning("Offline2");
+            Debug.LogWarning("Offline3");
 
             SceneManager.LoadScene("Offline");
-            Debug.LogWarning("Offline3");
+            Debug.LogWarning("Offline4");
 
         }
 
