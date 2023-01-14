@@ -143,12 +143,7 @@ public class LeaderboardManager : MonoBehaviour
             Debug.Log("Leaderboard Local Rank: " + " Name=" +  result[0].DisplayName + " ID=" + result[0].PlayFabId + " Pos=" + result[0].Position +  " Value=" + result[0].StatValue );
             SaveLocalRank(key, result);
             var mapJson = LoadLeaderboard(key);
-            SoloCampaignMenuView.instance.DisplayLocalRankFromJson(key, mapJson);
             
-        }
-        else
-        {
-            SoloCampaignMenuView.instance.DisplayLocalRankFromJson(key, null);
         }
         
     }

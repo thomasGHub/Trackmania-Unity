@@ -34,6 +34,7 @@ namespace Car
         public void Stop()
         {
             _isRunning = false;
+            _textMesh.text = "000";
             StopCoroutine(ChangeText());
         }
 

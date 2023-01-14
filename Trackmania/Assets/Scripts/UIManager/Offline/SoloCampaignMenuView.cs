@@ -217,27 +217,6 @@ public class SoloCampaignMenuView : View
         }
     }
 
-
-    public void DisplayLocalRankFromJson(string key, MapLeaderboard mapLeaderboard)
-    {
-        if (mapLeaderboard != null && mapLeaderboard.localPlayer != null)
-        {
-            Debug.Log("IS Number " + key + "  with key " + key + "   with rank " + mapLeaderboard.localPlayer.playerRank.ToString());
-            int index = key[key.Length - 1] - 49; //48 for assci     - 1 for array
-
-            LevelButton[index].GetComponent<CampaignButtonUI>().rankText.text = (mapLeaderboard.localPlayer.playerRank+1).ToString();
-        }
-        else
-        {
-            Debug.Log("IS Number " + ( (int)key[key.Length - 1] - 49)  + "  with key " + key + "   with rank null " );
-            int index = key[key.Length - 1] - 49; //48 for assci     - 3 for array
-
-            LevelButton[index].GetComponent<CampaignButtonUI>().rankText.text = "__";
-        }
-        
-    }
-
-
     public void DisplayRightLeaderboard(string key)
     {
         MapLeaderboard localLeaderboard =  LeaderboardManager.instance.LoadLeaderboard(key);
