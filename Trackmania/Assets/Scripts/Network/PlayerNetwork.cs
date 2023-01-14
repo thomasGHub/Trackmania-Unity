@@ -42,7 +42,7 @@ namespace MirrorBasics
             else
             {
 
-                Debug.Log($"OnStart __________");
+                //Debug.Log($"OnStart __________");
 
                 gameObject.GetComponent<Player>()._timerCount.ShowUI(false);
 
@@ -75,7 +75,7 @@ namespace MirrorBasics
             }
             else
             {
-                Debug.Log($"Spawn other player Prefab");
+                //Debug.Log($"Spawn other player Prefab");
                 playerLobbyUI = UILobby.instance.SpawnPlayerUIPrefab(this);
 
                 gameObject.GetComponent<Player>().SetCamPriorityNotLocalPlayer();
