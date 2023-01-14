@@ -7,6 +7,7 @@ using MirrorBasics;
 using Mirror;
 using System.Collections;
 using Newtonsoft.Json;
+using System.IO;
 
 public struct RoadPoints
 {
@@ -120,18 +121,44 @@ public class GameManager : MonoBehaviour
             _instance._ghostController.Init(ghostData);
         }
 
+        _instance._player.StartCountDown();
+    }
+
+    public static void RaceStart()
+    {
+        if(_instance._ghostController != null)
+        {
+            Debug.Log("StartRace");
+            _instance._ghostController.StartRace();
+        }
+
         _instance._ghost._isInRace = true;
+
         if (_instance._ghostSaveCoroutine == null)
         {
             _instance._ghostSaveCoroutine = _instance._ghost.GetData();
             _instance.StartCoroutine(_instance._ghostSaveCoroutine);
         }
 
-       _instance._player.RaceStart();
+        _instance._player.RaceStart();
     }
 
     public static void RaceRestart()
     {
+        List<GhostData> ghostData = _instance._ghost.loadGhost();
+
+        if(ghostData != null)
+        {
+            if(_instance._ghostController == null)
+            {
+                Transform startPoint = _instance._roadPoints.Start.transform;
+                GameObject gameObject = Instantiate(_instance._ghostPrefab, startPoint.position, startPoint.rotation);
+                _instance._ghostController = gameObject.GetComponent<GhostController>();
+            }
+            _instance._ghostController.Init(ghostData);
+        }
+            
+
         _instance._lastCheckPointPassed = null;
 
         foreach (Road checkPoint in _instance._roadPoints.CheckPoints)
@@ -140,10 +167,12 @@ public class GameManager : MonoBehaviour
         }
 
         _instance._ghost.RestartData();
-        if(_instance._ghostSaveCoroutine != null)
+
+        if(_instance._ghostController != null)
             _instance._ghostController.Restart(StartPosition);
 
-        _instance._player.RaceStart();
+        _instance._player.StartCountDown();
+        //_instance._player.RaceStart();
     }
 
     public static void VehiclePassPoint(Road roadScript)
@@ -178,12 +207,57 @@ public class GameManager : MonoBehaviour
                 PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, _currentTemps, PlayerNetwork.localPlayer.playerName);
         }
 
-        SavePersonalTime();
+
+        if(SavePersonalTime(Temps.TempsToInt(_currentTemps)))
+        {
+            _ghost.sendGhostData();
+            if (MapSaver.IsCampaignMap(_mapLoader.MapInfo.ID))
+            {
+                LeaderboardManager.instance.SendLeaderboard(_mapLoader.MapInfo.ID, Temps.TempsToInt(_currentTemps));
+            }
+            else
+            {
+                SaveWordlRecord();
+            }
+        }
+
+        
+        
 
         _ghost._isInRace = false;
     }
 
-    private void SavePersonalTime()
+    private bool SavePersonalTime(int score)
+    {
+        string path = MapSaver.GetMapDirectory(_mapLoader.MapInfo.ID) + MapSaver.MapPersonalTimeInfo;
+        string json;
+        PersonalMapTime personalMapTime;
+
+        Debug.LogWarning(_mapLoader.MapInfo.ID);
+
+        if (File.Exists(path))
+        {
+            json = File.ReadAllText(path);
+            personalMapTime = JsonConvert.DeserializeObject<PersonalMapTime>(json);
+        }
+        else
+        {
+            personalMapTime = new PersonalMapTime(_mapLoader.MapInfo.ID, int.MaxValue);
+        }
+        
+        
+        if(score < personalMapTime.Time)
+        {
+            personalMapTime.Time = score;
+            json = JsonConvert.SerializeObject(personalMapTime);
+            File.WriteAllText(path, json);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void SaveWordlRecord()
     {
         if(MapSaver.SavePersonalTime(_mapLoader.MapInfo, Temps.TempsToInt(_currentTemps)))
         {
@@ -227,6 +301,9 @@ public class GameManager : MonoBehaviour
 
 
 
-
+    public static GameManager GetInstance()
+    {
+        return _instance;
+    }
 
 }

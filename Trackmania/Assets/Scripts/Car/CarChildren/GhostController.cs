@@ -10,7 +10,7 @@ public class GhostController : MonoBehaviour
     private Rigidbody _GhostRb;
     Ghost ghost = new Ghost();
 
-    private bool _isInit = false;
+    private bool _isRunning = false;
     private bool _isFinish = false;
     private int _index = 0;
     private float _lerpTime;
@@ -31,14 +31,11 @@ public class GhostController : MonoBehaviour
     public void Init(List<GhostData> ghostDatas)
     {
         _ghosts = ghostDatas;
-        _isInit = true;
-
-        ChangeLerpValue();
     }
 
     public void Update()
     {
-        if(_isInit && !_isFinish)
+        if(_isRunning && !_isFinish)
         {
 
             if ((Time.time - _startTime) < _lerpTime)
@@ -77,8 +74,14 @@ public class GhostController : MonoBehaviour
         _GhostRb.transform.position = destination.position;
         _GhostRb.transform.rotation = destination.rotation;
 
-        _index = 0;
+        _isFinish = false;
+        _isRunning = false;
+    }
 
+    public void StartRace()
+    {
+        _isRunning = true;
+        _index = 0;
         ChangeLerpValue();
     }
 }

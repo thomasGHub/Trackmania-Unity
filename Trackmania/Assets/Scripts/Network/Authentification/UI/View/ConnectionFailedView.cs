@@ -19,6 +19,8 @@ public class ConnectionFailedView : View
         PlayOffline.onClick.AddListener(() => PlayOfflineClicked());
         RetryToConnect.onClick.AddListener(() => RetryToConnectClicked());
         QuitGame.onClick.AddListener(()=> QuiGameClicked());
+
+        PlayerPrefs.SetString("PlayOffline", "false");
     }
 
 

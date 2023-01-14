@@ -6,7 +6,14 @@ using UnityEngine.UI;
 
 public class LobbyPermanentView : MonoBehaviour
 {
+    public static LobbyPermanentView instance;
+
     [SerializeField] private TextMeshProUGUI _infoPlayerText;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {

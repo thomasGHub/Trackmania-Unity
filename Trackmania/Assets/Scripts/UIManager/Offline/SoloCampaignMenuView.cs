@@ -6,6 +6,7 @@ using TMPro;
 using System;
 using System.Text;
 using PlayFab.MultiplayerModels;
+using System.Reflection;
 
 public enum MedalsType { None, Bronze, Silver, Gold, Author}
 
@@ -28,6 +29,7 @@ public class SoloCampaignMenuView : View
     public TextMeshProUGUI LeaderboardTitle;
     public GameObject LeaderBoardLocal;
     public GameObject LeaderBoardWorld;
+    public ChooseMapBlockCreator ChooseMap;
 
     public GameObject rowPrefab;
     public Transform rowsParent;
@@ -46,6 +48,9 @@ public class SoloCampaignMenuView : View
     public TMP_InputField LeaderboardScoreInput;
     public Button LeaderboardSendDebugButton;
 
+    private List<MapInfo> _allMapInfos;
+    private Dictionary<string, CampaignButtonUI> _allCampaignMapBlocks;
+
     private void Awake()
     {
         instance = this;
@@ -58,7 +63,6 @@ public class SoloCampaignMenuView : View
         BackButton.onClick.AddListener(() => ViewManager.ShowLast());
 
         InitializeButtonMap();
-        CategoryChange(false);
         ResetTimer();
 
         WordButton.onClick.AddListener(() => GetLocalRank());
@@ -66,33 +70,37 @@ public class SoloCampaignMenuView : View
         LeaderboardSendDebugButton.onClick.AddListener(() => OnSendLeaderboardEntrydebug());
 
         LoadCampaignMap();
+
+        CategoryChange(false);
     }
 
     private void LoadCampaignMap()
     {
-        List<MapInfo> allMapInfos = GetMap.GetCampaignMap();
+        _allCampaignMapBlocks = new Dictionary<string, CampaignButtonUI>();
+        _allMapInfos = GetMap.GetCampaignMap();
 
-        for(int index = 0; index < allMapInfos.Count; index++)
+        for(int index = 0; index < _allMapInfos.Count; index++)
         {
             GameObject mapUIBlock = Instantiate(_mapDataPrefab, _parentTransform);
             CampaignButtonUI campaignButton = mapUIBlock.GetComponent<CampaignButtonUI>();
-            campaignButton.Init(allMapInfos[index], index + 1);
+            campaignButton.Init(_allMapInfos[index], index + 1);
+            _allCampaignMapBlocks[_allMapInfos[index].ID] = campaignButton;
         }
     }
 
     public void GetLocalRank()
     {
-        MouseOnButtonNumber(1);
-        DisplayRightLeaderboard(1);
-        for (int number = 1; number < LevelButton.Length +1; number++)
+        int lenght = _allMapInfos.Count;
+
+        for (int index = 0; index < lenght; index++)
         {
-            LeaderboardManager.instance.GetLeaderboardAroundPlayer("Leaderboard" + number);
-            //DisplayMedals(number-1);
+            Debug.LogWarning("MapID : " + _allMapInfos[index].ID);
+            LeaderboardManager.instance.GetLeaderboardAroundPlayer(_allMapInfos[index].ID);
+            _allCampaignMapBlocks[_allMapInfos[index].ID].UpdateRankText();
         }
 
-        
-
-
+        MouseOnButtonNumber(_allMapInfos[0].ID, _allMapInfos[0].Name);
+        DisplayRightLeaderboard(_allMapInfos[0].ID);
     }
 
     private void ResetTimer()
@@ -115,10 +123,11 @@ public class SoloCampaignMenuView : View
             DestroyLeaderboard();
         }
 
-        for (int i = 0; i < LevelButton.Length; i++)
+        foreach(string key in _allCampaignMapBlocks.Keys)
         {
-            LevelButton[i].GetComponent<CampaignButtonUI>().CategoryChange(isWorld);
+            _allCampaignMapBlocks[key].CategoryChange(isWorld);
         }
+
         LeaderBoardLocal.SetActive(!isWorld);
         LeaderBoardWorld.SetActive(isWorld);
     }
@@ -140,54 +149,60 @@ public class SoloCampaignMenuView : View
         Debug.Log($"LoadMap {numberMap}");
     }
 
-    public void MouseOnButtonNumber(int buttonNumber)
+    public void MouseOnButtonNumber(string key, string mapName)
     {
-        DisplayRightLeaderboard(buttonNumber);
+        DisplayRightLeaderboard(key);
         if (isWorldCategory)
         {
-            CheckUpdateLeaderboard(buttonNumber);
+            Debug.LogWarning("UpdateLeaderBoard" + key);
+            //CheckUpdateLeaderboard(key);
+
+            UpdateLocalLeaderboard(key);
+            UpdateLeaderboard(key);
         }
-        LeaderboardTitle.text = "Leaderboard " + buttonNumber;
+        LeaderboardTitle.text = mapName;
 
 
     }
 
-    void CheckUpdateLeaderboard(int number)
+    void CheckUpdateLeaderboard(string key)
     {
         //save the time of last updateLeaderboard to update every 10s
         float time = Time.time;
-        if (PlayerPrefs.HasKey("UpdateLeaderboardAt" + number))
+
+        if (PlayerPrefs.HasKey("UpdateLeaderboardAt" + key))
         {
             //Debug.Log(time + " " + (time - PlayerPrefs.GetFloat("UpdateLeaderboardAt" + number)));
-            if (time  -   PlayerPrefs.GetFloat("UpdateLeaderboardAt" + number) > updateLeaderBoardEverySecond)
+            if (time  -   PlayerPrefs.GetFloat("UpdateLeaderboardAt" + key) > updateLeaderBoardEverySecond)
             {
-                PlayerPrefs.SetFloat(("UpdateLeaderboardAt" + number), time);
-                UpdateLeaderboard(number);
-                Debug.Log("UpdateLeaderboard" + number);
+                PlayerPrefs.SetFloat(("UpdateLeaderboardAt" + key), time);
+                UpdateLeaderboard(key);
+                Debug.Log("UpdateLeaderboard" + key);
             }
             else
             {
                 Debug.Log("updateLocalLeaderboard");
-                UpdateLocalLeaderboard(number);
+                UpdateLocalLeaderboard(key);
+
             }
         }
         else
         {
-            Debug.Log("Dont have keyTime" +time + " " + (time - PlayerPrefs.GetFloat("UpdateLeaderboardAt" + number)));
-            PlayerPrefs.SetFloat(("UpdateLeaderboardAt" + number), time);
-            UpdateLeaderboard(number);
-            Debug.Log("UpdateLeaderboard" + number);
+            Debug.Log("Dont have keyTime" +time + " " + (time - PlayerPrefs.GetFloat("UpdateLeaderboardAt" + key)));
+            PlayerPrefs.SetFloat(("UpdateLeaderboardAt" + key), time);
+            UpdateLeaderboard(key);
+            Debug.Log("UpdateLeaderboard" + key);
         }
     }
 
-    void UpdateLeaderboard(int number)
+    void UpdateLeaderboard(string key)
     {
-        LeaderboardManager.instance.GetLeaderboard("Leaderboard" + number);
+        LeaderboardManager.instance.GetLeaderboard(key);
     }
 
-    void UpdateLocalLeaderboard(int number)
+    void UpdateLocalLeaderboard(string key)
     {
-        var mapJson = LeaderboardManager.instance.LoadLeaderboard("Leaderboard" + number);
+        var mapJson = LeaderboardManager.instance.LoadLeaderboard(key);
         DisplayLeaderboardFromJson(mapJson);
     }
 
@@ -207,7 +222,7 @@ public class SoloCampaignMenuView : View
     {
         if (mapLeaderboard != null && mapLeaderboard.localPlayer != null)
         {
-            Debug.Log("IS Number " + ((int)key[key.Length - 1] - 49) + "  with key " + key + "   with rank " + mapLeaderboard.localPlayer.playerRank.ToString());
+            Debug.Log("IS Number " + key + "  with key " + key + "   with rank " + mapLeaderboard.localPlayer.playerRank.ToString());
             int index = key[key.Length - 1] - 49; //48 for assci     - 1 for array
 
             LevelButton[index].GetComponent<CampaignButtonUI>().rankText.text = (mapLeaderboard.localPlayer.playerRank+1).ToString();
@@ -223,9 +238,9 @@ public class SoloCampaignMenuView : View
     }
 
 
-    public void DisplayRightLeaderboard(int number)
+    public void DisplayRightLeaderboard(string key)
     {
-        MapLeaderboard localLeaderboard =  LeaderboardManager.instance.LoadLeaderboard("Leaderboard" + number );
+        MapLeaderboard localLeaderboard =  LeaderboardManager.instance.LoadLeaderboard(key);
         if (localLeaderboard!=null && localLeaderboard.localPlayer!=null && localLeaderboard.localPlayer.playerScore != string.Empty)
         {
             LeaderBoardWorld.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = (localLeaderboard.localPlayer.playerRank+1).ToString();
@@ -266,7 +281,6 @@ public class SoloCampaignMenuView : View
 
     public void OnSendLeaderboardEntrydebug()
     {
-
         LeaderboardManager.instance.SendLeaderboard(LeaderboardNameInput.text, int.Parse(LeaderboardScoreInput.text));
     }
 
@@ -354,6 +368,14 @@ public class SoloCampaignMenuView : View
         }
 
         return myString.ToString();
+    }
+
+    public void DisableButton()
+    {
+        foreach(string key in _allCampaignMapBlocks.Keys)
+        {
+            _allCampaignMapBlocks[key].DisableButton();
+        }
     }
 
 }

@@ -11,6 +11,7 @@ public class PlaySoloMapUIBlock : PlayOnlineMapUiBlock
 {
     protected override void PlayMap()
     {
+        ViewManager.Show<PopUpView>(false, false);
         StartCoroutine(LaunchGame());
     }
 

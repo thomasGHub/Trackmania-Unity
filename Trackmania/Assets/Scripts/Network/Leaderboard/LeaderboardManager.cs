@@ -6,6 +6,7 @@ using PlayFab.ClientModels;
 using UnityEngine.Events;
 using System;
 using System.IO;
+using UnityEngine.InputSystem;
 
 [System.Serializable]
 public class MedalsScore
@@ -130,6 +131,8 @@ public class LeaderboardManager : MonoBehaviour
 
     private void OnLeaderboardGetLocalRank(string key, List<PlayerLeaderboardEntry> result)
     {
+        Debug.Log("ResultCount : " + result.Count);
+
         for (int i = 0; i < result.Count; i++)
         {
             Debug.Log("result " + result[i]);
@@ -186,6 +189,7 @@ public class LeaderboardManager : MonoBehaviour
 
     private void SaveLocalRank(string key, List<PlayerLeaderboardEntry> result)
     {
+        Debug.LogWarning("SaveLocalRank");
         MapLeaderboard saveMap = LoadLeaderboard(key);
         saveMap.mapName = key;
 
@@ -197,7 +201,7 @@ public class LeaderboardManager : MonoBehaviour
         saveMap.localPlayer = localPlayerScore;
 
         string _json = JsonUtility.ToJson(saveMap);
-        File.WriteAllText(Application.persistentDataPath + "/" + key  + ".json", _json);
+        File.WriteAllText(MapSaver.GetMapDirectory(key) + MapSaver.MapLeaderBoardData, _json);
     
     }
 
@@ -217,13 +221,13 @@ public class LeaderboardManager : MonoBehaviour
         }
 
         string _json = JsonUtility.ToJson(saveMap);
-        File.WriteAllText(Application.persistentDataPath + "/" + key + ".json", _json);
+        File.WriteAllText(MapSaver.GetMapDirectory(key) + MapSaver.MapLeaderBoardData, _json);
     }
 
     public MapLeaderboard LoadLeaderboard(string key)
     {
         Debug.Log("Load:" + key);
-        string path = Application.persistentDataPath + "/" + key + ".json";
+        string path = MapSaver.GetMapDirectory(key) + MapSaver.MapLeaderBoardData;
         if (File.Exists(path))
         {
             string jsonStr = File.ReadAllText(path);
@@ -243,17 +247,17 @@ public class LeaderboardManager : MonoBehaviour
     #region Other
 
 
-    public bool IsNewScore(string leaderboardName, int score)
+    public bool IsNewScore(string key, int score)
     {
         //open file 
         // compare score 
         // return bool
-        if (!File.Exists(Application.persistentDataPath + "/" + leaderboardName + ".json"))
+        if (!File.Exists(MapSaver.GetMapDirectory(key) + MapSaver.MapLeaderBoardData))
         {
             //Debug.LogWarning("Possible errer New Score ");
             return true;
         }
-        MapLeaderboard mapJson = LoadLeaderboard(leaderboardName);
+        MapLeaderboard mapJson = LoadLeaderboard(key);
         if (mapJson.localPlayer.playerScore != null &&  mapJson.localPlayer.playerScore != "" &&  int.Parse(mapJson.localPlayer.playerScore ) > score)
         {
             //Debug.LogWarning(mapJson.localPlayer.playerScore + score);

@@ -296,9 +296,9 @@ MonoBehaviour:
   _centerOfMass: {fileID: 6328121786138823046}
   _frictionPoint: {fileID: 6328121786510075167}
   _speed: 2000
-  _turn: 3000
-  _friction: 6000
-  _dragAmount: 5
+  _turn: 1500
+  _friction: 3000
+  _dragAmount: 15
   _groundRayPoint: {fileID: 6328121787112007007}
   _maxRayLenght: 0.25
   _inputThreshold: 0.1

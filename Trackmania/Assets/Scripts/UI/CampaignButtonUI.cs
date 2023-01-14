@@ -32,6 +32,7 @@ public class CampaignButtonUI : MonoBehaviour, IPointerEnterHandler
         numberText.text = index.ToString();
         buttonNumber = index;
         DisplayMedals();
+        UpdateRankText();
 
         _button.onClick.AddListener(LoadMap);
     }
@@ -46,52 +47,48 @@ public class CampaignButtonUI : MonoBehaviour, IPointerEnterHandler
 
     private void DisplayMedals()
     {
-        Debug.LogWarning("Leaderboard" + (buttonNumber));
-        MapLeaderboard localLeaderboard = LeaderboardManager.instance.LoadLeaderboard("Leaderboard" + (buttonNumber));
-        if (localLeaderboard != null && localLeaderboard.localPlayer != null && localLeaderboard.localPlayer.playerScore != string.Empty)
+        string path = MapSaver.GetMapDirectory(_mapInfo.ID) + MapSaver.MapPersonalTimeInfo;
+
+        if (File.Exists(path))
         {
-            Debug.LogWarning("LeaderBoard Score : " + int.Parse(localLeaderboard.localPlayer.playerScore));
-            var tempColor = new Color(1f, 1f, 1f, 1f); ;
-            imageMedal.color = tempColor;
-            if (int.Parse(localLeaderboard.localPlayer.playerScore) < localLeaderboard.medalsScore.authorMedalScore)
+            string json = File.ReadAllText(path);
+            PersonalMapTime personalMapTime = JsonConvert.DeserializeObject<PersonalMapTime>(json);
+            int score = personalMapTime.Time;
+
+            imageMedal.color = new Color(1f, 1f, 1f, 1f);
+
+            if (score < _mapInfo.AuthorMedal)
             {
                 imageMedal.sprite = author;
+                return;
             }
-            else if (int.Parse(localLeaderboard.localPlayer.playerScore) < localLeaderboard.medalsScore.goldMedalScore)
+            else if (score < _mapInfo.GoldMedal)
             {
                 imageMedal.sprite = gold;
-
+                return;
             }
-            else if (int.Parse(localLeaderboard.localPlayer.playerScore) < localLeaderboard.medalsScore.silverMedalScore)
+            else if (score < _mapInfo.SilverMedal)
             {
                 imageMedal.sprite = silver;
-
+                return;
             }
-            else if (int.Parse(localLeaderboard.localPlayer.playerScore) < localLeaderboard.medalsScore.bronzeMedalScore)
+            else if (score < _mapInfo.BronzeMedal)
             {
                 imageMedal.sprite = bronze;
-
+                return;
             }
-            else
-            {
-                tempColor = new Color(1f, 1f, 1f, 0f); ;
-                imageMedal.color = tempColor;
-                imageMedal.sprite = null;
-            }
+        }
 
-        }
-        else
-        {
-            var tempColor = new Color(1f, 1f, 1f, 0f); ;
-            imageMedal.color = tempColor;
-            imageMedal.sprite = null;
-        }
+        var tempColor = new Color(1f, 1f, 1f, 0f); ;
+        imageMedal.color = tempColor;
+        imageMedal.sprite = null;
 
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        SoloCampaignMenuView.instance.MouseOnButtonNumber(buttonNumber);
+        Debug.LogWarning("HoverID : " + _mapInfo.ID);
+        SoloCampaignMenuView.instance.MouseOnButtonNumber(_mapInfo.ID, _mapInfo.Name);
     }
 
 
@@ -119,7 +116,14 @@ public class CampaignButtonUI : MonoBehaviour, IPointerEnterHandler
 
     private void LoadMap()
     {
+        SoloCampaignMenuView.instance.DisableButton();
+        ViewManager.Show<PopUpView>(false, false);
         StartCoroutine(LaunchGame());   
+    }
+
+    public void DisableButton()
+    {
+        _button.interactable = false;
     }
     
     private IEnumerator LaunchGame()
@@ -136,6 +140,20 @@ public class CampaignButtonUI : MonoBehaviour, IPointerEnterHandler
 
         ViewManager.Show<InGameOfflineView>();
         PermananentMenuView.ActivateView(false);
+    }
+
+    public void UpdateRankText()
+    {
+        string path = MapSaver.GetMapDirectory(_mapInfo.ID) + MapSaver.MapLeaderBoardData;
+        if (!File.Exists(path))
+        {
+            return;
+        }
+        string json = File.ReadAllText(path);
+        MapLeaderboard mapLeaderboard = JsonConvert.DeserializeObject<MapLeaderboard>(json);
+
+        if(mapLeaderboard.localPlayer.playerScore != "0")
+            rankText.text = (mapLeaderboard.localPlayer.playerRank + 1).ToString();
     }
 
 

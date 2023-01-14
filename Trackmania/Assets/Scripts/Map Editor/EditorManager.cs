@@ -43,6 +43,7 @@ public class EditorManager : MonoBehaviour
     [SerializeField] private TMP_InputField _inputFieldSilverMedal;
     [SerializeField] private TMP_InputField _inputFieldGoldMedal;
     [SerializeField] private TMP_InputField _inputFieldAuthorMedal;
+    [SerializeField] private Button _back;
 
     #endregion
 
@@ -285,6 +286,7 @@ public class EditorManager : MonoBehaviour
     {
         ShowHideUI();
         ValidMapEditor.LanchRace();
+        _back.gameObject.SetActive(true);
     }
 
     public void setInfo()
@@ -295,13 +297,20 @@ public class EditorManager : MonoBehaviour
             SceneManager.LoadScene("EditMap");
             return;
         }
-        _inputField.gameObject.SetActive(true);
-        _inputFieldBronzeMedal.gameObject.SetActive(true);
-        _inputFieldSilverMedal.gameObject.SetActive(true);
-        _inputFieldGoldMedal.gameObject.SetActive(true);
-        _inputFieldAuthorMedal.gameObject.SetActive(true);
+
+        ShowInputUi(true);
 
         _waitingForInfo = true;
+    }
+
+    private void ShowInputUi(bool show)
+    {
+
+        _inputField.gameObject.SetActive(show);
+        _inputFieldBronzeMedal.gameObject.SetActive(show);
+        _inputFieldSilverMedal.gameObject.SetActive(show);
+        _inputFieldGoldMedal.gameObject.SetActive(show);
+        _inputFieldAuthorMedal.gameObject.SetActive(show);
     }
 
     private void saveMap()
@@ -361,5 +370,19 @@ public class EditorManager : MonoBehaviour
         {
             _UI.SetActive(true);
         }
+    }
+
+    public void Menu()
+    {
+        SceneManager.LoadScene("EditMap");
+    }
+
+    public void Back()
+    {
+        _back.gameObject.SetActive(false);
+        ValidMapEditor.StopTest();
+
+        ShowInputUi(false);
+        ShowHideUI();
     }
 }
