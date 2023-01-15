@@ -128,7 +128,7 @@ namespace MirrorBasics
         [TargetRpc]
         void TargetHostGame(bool success, string _matchID, int _playerIndex)
         {
-            string path = MapSaver.MapDataPath + "/" + "mapToPlay" + ".json";
+            string path = MapSaver.MapDataPath + MapSaver.MapToPlay ;
             string json = File.ReadAllText(path);
             MapInfo mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
             CmdSendMapID(mapInfo.ID);
@@ -400,7 +400,7 @@ namespace MirrorBasics
             {
                 ViewManager.Show<InGameView>();
                 LobbyPermanentView.ActivateView(false);
-                StartCoroutine(LoadMapScence());
+                StartCoroutine(LoadMapScene());
 
             }
             else
@@ -411,12 +411,12 @@ namespace MirrorBasics
         }
 
 
-        private IEnumerator LoadMapScence()
+        private IEnumerator LoadMapScene()
         {
             AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("GameMap", LoadSceneMode.Additive);
             yield return asyncOperation.isDone;
             yield return new WaitForSeconds(1);
-            GameManager.LanchRace();
+            GameManager.LaunchRace();
         }
 
 
@@ -460,5 +460,40 @@ namespace MirrorBasics
             
         }
 
+        [Command]
+        public void CmdHasFinished(int _playerIndex)
+        {
+            Debug.Log("Someone finished : " + _playerIndex);
+
+            if (currentMatch.gameMode.type == GameModeType.Rounds && !currentMatch.isRoundEnding)
+            {
+                RpcEndRound();
+                currentMatch.isRoundEnding = true;
+                StartCoroutine(LaunchRound());
+            }
+        }
+
+        [ClientRpc]
+        public void RpcEndRound()
+        {
+            GameManager.GetInstance().LaunchEndRound();
+        }
+
+        private IEnumerator LaunchRound()
+        {
+            Debug.Log(" Launching new round");
+            yield return new WaitForSeconds(6);
+            Debug.Log(" Launching now");
+
+            currentMatch.isRoundEnding = false;
+            if (currentMatch.nbRound != (currentMatch.gameMode as Rounds).nbRounds)
+            {
+                currentMatch.nbRound++;
+                GameManager.GetInstance().LaunchNewRound();
+            }            else
+            {
+                StartCoroutine(UILobby.instance.MainMenu());
+            }
+        }
     }
 }

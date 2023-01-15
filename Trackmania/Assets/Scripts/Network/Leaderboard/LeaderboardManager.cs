@@ -184,7 +184,6 @@ public class LeaderboardManager : MonoBehaviour
 
     private void SaveLocalRank(string key, List<PlayerLeaderboardEntry> result)
     {
-        Debug.LogWarning("SaveLocalRank");
         MapLeaderboard saveMap = LoadLeaderboard(key);
         saveMap.mapName = key;
 

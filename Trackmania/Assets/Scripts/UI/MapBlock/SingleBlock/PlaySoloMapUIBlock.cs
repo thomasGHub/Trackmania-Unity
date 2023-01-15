@@ -25,7 +25,8 @@ public class PlaySoloMapUIBlock : PlayOnlineMapUiBlock
         yield return asyncOperation.isDone;
         yield return new WaitForSeconds(1f);
 
-        GameManager.LanchRace();
+        GameManager.GetInstance().gameMode = GameModeFactory.Create(GameModeType.TimeAttack);
+        GameManager.LaunchRace();
 
         ViewManager.Show<InGameOfflineView>();
         PermananentMenuView.ActivateView(false);

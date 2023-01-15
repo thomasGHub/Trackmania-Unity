@@ -14,14 +14,16 @@ namespace Car
         [Header("Visible value")]
         [SerializeField] private float _minValue = 0f;
         [SerializeField] private float _maxValue = 999f;
+        [SerializeField] private TextMesh _textMesh;
 
         private float _value;
         private bool _isRunning = false;
-        private TextMesh _textMesh;
+        //private TextMesh _textMesh;
         // Start is called before the first frame update
         private void Awake()
         {
             _textMesh = GetComponent<TextMesh>();
+            Debug.LogWarning("Initialize : " + _textMesh);
             _textMesh.text = "000";
         }
 

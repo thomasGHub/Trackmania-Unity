@@ -2,6 +2,8 @@ using UnityEngine;
 using Car;
 using Cinemachine;
 using UnityEngine.InputSystem;
+using MirrorBasics;
+using System.Collections;
 
 public class Player : MonoBehaviour
 {
@@ -16,7 +18,7 @@ public class Player : MonoBehaviour
 
     private PlayerMap _playerMap;
     private int _currentIndex;
-
+    private IEnumerator _countDown = null;
     public CarController PlayerCar => _carController;
 
     private void Awake()
@@ -56,7 +58,14 @@ public class Player : MonoBehaviour
         _timerCount.Stop();
         _playerMap.PlayerUX.CameraSwitch.Disable();
         _playerMap.PlayerMovement.Respawn.Disable();
-        //_playerMap.PlayerMovement.Restart.Disable();
+
+        if(GameManager.GetInstance().isMulti)
+        {
+            if (PlayerNetwork.localPlayer.currentMatch.gameMode.type == GameModeType.Rounds)
+                _playerMap.PlayerMovement.Restart.Disable();
+        }
+        
+            
     }
 
     public void RaceRestart()
@@ -136,7 +145,13 @@ public class Player : MonoBehaviour
     public void StartCountDown()
     {
         _UI.SetActive(true);
-        StartCoroutine(_countDownScript.CountDownStart());
+        if(_countDown != null)
+        {
+            StopCoroutine(_countDown);
+        }
+
+        _countDown = _countDownScript.CountDownStart();
+        StartCoroutine(_countDown);
     }
 
  

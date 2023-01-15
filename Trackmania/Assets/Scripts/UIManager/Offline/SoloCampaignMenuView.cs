@@ -94,7 +94,6 @@ public class SoloCampaignMenuView : View
 
         for (int index = 0; index < lenght; index++)
         {
-            Debug.LogWarning("MapID : " + _allMapInfos[index].ID);
             LeaderboardManager.instance.GetLeaderboardAroundPlayer(_allMapInfos[index].ID);
             _allCampaignMapBlocks[_allMapInfos[index].ID].UpdateRankText();
         }
