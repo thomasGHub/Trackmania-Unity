@@ -461,36 +461,66 @@ namespace MirrorBasics
         }
 
         [Command]
-        public void CmdHasFinished(int _playerIndex)
-        {
-            Debug.Log("Someone finished : " + _playerIndex);
-
-            if (currentMatch.gameMode.type == GameModeType.Rounds && !currentMatch.isRoundEnding)
-            {
-                RpcEndRound();
-                currentMatch.isRoundEnding = true;
-                StartCoroutine(LaunchRound());
-            }
+        public void CmdHasFinished(int _playerIndex)
+
+        {
+
+            Debug.Log("Someone finished : " + _playerIndex);
+
+
+
+            if (currentMatch.gameMode.type == GameModeType.Rounds && !currentMatch.isRoundEnding)
+
+            {
+
+                RpcEndRound();
+
+                currentMatch.isRoundEnding = true;
+
+                StartCoroutine(LaunchRound());
+
+            }
+
         }
 
         [ClientRpc]
-        public void RpcEndRound()
-        {
-            GameManager.GetInstance().LaunchEndRound();
+        public void RpcEndRound()
+
+        {
+
+            GameManager.GetInstance().LaunchEndRound();
+
         }
 
-        private IEnumerator LaunchRound()
-        {
-            Debug.Log(" Launching new round");
-            yield return new WaitForSeconds(6);
-            Debug.Log(" Launching now");
-
-            currentMatch.isRoundEnding = false;
-            if (currentMatch.nbRound != (currentMatch.gameMode as Rounds).nbRounds)
-            {
-                currentMatch.nbRound++;
-                GameManager.GetInstance().LaunchNewRound();
-            }            else
+        [ClientRpc]
+        private void RpcLaunchRound()
+        {
+            GameManager.GetInstance().LaunchNewRound();
+
+        }
+        private IEnumerator LaunchRound()
+
+        {
+
+            Debug.Log(" Launching new round");
+
+            yield return new WaitForSeconds(6);
+
+            Debug.Log(" Launching now");
+
+
+
+            currentMatch.isRoundEnding = false;
+
+            if (currentMatch.nbRound != (currentMatch.gameMode as Rounds).nbRounds)
+
+            {
+
+                currentMatch.nbRound++;
+                RpcLaunchRound();
+
+            }
+            else
             {
                 StartCoroutine(UILobby.instance.MainMenu());
             }
