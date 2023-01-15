@@ -227,22 +227,24 @@ public class GameManager : MonoBehaviour
                 PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, _currentTemps, PlayerNetwork.localPlayer.playerName);
         }
 
-
-        if(SavePersonalTime(Temps.TempsToInt(_currentTemps)))
-        {
-            _ghost.sendGhostData();
-            if (MapSaver.IsCampaignMap(_mapLoader.MapInfo.ID))
-            {
-                LeaderboardManager.instance.SendLeaderboard(_mapLoader.MapInfo.ID, Temps.TempsToInt(_currentTemps));
-            }
-            else
-            {
-                SaveWordlRecord();
-            }
-        }
-
         if(!isMulti)
+        {
+            if (SavePersonalTime(Temps.TempsToInt(_currentTemps)))
+            {
+                _ghost.sendGhostData();
+                if (MapSaver.IsCampaignMap(_mapLoader.MapInfo.ID))
+                {
+                    LeaderboardManager.instance.SendLeaderboard(_mapLoader.MapInfo.ID, Temps.TempsToInt(_currentTemps));
+                }
+                else
+                {
+                    SaveWordlRecord();
+                }
+            }
+
+
             _ghost._isInRace = false;
+        }
     }
 
     private bool SavePersonalTime(int score)
