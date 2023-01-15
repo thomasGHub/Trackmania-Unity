@@ -33,12 +33,16 @@ public class Player : MonoBehaviour
         _playerMap.PlayerUX.CameraSwitch.performed += CameraSwitch;
         _playerMap.PlayerMovement.Respawn.performed += Respawn;
         _playerMap.PlayerMovement.Restart.performed += RaceRestart;
-
     }
 
     private void OnDisable()
     {
         _playerMap.PlayerUX.CameraSwitch.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        _playerMap.PlayerMovement.Restart.Disable();
     }
 
     public void RaceStart()
@@ -48,7 +52,11 @@ public class Player : MonoBehaviour
         _timerCount.Launch();
         _playerMap.PlayerUX.CameraSwitch.Enable();
         _playerMap.PlayerMovement.Respawn.Enable();
-        _playerMap.PlayerMovement.Restart.Enable();
+        if (GameManager.GetInstance().isMulti)
+        {
+            if (PlayerNetwork.localPlayer.currentMatch.gameMode.type != GameModeType.Rounds)
+                _playerMap.PlayerMovement.Restart.Enable();
+        }
     }
 
     public void RaceStop()

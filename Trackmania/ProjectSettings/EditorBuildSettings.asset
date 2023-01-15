@@ -20,13 +20,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Network/GameMap.unity
     guid: 5449cb2c14b7c6648a82d82dc53d02aa
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MarketPlace.unity
     guid: e9b9a9d6e983ba646a965d785643322f
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MapEditor/EditMap.unity
     guid: 74feaab8ceb200b4d8f12a8e95ac9d7f
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MapEditor/EditorMapScene.unity
     guid: ad3773a72b12239408d26246a28a7575
   m_configObjects: {}

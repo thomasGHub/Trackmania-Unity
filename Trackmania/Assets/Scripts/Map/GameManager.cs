@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
 
         Transform startPoint = _roadPoints.Start.transform;
 
-        if(PlayerPrefs.GetInt("Multi") == 1)
+        if(isMulti)
         {
             _player = PlayerNetwork.localPlayer.gameObject.GetComponent<Player>();//_playerCar.GetComponent<Player>();
             _player.gameObject.GetComponent<NetworkTransformChild>().OnTeleport(startPoint.position, startPoint.rotation);
@@ -100,33 +100,32 @@ public class GameManager : MonoBehaviour
         {
             GameObject go = Instantiate(_soloPlayerPrefab, startPoint.position, startPoint.rotation);
             _player = go.GetComponent<Player>();
+            _instance._ghost = new Ghost(_instance._player.PlayerCar.transform, _instance._mapLoader.MapInfo.ID);
         }
 
         _roadToFunction.Add(_roadData.CheckPoint.GetType(), CheckPointPassed);
         _roadToFunction.Add(_roadData.Goal.GetType(), EndPointPassed);
-
-        _ghost = new Ghost(_player.PlayerCar.transform, _mapLoader.MapInfo.ID);
+        
     }
 
     public static void LaunchRace()
     {
-        if (_instance.isMulti)
-        Debug.Log(PlayerNetwork.localPlayer.currentMatch.gameMode.ToString());
-        
-
         foreach(Road checkPoint in _instance._roadPoints.CheckPoints)
         {
             _instance._checkPointPassed[checkPoint] = false;
         }
 
-        List<GhostData> ghostData = _instance._ghost.loadGhost();
-
-        if (ghostData != null)
+        if(!_instance.isMulti)
         {
-            Transform startPoint = _instance._roadPoints.Start.transform;
-            GameObject gameObject = Instantiate(_instance._ghostPrefab, startPoint.position, startPoint.rotation);
-            _instance._ghostController = gameObject.GetComponent<GhostController>();
-            _instance._ghostController.Init(ghostData);
+            List<GhostData> ghostData = _instance._ghost.loadGhost();
+
+            if (ghostData != null)
+            {
+                Transform startPoint = _instance._roadPoints.Start.transform;
+                GameObject gameObject = Instantiate(_instance._ghostPrefab, startPoint.position, startPoint.rotation);
+                _instance._ghostController = gameObject.GetComponent<GhostController>();
+                _instance._ghostController.Init(ghostData);
+            }
         }
 
         _instance._player.StartCountDown();
@@ -134,26 +133,28 @@ public class GameManager : MonoBehaviour
 
     public static void RaceStart()
     {
-        if(_instance._ghostController != null)
+        if(!_instance.isMulti)
         {
-            _instance._ghostController.StartRace();
-        }
+            if (_instance._ghostController != null)
+            {
+                _instance._ghostController.StartRace();
+            }
 
-        _instance._ghost._isInRace = true;
+            _instance._ghost._isInRace = true;
 
-        if (_instance._ghostSaveCoroutine == null)
-        {
-            _instance._ghostSaveCoroutine = _instance._ghost.GetData();
-            _instance.StartCoroutine(_instance._ghostSaveCoroutine);
-        }
-        else
-        {
+            if (_instance._ghostSaveCoroutine == null)
+            {
+                _instance._ghostSaveCoroutine = _instance._ghost.GetData();
+                _instance.StartCoroutine(_instance._ghostSaveCoroutine);
+            }
+            else
+            {
+                _instance.StopCoroutine(_instance._ghostSaveCoroutine);
 
-            _instance.StopCoroutine(_instance._ghostSaveCoroutine);
-
-            _instance._ghost.RestartData();
-            _instance._ghostSaveCoroutine = _instance._ghost.GetData();
-            _instance.StartCoroutine(_instance._ghostSaveCoroutine);
+                _instance._ghost.RestartData();
+                _instance._ghostSaveCoroutine = _instance._ghost.GetData();
+                _instance.StartCoroutine(_instance._ghostSaveCoroutine);
+            }
         }
 
         _instance._player.RaceStart();

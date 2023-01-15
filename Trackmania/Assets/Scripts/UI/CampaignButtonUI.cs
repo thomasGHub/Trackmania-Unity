@@ -87,7 +87,6 @@ public class CampaignButtonUI : MonoBehaviour, IPointerEnterHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.LogWarning("HoverID : " + _mapInfo.ID);
         SoloCampaignMenuView.instance.MouseOnButtonNumber(_mapInfo.ID, _mapInfo.Name);
     }
 

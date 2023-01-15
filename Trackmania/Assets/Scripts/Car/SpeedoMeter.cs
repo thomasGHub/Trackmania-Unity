@@ -23,7 +23,6 @@ namespace Car
         private void Awake()
         {
             _textMesh = GetComponent<TextMesh>();
-            Debug.LogWarning("Initialize : " + _textMesh);
             _textMesh.text = "000";
         }
 
