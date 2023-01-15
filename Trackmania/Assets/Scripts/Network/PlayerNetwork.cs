@@ -516,9 +516,11 @@ namespace MirrorBasics
 
             Debug.Log(" Launching now");
 
-
-
             currentMatch.isRoundEnding = false;
+
+            Debug.Log("Bool Ending : " + currentMatch.isRoundEnding);
+            Debug.Log(" NB Round : " + currentMatch.nbRound);
+            Debug.Log(" GameMode as Round : " + (currentMatch.gameMode as Rounds).nbRounds);
 
             if (currentMatch.nbRound != (currentMatch.gameMode as Rounds).nbRounds)
 

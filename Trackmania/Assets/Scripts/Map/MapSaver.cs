@@ -88,7 +88,7 @@ public class MapSaver
         string path;
         if (newMap)
         {
-            path = MapSaver.MapDataPath + "/" + mapInfo.ID;
+            path = MapSaver.MapDataPath + MapSaver.Online + "/" + mapInfo.ID;
         }
         else
         {
@@ -107,7 +107,7 @@ public class MapSaver
         string path;
         if (newMap)
         {
-            path = MapSaver.MapDataPath + "/" + listJsonData.ID;
+            path = MapSaver.MapDataPath + MapSaver.Online + "/" + listJsonData.ID;
         }
         else
         {
