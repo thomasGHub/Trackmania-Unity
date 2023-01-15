@@ -305,7 +305,7 @@ public class GameManager : MonoBehaviour
             StartCoroutine(RequestManager.UpdatingdData(updatingData));
             MapInfo mapInfo = _mapLoader.MapInfo;
             mapInfo.WorldRecord = personalWorldRecord;
-            MapSaver.SaveMapInfo(mapInfo);
+            MapSaver.SaveMapInfo(mapInfo, false);
         }
     }
 

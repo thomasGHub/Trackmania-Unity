@@ -83,9 +83,17 @@ public class MapSaver
         File.WriteAllText(path + _mapInfo, _json);
     }
 
-    public static void SaveMapInfo(MapInfo mapInfo)
+    public static void SaveMapInfo(MapInfo mapInfo, bool newMap)
     {
-        string path = GetMapDirectory(mapInfo.ID);
+        string path;
+        if (newMap)
+        {
+            path = MapSaver.MapDataPath + "/" + mapInfo.ID;
+        }
+        else
+        {
+            path = GetMapDirectory(mapInfo.ID);
+        }
 
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
@@ -94,9 +102,17 @@ public class MapSaver
         File.WriteAllText(path + "/" + MapSaver.MapInfo, json);
     }
 
-    public static void SaveMapData(ListJsonData listJsonData)
+    public static void SaveMapData(ListJsonData listJsonData, bool newMap)
     {
-        string path = GetMapDirectory(listJsonData.ID);;
+        string path;
+        if (newMap)
+        {
+            path = MapSaver.MapDataPath + "/" + listJsonData.ID;
+        }
+        else
+        {
+            path = GetMapDirectory(listJsonData.ID);
+        }
 
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
