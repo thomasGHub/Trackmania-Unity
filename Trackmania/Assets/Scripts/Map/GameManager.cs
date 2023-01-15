@@ -241,7 +241,8 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        _ghost._isInRace = false;
+        if(!isMulti)
+            _ghost._isInRace = false;
     }
 
     private bool SavePersonalTime(int score)

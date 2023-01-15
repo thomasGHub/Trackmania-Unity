@@ -62,9 +62,7 @@ namespace MirrorBasics
             {
                 matchIDs.Add(_matchID);
 
-                //GameMode tempGameMode = GameModeFactory.Create(GameModeType.TimeAttack,5);
-
-                Match match = new Match(_matchID, _mapId, _player, publicMatch, ViewManager.GetView<GameModeMenuView>().finalGameMode);
+                Match match = new Match(_matchID, _mapId, _player, publicMatch, new GameMode());
                 matches.Add(match);
                 //Debug.Log ($"Match generated");
                 _player.currentMatch = match;

@@ -132,7 +132,7 @@ namespace MirrorBasics
             string json = File.ReadAllText(path);
             MapInfo mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
             CmdSendMapID(mapInfo.ID);
-
+            CmdSendMapMode(ViewManager.GetView<GameModeMenuView>().finalGameMode);
             playerIndex = _playerIndex;
             matchID = _matchID;
             Debug.Log($"MatchID: {matchID} == {_matchID}");
@@ -192,6 +192,14 @@ namespace MirrorBasics
             //Debug.Log("Server_________________________________" + _mapID);
 
             currentMatch.mapId = _mapID;
+        }
+
+        [Command]
+        void CmdSendMapMode(GameMode gameMode)
+        {
+            Debug.Log("Server_________________________________" + gameMode.type);
+
+            currentMatch.gameMode = gameMode;
         }
 
         [Command]
