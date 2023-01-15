@@ -186,6 +186,7 @@ namespace MirrorBasics
             UILobby.instance.JoinSuccess(success, _matchID);
 
             CmdGetMapId();
+            CmdGetMapMode();
         }
 
 
@@ -211,12 +212,24 @@ namespace MirrorBasics
             RpcGetMapId(currentMatch.mapId);
         }
 
+        [Command]
+        public void CmdGetMapMode()
+        {
+            RpcGetMapMode(currentMatch.gameMode);
+        }
+
 
         [TargetRpc]
         public void RpcGetMapId(string _mapId)
         {
             currentMatch.mapId = _mapId;
             StartCoroutine(GetMap());
+        }
+
+        [TargetRpc]
+        public void RpcGetMapMode(GameMode gameMode)
+        {
+            currentMatch.gameMode = gameMode;
         }
 
 
