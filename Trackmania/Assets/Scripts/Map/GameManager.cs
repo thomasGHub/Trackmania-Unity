@@ -162,6 +162,10 @@ public class GameManager : MonoBehaviour
 
     public static void RaceRestart()
     {
+        if (!_instance.isMulti)
+        {
+
+        
         List<GhostData> ghostData = _instance._ghost.loadGhost();
 
         if(ghostData != null)
@@ -174,7 +178,7 @@ public class GameManager : MonoBehaviour
             }
             _instance._ghostController.Init(ghostData);
         }
-            
+        }
 
         _instance._lastCheckPointPassed = null;
 

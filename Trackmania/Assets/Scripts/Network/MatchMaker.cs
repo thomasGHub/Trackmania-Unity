@@ -54,7 +54,7 @@ namespace MirrorBasics
             //DontDestroyOnLoad(gameObject);
         }
 
-        public bool HostGame(string _matchID, string _mapId, PlayerNetwork _player, bool publicMatch, out int playerIndex)
+        public bool HostGame(string _matchID, string _mapId, PlayerNetwork _player, bool publicMatch, out int playerIndex,GameMode _gamemode)
         {
             playerIndex = -1;
 
@@ -62,7 +62,7 @@ namespace MirrorBasics
             {
                 matchIDs.Add(_matchID);
 
-                Match match = new Match(_matchID, _mapId, _player, publicMatch, new GameMode());
+                Match match = new Match(_matchID, _mapId, _player, publicMatch, _gamemode);
                 matches.Add(match);
                 //Debug.Log ($"Match generated");
                 _player.currentMatch = match;
