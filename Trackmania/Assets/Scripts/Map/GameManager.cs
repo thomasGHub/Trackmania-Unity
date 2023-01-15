@@ -233,7 +233,7 @@ public class GameManager : MonoBehaviour
         string json;
         PersonalMapTime personalMapTime;
 
-        Debug.LogWarning(_mapLoader.MapInfo.ID);
+        //Debug.LogWarning(_mapLoader.MapInfo.ID);
 
         if (File.Exists(path))
         {
