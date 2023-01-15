@@ -28,6 +28,8 @@ namespace MirrorBasics
 
         Guid netIDGuid;
 
+        GameMode savedGameMode;
+
         void Awake()
         {
             networkMatch = GetComponent<NetworkMatch>();
@@ -104,6 +106,7 @@ namespace MirrorBasics
         public void HostGame(bool publicMatch)
         {
             string matchID = MatchMaker.GetRandomMatchID();
+            savedGameMode = ViewManager.GetView<GameModeMenuView>().finalGameMode;
             CmdHostGame(matchID, publicMatch);
         }
 
@@ -111,8 +114,8 @@ namespace MirrorBasics
         void CmdHostGame(string _matchID, bool publicMatch)
         {
             matchID = _matchID;
-
-            if (MatchMaker.instance.HostGame(_matchID, "", this, publicMatch, out playerIndex))
+            
+            if (MatchMaker.instance.HostGame(_matchID, "", this, publicMatch, out playerIndex, savedGameMode))
             {
                 Debug.Log($"<color=green>Game hosted successfully</color>");
                 networkMatch.matchId = _matchID.ToGuid();
@@ -132,7 +135,7 @@ namespace MirrorBasics
             string json = File.ReadAllText(path);
             MapInfo mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
             CmdSendMapID(mapInfo.ID);
-            CmdSendMapMode(ViewManager.GetView<GameModeMenuView>().finalGameMode);
+            //CmdSendMapMode(ViewManager.GetView<GameModeMenuView>().finalGameMode);
             playerIndex = _playerIndex;
             matchID = _matchID;
             Debug.Log($"MatchID: {matchID} == {_matchID}");
