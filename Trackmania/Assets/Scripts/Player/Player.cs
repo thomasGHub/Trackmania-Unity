@@ -52,10 +52,12 @@ public class Player : MonoBehaviour
         _timerCount.Launch();
         _playerMap.PlayerUX.CameraSwitch.Enable();
         _playerMap.PlayerMovement.Respawn.Enable();
+        _playerMap.PlayerMovement.Restart.Enable();
+
         if (GameManager.GetInstance().isMulti)
         {
-            if (PlayerNetwork.localPlayer.currentMatch.gameMode.type != GameModeType.Rounds)
-                _playerMap.PlayerMovement.Restart.Enable();
+            if (PlayerNetwork.localPlayer.currentMatch.gameMode.type == GameModeType.Rounds)
+                _playerMap.PlayerMovement.Restart.Disable();
         }
     }
 
