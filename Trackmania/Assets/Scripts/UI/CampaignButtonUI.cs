@@ -37,6 +37,11 @@ public class CampaignButtonUI : MonoBehaviour, IPointerEnterHandler
         _button.onClick.AddListener(LoadMap);
     }
 
+    private void OnEnable()
+    {
+        DisplayMedals();
+    }
+
 
     private void Start()
     {
