@@ -1,22 +1,22 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public enum GameModeType { TimeAttack, Rounds, Campaign }
+
 public class GameMode
 {
     public GameModeType type;
-
     // abstract methods
-
-
 
 }
 
+[Serializable]
 public class TimeAttack : GameMode
 {
-
+    [JsonConstructor]
     public TimeAttack()
     {
         type = GameModeType.TimeAttack;
@@ -25,11 +25,13 @@ public class TimeAttack : GameMode
 
 }
 
-
+[Serializable]
 public class Rounds : GameMode
 {
     private int _numRounds;
     public int nbRounds { get { return _numRounds; } }
+
+    [JsonConstructor]
     public Rounds(int numRounds)
     {
         type = GameModeType.Rounds;
@@ -63,5 +65,17 @@ public static class GameModeFactory
 
             default: throw new ArgumentException("Invalid game mode type.");
         }
+    }
+}
+
+public class GameModeData
+{
+    public object gameMode;
+    public Type type;
+
+    public GameModeData(object _gameMode, Type _type)
+    {
+        gameMode = _gameMode;
+        type = _type;
     }
 }

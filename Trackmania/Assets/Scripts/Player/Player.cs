@@ -85,8 +85,11 @@ public class Player : MonoBehaviour
         ResetVehicle(GameManager.StartPosition);
     }
 
-    private void ResetVehicle(Transform destination)
+    public void ResetVehicle(Transform destination)
     {
+        if (destination == null)
+            destination = _carController.transform;
+
         _carController.Teleportation(destination);
     }
 
@@ -108,7 +111,19 @@ public class Player : MonoBehaviour
         Transform respawnPoint = GameManager.LastCheckPointPassed;
 
         if (respawnPoint == null)
+        {
+            if (GameManager.GetInstance().isMulti)
+            {
+                if (PlayerNetwork.localPlayer.currentMatch.gameMode.type == GameModeType.Rounds)
+                {
+                    ResetVehicle(GameManager.StartPosition);
+                    return;
+                }
+            }
+
             RaceRestart();
+        }
+            
 
         else
         {

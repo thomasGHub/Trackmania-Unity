@@ -28,7 +28,7 @@ namespace MirrorBasics
 
         Guid netIDGuid;
 
-        GameMode savedGameMode;
+        [SyncVar] GameMode savedGameMode;
 
         void Awake()
         {
@@ -107,15 +107,34 @@ namespace MirrorBasics
         {
             string matchID = MatchMaker.GetRandomMatchID();
             savedGameMode = ViewManager.GetView<GameModeMenuView>().finalGameMode;
-            CmdHostGame(matchID, publicMatch);
+
+            string json = JsonUtility.ToJson(savedGameMode);
+
+            Debug.Log("Client____________" + json);
+
+            int nbRounds = savedGameMode.GetType() == typeof(Rounds) ? (savedGameMode as Rounds).nbRounds : -1;
+
+            CmdHostGame(matchID, publicMatch, savedGameMode.type, nbRounds);
+            
         }
 
         [Command]
-        void CmdHostGame(string _matchID, bool publicMatch)
+        void CmdHostGame(string _matchID, bool publicMatch, GameModeType type, int nbRounds)
         {
+            GameMode gameMode;
+            if(nbRounds !=  -1)
+            {
+                gameMode = GameModeFactory.Create(type, nbRounds);
+                Debug.Log("Server__________ " + (gameMode as Rounds).nbRounds);
+            }
+            else
+            {
+                gameMode = GameModeFactory.Create(type);
+            }            
+
             matchID = _matchID;
             
-            if (MatchMaker.instance.HostGame(_matchID, "", this, publicMatch, out playerIndex, savedGameMode))
+            if (MatchMaker.instance.HostGame(_matchID, "", this, publicMatch, out playerIndex, gameMode))
             {
                 Debug.Log($"<color=green>Game hosted successfully</color>");
                 networkMatch.matchId = _matchID.ToGuid();
@@ -522,6 +541,13 @@ namespace MirrorBasics
             GameManager.GetInstance().LaunchNewRound();
 
         }
+
+        [ClientRpc]
+        private void BackToMenu()
+        {
+            StartCoroutine(UILobby.instance.MainMenu());
+        }
+
         private IEnumerator LaunchRound()
 
         {
@@ -548,7 +574,7 @@ namespace MirrorBasics
             }
             else
             {
-                StartCoroutine(UILobby.instance.MainMenu());
+                BackToMenu();
             }
         }
     }

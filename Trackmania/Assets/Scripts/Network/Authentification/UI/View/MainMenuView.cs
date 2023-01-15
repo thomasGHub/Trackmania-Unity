@@ -15,6 +15,7 @@ public class MainMenuView : View
     public Button MarketPLaceButton;
     public Button SettingsButton;
     public Button DeconnectionButton;
+    public Button QuitGameButton;
 
     public override void Initialize()
     {
@@ -23,6 +24,7 @@ public class MainMenuView : View
         MarketPLaceButton.onClick.AddListener(() => MarketPlaceClicked());
         SettingsButton.onClick.AddListener(() => SettingsClicked());
         DeconnectionButton.onClick.AddListener(() => OnDeconnection());
+        QuitGameButton.onClick.AddListener(() => QuitGame());
 
         OfflineMode();
     }
@@ -59,13 +61,12 @@ public class MainMenuView : View
 
     private void OnDeconnection()
     {
-        StartCoroutine(OnDeco());
-        //SceneManager.LoadScene("Login", LoadSceneMode.Single);
-        //ViewManager.Show<AuthentificationStartView>();
+        StartCoroutine(OnDeco());;
+    }
 
-        //PlayerPrefs.DeleteKey("UserName");
-        //PlayerPrefs.DeleteKey("Password");
-        //PlayerPrefs.DeleteKey("Custom_Id");
+    private void QuitGame()
+    {
+        Application.Quit();
     }
 
 

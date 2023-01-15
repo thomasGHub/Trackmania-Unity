@@ -212,6 +212,8 @@ public class GameManager : MonoBehaviour
 
     private void EndPointPassed(Road roadScript)
     {
+        _player.ResetVehicle(null);
+
         foreach (bool value in _checkPointPassed.Values)
         {
             if (!value)
