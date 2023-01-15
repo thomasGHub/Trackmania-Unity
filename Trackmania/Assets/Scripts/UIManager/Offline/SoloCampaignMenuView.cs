@@ -29,7 +29,7 @@ public class SoloCampaignMenuView : View
     public TextMeshProUGUI LeaderboardTitle;
     public GameObject LeaderBoardLocal;
     public GameObject LeaderBoardWorld;
-    public ChooseMapBlockCreator ChooseMap;
+    public ChooseOfflineMapBlockCreator ChooseMap;
 
     public GameObject rowPrefab;
     public Transform rowsParent;

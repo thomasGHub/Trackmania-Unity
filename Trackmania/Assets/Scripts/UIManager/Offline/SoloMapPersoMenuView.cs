@@ -10,6 +10,9 @@ public class SoloMapPersoMenuView : View
 
     public override void Initialize()
     {
-        BackButton.onClick.AddListener(() => ViewManager.ShowLast());
+        BackButton.onClick.AddListener(() => 
+        { 
+            ViewManager.Show<OnlineCategoriesView>();
+        });
     }
 }

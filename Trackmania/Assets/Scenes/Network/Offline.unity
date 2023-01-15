@@ -1174,7 +1174,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 98066379}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f5da86fe888dd445bdaae3499cfb0c0, type: 3}
+  m_Script: {fileID: 11500000, guid: 1d14c0b2b370f8c48821ddad6d1ca253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _parentTransform: {fileID: 1914981359}
@@ -9081,7 +9081,7 @@ MonoBehaviour:
   LeaderboardTitle: {fileID: 280693529}
   LeaderBoardLocal: {fileID: 1487145193}
   LeaderBoardWorld: {fileID: 978828250}
-  ChooseMap: {fileID: 98066384}
+  ChooseMap: {fileID: 0}
   rowPrefab: {fileID: 427715799756022447, guid: 4174f2a23109f9045aa0df17bf8dfe92, type: 3}
   rowsParent: {fileID: 1241186815}
   updateLeaderBoardEverySecond: 10

@@ -22,6 +22,6 @@ public class SoloMenuView : View
     }
     void PlayMapPerso()
     {
-        ViewManager.Show<SoloMapPersoMenuView>(true, false);
+        ViewManager.Show<SoloMapPersoMenuView>(true, true);
     }
 }

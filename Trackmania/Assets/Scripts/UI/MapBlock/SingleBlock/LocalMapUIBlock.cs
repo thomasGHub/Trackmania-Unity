@@ -90,6 +90,8 @@ public class LocalMapUIBlock : MapUiBlock
         yield return first;
         yield return second;
 
+        MapSaver.SaveOnlineMap(listBlock, _mapInfo);
+
         Published();
     }
 }

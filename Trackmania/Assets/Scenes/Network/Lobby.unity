@@ -7800,7 +7800,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1807921315}
   - component: {fileID: 1807921316}
-  - component: {fileID: 1807921317}
   m_Layer: 0
   m_Name: MapUILocalMap
   m_TagString: Untagged
@@ -7829,23 +7828,9 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1807921314}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ec23286d0214774c822380ce2ffe024, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _parentTransform: {fileID: 1914981359}
-  _mapDataPrefab: {fileID: 7412385486137486812, guid: ddda146fc6afabc4aaf4eeca618ef72e, type: 3}
---- !u!114 &1807921317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1807921314}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f5da86fe888dd445bdaae3499cfb0c0, type: 3}
+  m_Script: {fileID: 11500000, guid: b7821cc6b3d7e6a409cc9ae3bbfc69ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _parentTransform: {fileID: 1914981359}
