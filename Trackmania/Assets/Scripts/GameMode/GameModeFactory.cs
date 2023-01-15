@@ -3,10 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum GameModeType { TimeAttack, Rounds }
-public abstract class IGameMode
+public enum GameModeType { TimeAttack, Rounds, Campaign }
+public class GameMode
 {
-    public string mapID;
     public GameModeType type;
 
     // abstract methods
@@ -15,39 +14,53 @@ public abstract class IGameMode
 
 }
 
-class TimeAttack : IGameMode
+public class TimeAttack : GameMode
 {
-    private int _gameDuration;
-    public int roundDuration { get { return _gameDuration; } }
-    public TimeAttack(int duration)
+
+    public TimeAttack()
     {
-        this._gameDuration = duration;
+        type = GameModeType.TimeAttack;
     }
 
 
 }
 
 
-class Rounds : IGameMode
+public class Rounds : GameMode
 {
-    private int _numLaps;
-    public int numLaps { get { return _numLaps; } }
-    public Rounds(int numLaps)
+    private int _numRounds;
+    public int nbRounds { get { return _numRounds; } }
+    public Rounds(int numRounds)
     {
-        this._numLaps = numLaps;
+        type = GameModeType.Rounds;
+
+        this._numRounds = numRounds;
     }
 
 
 }
 
-class GameModeFactory
+public class Campaign : GameMode
 {
-    public static IGameMode Create(GameModeType type, params object[] args)
+
+    public Campaign()
+    {
+        type = GameModeType.Campaign;
+
+    }
+
+}
+
+public static class GameModeFactory
+{
+    public static GameMode Create(GameModeType type, params object[] args)
     {
         switch (type)
         {
-            case GameModeType.TimeAttack: return new TimeAttack((int)args[0]);
+            case GameModeType.TimeAttack: return new TimeAttack();
             case GameModeType.Rounds: return new Rounds((int)args[0]);
+            case GameModeType.Campaign: return new Campaign();
+
             default: throw new ArgumentException("Invalid game mode type.");
         }
     }

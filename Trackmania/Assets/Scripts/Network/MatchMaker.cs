@@ -16,8 +16,11 @@ namespace MirrorBasics {
         public string mapId;
         public List<PlayerNetwork> players = new List<PlayerNetwork> ();
         //public List<Temps> playersScores = new List<Temps>();
+        public GameMode gameMode;
+        public bool isRoundEnding;
+        public int nbRound;
 
-        public Match (string matchID,string mapId, PlayerNetwork player, bool publicMatch) {
+        public Match (string matchID,string mapId, PlayerNetwork player, bool publicMatch,GameMode _gameMode) {
             matchFull = false;
             inMatch = false;
             this.matchID = matchID;
@@ -26,6 +29,8 @@ namespace MirrorBasics {
             players.Add (player);
             //Temps temps = new Temps(0,0,0);
             //playersScores.Add(temps);
+            gameMode = _gameMode;
+            nbRound = 0;
         }
 
         public Match () { }
@@ -49,7 +54,10 @@ namespace MirrorBasics {
 
             if (!matchIDs.Contains (_matchID)) {
                 matchIDs.Add (_matchID);
-                Match match = new Match (_matchID, _mapId, _player, publicMatch);
+
+                //GameMode tempGameMode = GameModeFactory.Create(GameModeType.TimeAttack,5);
+
+                Match match = new Match (_matchID, _mapId, _player, publicMatch, ViewManager.GetView<GameModeMenuView>().finalGameMode);
                 matches.Add (match);
                 Debug.Log ($"Match generated");
                 _player.currentMatch = match;

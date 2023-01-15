@@ -42,8 +42,8 @@ public class PlayOnlineMapUiBlock : MapUiBlock
         //LoadMap.SwitchSceneAsync(_mapInfo);
         string json = JsonConvert.SerializeObject(_mapInfo);
         File.WriteAllText(MapSaver.MapDataPath + MapSaver.MapToPlay, json);
-
-        ViewManager.GetView<CreateMenuView>().ActiveButton();
+        
+        ViewManager.Show<GameModeMenuView>();
 
     }
 }

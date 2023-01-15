@@ -42,8 +42,12 @@ public class GameManager : MonoBehaviour
     public static Transform LastCheckPointPassed => _instance._lastCheckPointPassed;
     public static Transform StartPosition => _instance._roadPoints.Start.transform;
 
+    public GameMode gameMode { get; internal set; }
+    private bool isMulti { get { return PlayerPrefs.GetInt("Multi") == 1; } }
+
     private Temps localBestTemps = new Temps(0,0,0);
     private Temps _currentTemps;
+
 
 
     #region Ghost
@@ -106,6 +110,10 @@ public class GameManager : MonoBehaviour
 
     public static void LaunchRace()
     {
+        if (_instance.isMulti)
+        Debug.Log(PlayerNetwork.localPlayer.currentMatch.gameMode.ToString());
+        
+
         foreach(Road checkPoint in _instance._roadPoints.CheckPoints)
         {
             _instance._checkPointPassed[checkPoint] = false;
@@ -200,10 +208,13 @@ public class GameManager : MonoBehaviour
 
         _currentTemps = _player.RaceFinish();
 
+        if (_instance.isMulti)
+            PlayerNetwork.localPlayer.CmdHasFinished(PlayerNetwork.localPlayer.playerIndex);
+
         if (Temps.IsNewTempsBest(_currentTemps, localBestTemps))
         {
             localBestTemps = _currentTemps;
-            if(PlayerPrefs.GetInt("Multi") == 1)
+            if(_instance.isMulti)
                 PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, _currentTemps, PlayerNetwork.localPlayer.playerName);
         }
 
@@ -306,4 +317,19 @@ public class GameManager : MonoBehaviour
         return _instance;
     }
 
+    public void LaunchEndRound()
+    {
+        StartCoroutine(EndRound());
+    }
+
+    public IEnumerator EndRound()
+    {
+        yield return new WaitForSeconds(5f);
+        _player.RaceStop();
+    }
+    public void LaunchNewRound()
+    {
+        _player.RaceRestart();
+
+    }
 }
