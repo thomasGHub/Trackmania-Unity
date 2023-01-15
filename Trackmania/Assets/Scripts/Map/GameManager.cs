@@ -128,7 +128,6 @@ public class GameManager : MonoBehaviour
     {
         if(_instance._ghostController != null)
         {
-            Debug.Log("StartRace");
             _instance._ghostController.StartRace();
         }
 
@@ -136,6 +135,15 @@ public class GameManager : MonoBehaviour
 
         if (_instance._ghostSaveCoroutine == null)
         {
+            _instance._ghostSaveCoroutine = _instance._ghost.GetData();
+            _instance.StartCoroutine(_instance._ghostSaveCoroutine);
+        }
+        else
+        {
+
+            _instance.StopCoroutine(_instance._ghostSaveCoroutine);
+
+            _instance._ghost.RestartData();
             _instance._ghostSaveCoroutine = _instance._ghost.GetData();
             _instance.StartCoroutine(_instance._ghostSaveCoroutine);
         }
@@ -166,7 +174,7 @@ public class GameManager : MonoBehaviour
             _instance._checkPointPassed[checkPoint] = false;
         }
 
-        _instance._ghost.RestartData();
+        
 
         if(_instance._ghostController != null)
             _instance._ghostController.Restart(StartPosition);
@@ -221,9 +229,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        
-        
-
         _ghost._isInRace = false;
     }
 
@@ -232,8 +237,6 @@ public class GameManager : MonoBehaviour
         string path = MapSaver.GetMapDirectory(_mapLoader.MapInfo.ID) + MapSaver.MapPersonalTimeInfo;
         string json;
         PersonalMapTime personalMapTime;
-
-        //Debug.LogWarning(_mapLoader.MapInfo.ID);
 
         if (File.Exists(path))
         {
