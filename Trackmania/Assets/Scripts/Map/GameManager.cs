@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     public GameMode gameMode { get; internal set; }
     public bool isMulti { get { return PlayerPrefs.GetInt("Multi") == 1; } }
 
-    private Temps localBestTemps = new Temps(0,0,0);
+    private Temps localBestTemps = new Temps(0, 0, 0);
     private Temps _currentTemps;
 
 
@@ -61,12 +61,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if( _instance != null )
+        if (_instance != null)
         {
             Destroy(this);
             return;
         }
-            
+
         _instance = this;
 
         _playerMap = new PlayerMap();
@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
 
         Transform startPoint = _roadPoints.Start.transform;
 
-        if(isMulti)
+        if (isMulti)
         {
             _player = PlayerNetwork.localPlayer.gameObject.GetComponent<Player>();//_playerCar.GetComponent<Player>();
             _player.gameObject.GetComponent<NetworkTransformChild>().OnTeleport(startPoint.position, startPoint.rotation);
@@ -105,17 +105,17 @@ public class GameManager : MonoBehaviour
 
         _roadToFunction.Add(_roadData.CheckPoint.GetType(), CheckPointPassed);
         _roadToFunction.Add(_roadData.Goal.GetType(), EndPointPassed);
-        
+
     }
 
     public static void LaunchRace()
     {
-        foreach(Road checkPoint in _instance._roadPoints.CheckPoints)
+        foreach (Road checkPoint in _instance._roadPoints.CheckPoints)
         {
             _instance._checkPointPassed[checkPoint] = false;
         }
 
-        if(!_instance.isMulti)
+        if (!_instance.isMulti)
         {
             List<GhostData> ghostData = _instance._ghost.loadGhost();
 
@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
 
     public static void RaceStart()
     {
-        if(!_instance.isMulti)
+        if (!_instance.isMulti)
         {
             if (_instance._ghostController != null)
             {
@@ -165,19 +165,19 @@ public class GameManager : MonoBehaviour
         if (!_instance.isMulti)
         {
 
-        
-        List<GhostData> ghostData = _instance._ghost.loadGhost();
 
-        if(ghostData != null)
-        {
-            if(_instance._ghostController == null)
+            List<GhostData> ghostData = _instance._ghost.loadGhost();
+
+            if (ghostData != null)
             {
-                Transform startPoint = _instance._roadPoints.Start.transform;
-                GameObject gameObject = Instantiate(_instance._ghostPrefab, startPoint.position, startPoint.rotation);
-                _instance._ghostController = gameObject.GetComponent<GhostController>();
+                if (_instance._ghostController == null)
+                {
+                    Transform startPoint = _instance._roadPoints.Start.transform;
+                    GameObject gameObject = Instantiate(_instance._ghostPrefab, startPoint.position, startPoint.rotation);
+                    _instance._ghostController = gameObject.GetComponent<GhostController>();
+                }
+                _instance._ghostController.Init(ghostData);
             }
-            _instance._ghostController.Init(ghostData);
-        }
         }
 
         _instance._lastCheckPointPassed = null;
@@ -187,9 +187,9 @@ public class GameManager : MonoBehaviour
             _instance._checkPointPassed[checkPoint] = false;
         }
 
-        
 
-        if(_instance._ghostController != null)
+
+        if (_instance._ghostController != null)
             _instance._ghostController.Restart(StartPosition);
 
         _instance._player.StartCountDown();
@@ -212,8 +212,6 @@ public class GameManager : MonoBehaviour
 
     private void EndPointPassed(Road roadScript)
     {
-        _player.ResetVehicle(null);
-
         foreach (bool value in _checkPointPassed.Values)
         {
             if (!value)
@@ -229,11 +227,11 @@ public class GameManager : MonoBehaviour
         if (Temps.IsNewTempsBest(_currentTemps, localBestTemps))
         {
             localBestTemps = _currentTemps;
-            if(_instance.isMulti)
+            if (_instance.isMulti)
                 PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, _currentTemps, PlayerNetwork.localPlayer.playerName);
         }
 
-        if(!isMulti)
+        if (!isMulti)
         {
             if (SavePersonalTime(Temps.TempsToInt(_currentTemps)))
             {
@@ -268,9 +266,9 @@ public class GameManager : MonoBehaviour
         {
             personalMapTime = new PersonalMapTime(_mapLoader.MapInfo.ID, int.MaxValue);
         }
-        
-        
-        if(score < personalMapTime.Time)
+
+
+        if (score < personalMapTime.Time)
         {
             personalMapTime.Time = score;
             json = JsonConvert.SerializeObject(personalMapTime);
@@ -283,7 +281,7 @@ public class GameManager : MonoBehaviour
 
     private void SaveWordlRecord()
     {
-        if(MapSaver.SavePersonalTime(_mapLoader.MapInfo, Temps.TempsToInt(_currentTemps)))
+        if (MapSaver.SavePersonalTime(_mapLoader.MapInfo, Temps.TempsToInt(_currentTemps)))
         {
             StartCoroutine(SaveWorldRecord());
         }
@@ -302,12 +300,12 @@ public class GameManager : MonoBehaviour
     {
         SingleWorldRecord mapWorldRecord = JsonConvert.DeserializeObject<SingleWorldRecord>(data);
 
-        if(mapWorldRecord.WorldRecord == null) //Map not publish
+        if (mapWorldRecord.WorldRecord == null) //Map not publish
         {
             return;
         }
 
-        if(Temps.TempsToInt(_currentTemps) < mapWorldRecord.WorldRecord.Time || mapWorldRecord.WorldRecord.Time == -1)
+        if (Temps.TempsToInt(_currentTemps) < mapWorldRecord.WorldRecord.Time || mapWorldRecord.WorldRecord.Time == -1)
         {
             MapWorldRecord personalWorldRecord = new MapWorldRecord(PlayerPrefs.GetString("UserName"), Temps.TempsToInt(_currentTemps));
             UpdatingData updatingData = new UpdatingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapInfo, new WorldRecordData(personalWorldRecord), new FilterID(_mapLoader.MapInfo.ID));
@@ -318,7 +316,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static void SetPlayerReference(Player __player )
+    public static void SetPlayerReference(Player __player)
     {
         _instance._player = __player;
     }

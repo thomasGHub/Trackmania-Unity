@@ -61,6 +61,8 @@ public class EditorManager : MonoBehaviour
     private Regex letterRegex = new Regex(@"[a-zA-Z]");
     private Regex numberRegex = new Regex(@"[1-9]");
 
+    public bool isTesting = false;
+
     private void Start()
     {
         _plane = new UnityEngine.Plane(UnityEngine.Vector3.up, new Vector3(0, 0, 0));
@@ -184,7 +186,7 @@ public class EditorManager : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit) && !isTesting)
         {
             if (hit.transform.gameObject.name != "Plane")
             {

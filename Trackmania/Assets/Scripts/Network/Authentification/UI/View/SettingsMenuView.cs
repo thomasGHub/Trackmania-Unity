@@ -9,6 +9,7 @@ public class SettingsMenuView : View
     public Slider sliderMusic;
     public Slider sliderFx;
     public Button BackButton;
+    public Button Controls;
 
     public override void Initialize()
     {
@@ -21,6 +22,7 @@ public class SettingsMenuView : View
 
 
         BackButton.onClick.AddListener(() => ViewManager.ShowLast());
+        Controls.onClick.AddListener(() => ViewManager.Show<ControlsMenuView>());
             
     }
 

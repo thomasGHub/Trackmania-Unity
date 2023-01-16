@@ -33,7 +33,7 @@ public class ValidMapEditor : MonoBehaviour
     void Start()
     {
         _playerMap = new PlayerMap();
-
+        _editorManager.isTesting = true;
         _instance._roadToFunction.Add(_instance._roadData.CheckPoint.GetType(), _instance.CheckPointPassed);
         _instance._roadToFunction.Add(_instance._roadData.Goal.GetType(), _instance.EndPointPassed);
     }
