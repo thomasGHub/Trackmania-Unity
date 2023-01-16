@@ -115,6 +115,13 @@ namespace Car
 
             _playerMap.PlayerMovement.LeftRigth.performed += LeftRigth;
             _playerMap.PlayerMovement.LeftRigth.canceled += LeftRigth;
+
+            if (Application.isBatchMode)
+            {
+                _skidSound.Stop();
+                _engineSoundLowPitched.Stop();
+                _engineSoundHighPitched.Stop();
+            }
         }
 
         private void OnDisable()
@@ -250,6 +257,11 @@ namespace Car
 
         private void AudioControl()
         {
+            if (Application.isBatchMode)
+            {
+                return;
+            }
+
             if (_grounded && Mathf.Abs(_carVelocity.x) > _skidThreshold)
                 _skidSound.mute = false;
 

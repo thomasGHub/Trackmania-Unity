@@ -15,6 +15,7 @@ public class DatabaseInformation
     public DatabaseInformation()
     {
         DatabaseToString[Database.Trackmania] = "TrackmaniaDB";
+        DatabaseToString[Database.TrackmaniaCampaign] = "TrackmaniaCampaign";
 
         SourceToString[Source.TrackmaniaDB] = "TrackmaniaDatabase";
 
@@ -25,7 +26,8 @@ public class DatabaseInformation
 
 public enum Database
 {
-    Trackmania
+    Trackmania,
+    TrackmaniaCampaign
 }
 
 public enum Source
@@ -187,7 +189,7 @@ public class RequestManager : MonoBehaviour
         }
     }
 
-    public static IEnumerator DownloadingAllData(RequestData requestData, System.Action<MapInfo[]> callback = null)
+    public static IEnumerator DownloadingAllData(RequestData requestData, System.Action<string> callback = null)
     {
 
         if (_instance._popUp != null)
@@ -201,7 +203,7 @@ public class RequestManager : MonoBehaviour
             request.SetRequestHeader("api-key", "p0wgTxTbPwPkwoSjGkzIuRtRmkAtFDPxCOd1Tv0qNxXTaXEvPqlRFTgjHqWbo9nw");
 
             string json = requestData.Stringnify();
-            Debug.Log(json);
+            //Debug.Log(json);
             byte[] bodyRaw = Encoding.ASCII.GetBytes(json);
 
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
@@ -218,13 +220,11 @@ public class RequestManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Succes");
+                //Debug.Log("Succes");
                 _instance._data = request.downloadHandler.text;
-                MultipleElement myDeserializedClass = JsonConvert.DeserializeObject<MultipleElement>(request.downloadHandler.text);
-                Debug.Log("Request : " + request.downloadHandler.text);
-                Debug.Log("MapInfo : " + myDeserializedClass._allMapInfo.Length);
+                //Debug.Log("Request : " + request.downloadHandler.text);
 
-                callback(myDeserializedClass._allMapInfo);
+                callback(request.downloadHandler.text);
             }
         }
 

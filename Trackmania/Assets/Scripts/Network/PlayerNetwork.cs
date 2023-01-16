@@ -28,6 +28,8 @@ namespace MirrorBasics
 
         Guid netIDGuid;
 
+        [SyncVar] GameMode savedGameMode;
+
         void Awake()
         {
             networkMatch = GetComponent<NetworkMatch>();
@@ -41,7 +43,17 @@ namespace MirrorBasics
             }
             else
             {
+
+                //Debug.Log($"OnStart __________");
+
                 gameObject.GetComponent<Player>()._timerCount.ShowUI(false);
+
+
+                gameObject.GetComponent<Player>().SetCamPriorityNotLocalPlayer();
+                gameObject.GetComponent<Player>().enabled = false;
+                gameObject.GetComponent<Player>().DisableNotLocalPlayerCar();
+
+
             }
         }
 
@@ -60,16 +72,17 @@ namespace MirrorBasics
                 localPlayer = this;
                 //GameManager.SetPlayerReference(gameObject.GetComponent<Player>());
                 CmdSendName(PlayerPrefs.GetString("UserName"));
+                gameObject.GetComponent<Player>().SetCamPriorityLocalPlayer();
+                
             }
             else
             {
-                Debug.Log($"Spawning other player UI Prefab");
+                //Debug.Log($"Spawn other player Prefab");
                 playerLobbyUI = UILobby.instance.SpawnPlayerUIPrefab(this);
 
                 gameObject.GetComponent<Player>().SetCamPriorityNotLocalPlayer();
                 gameObject.GetComponent<Player>().enabled = false;
                 gameObject.GetComponent<Player>().DisableNotLocalPlayerCar();
-
 
             }
         }
@@ -93,15 +106,35 @@ namespace MirrorBasics
         public void HostGame(bool publicMatch)
         {
             string matchID = MatchMaker.GetRandomMatchID();
-            CmdHostGame(matchID, publicMatch);
+            savedGameMode = ViewManager.GetView<GameModeMenuView>().finalGameMode;
+
+            string json = JsonUtility.ToJson(savedGameMode);
+
+            Debug.Log("Client____________" + json);
+
+            int nbRounds = savedGameMode.GetType() == typeof(Rounds) ? (savedGameMode as Rounds).nbRounds : -1;
+
+            CmdHostGame(matchID, publicMatch, savedGameMode.type, nbRounds);
+            
         }
 
         [Command]
-        void CmdHostGame(string _matchID, bool publicMatch)
+        void CmdHostGame(string _matchID, bool publicMatch, GameModeType type, int nbRounds)
         {
-            matchID = _matchID;
+            GameMode gameMode;
+            if(nbRounds !=  -1)
+            {
+                gameMode = GameModeFactory.Create(type, nbRounds);
+                Debug.Log("Server__________ " + (gameMode as Rounds).nbRounds);
+            }
+            else
+            {
+                gameMode = GameModeFactory.Create(type);
+            }            
 
-            if (MatchMaker.instance.HostGame(_matchID, "", this, publicMatch, out playerIndex))
+            matchID = _matchID;
+            
+            if (MatchMaker.instance.HostGame(_matchID, "", this, publicMatch, out playerIndex, gameMode))
             {
                 Debug.Log($"<color=green>Game hosted successfully</color>");
                 networkMatch.matchId = _matchID.ToGuid();
@@ -117,11 +150,11 @@ namespace MirrorBasics
         [TargetRpc]
         void TargetHostGame(bool success, string _matchID, int _playerIndex)
         {
-            string path = MapSaver.MapDataPath + "/" + "mapToPlay" + ".json";
+            string path = MapSaver.MapDataPath + MapSaver.MapToPlay ;
             string json = File.ReadAllText(path);
             MapInfo mapInfo = JsonConvert.DeserializeObject<MapInfo>(json);
             CmdSendMapID(mapInfo.ID);
-
+            //CmdSendMapMode(ViewManager.GetView<GameModeMenuView>().finalGameMode);
             playerIndex = _playerIndex;
             matchID = _matchID;
             Debug.Log($"MatchID: {matchID} == {_matchID}");
@@ -172,6 +205,7 @@ namespace MirrorBasics
             UILobby.instance.JoinSuccess(success, _matchID);
 
             CmdGetMapId();
+            CmdGetMapMode();
         }
 
 
@@ -184,9 +218,23 @@ namespace MirrorBasics
         }
 
         [Command]
+        void CmdSendMapMode(GameMode gameMode)
+        {
+            Debug.Log("Server_________________________________" + gameMode.type);
+
+            currentMatch.gameMode = gameMode;
+        }
+
+        [Command]
         public void CmdGetMapId()
         {
             RpcGetMapId(currentMatch.mapId);
+        }
+
+        [Command]
+        public void CmdGetMapMode()
+        {
+            RpcGetMapMode(currentMatch.gameMode);
         }
 
 
@@ -195,6 +243,12 @@ namespace MirrorBasics
         {
             currentMatch.mapId = _mapId;
             StartCoroutine(GetMap());
+        }
+
+        [TargetRpc]
+        public void RpcGetMapMode(GameMode gameMode)
+        {
+            currentMatch.gameMode = gameMode;
         }
 
 
@@ -226,14 +280,14 @@ namespace MirrorBasics
         public void ReceiveMapInfo(string data)
         {
             SingleMapInfo myDeserializedClass = JsonConvert.DeserializeObject<SingleMapInfo>(data);
-            MapSaver.SaveMapInfo(myDeserializedClass.MapInfo);
+            MapSaver.SaveMapInfo(myDeserializedClass.MapInfo, true);
             MapSaver.SaveMapToPlay(myDeserializedClass.MapInfo);
         }
 
         public void ReceiveMapData(string data)
         {
             SingleListJsonData myDeserializedClass = JsonConvert.DeserializeObject<SingleListJsonData>(data);
-            MapSaver.SaveMapData(myDeserializedClass.ListJsonData);
+            MapSaver.SaveMapData(myDeserializedClass.ListJsonData, true);
         }
 
 
@@ -383,13 +437,13 @@ namespace MirrorBasics
         [ClientRpc]
         void RpcBeginGame()
         {
-            Debug.Log($"MatchID: {matchID} | Beginning | Index {playerIndex}");
+            //Debug.Log($"MatchID: {matchID} | Beginning | Index {playerIndex}");
 
             if (isLocalPlayer)
             {
                 ViewManager.Show<InGameView>();
-
-                StartCoroutine(LoadMapScence());
+                LobbyPermanentView.ActivateView(false);
+                StartCoroutine(LoadMapScene());
 
             }
             else
@@ -400,12 +454,12 @@ namespace MirrorBasics
         }
 
 
-        private IEnumerator LoadMapScence()
+        private IEnumerator LoadMapScene()
         {
             AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("GameMap", LoadSceneMode.Additive);
             yield return asyncOperation.isDone;
             yield return new WaitForSeconds(1);
-            GameManager.LanchRace();
+            GameManager.LaunchRace();
         }
 
 
@@ -449,5 +503,79 @@ namespace MirrorBasics
             
         }
 
+        [Command]
+        public void CmdHasFinished(int _playerIndex)
+
+        {
+
+            Debug.Log("Someone finished : " + _playerIndex);
+
+
+
+            if (currentMatch.gameMode.type == GameModeType.Rounds && !currentMatch.isRoundEnding)
+
+            {
+
+                RpcEndRound();
+
+                currentMatch.isRoundEnding = true;
+
+                StartCoroutine(LaunchRound());
+
+            }
+
+        }
+
+        [ClientRpc]
+        public void RpcEndRound()
+
+        {
+
+            GameManager.GetInstance().LaunchEndRound();
+
+        }
+
+        [ClientRpc]
+        private void RpcLaunchRound()
+        {
+            GameManager.GetInstance().LaunchNewRound();
+
+        }
+
+        [ClientRpc]
+        private void BackToMenu()
+        {
+            StartCoroutine(UILobby.instance.MainMenu());
+        }
+
+        private IEnumerator LaunchRound()
+
+        {
+
+            Debug.Log(" Launching new round");
+
+            yield return new WaitForSeconds(6);
+
+            Debug.Log(" Launching now");
+
+            currentMatch.isRoundEnding = false;
+
+            Debug.Log("Bool Ending : " + currentMatch.isRoundEnding);
+            Debug.Log(" NB Round : " + currentMatch.nbRound);
+            Debug.Log(" GameMode as Round : " + (currentMatch.gameMode as Rounds).nbRounds);
+
+            if (currentMatch.nbRound != (currentMatch.gameMode as Rounds).nbRounds)
+
+            {
+
+                currentMatch.nbRound++;
+                RpcLaunchRound();
+
+            }
+            else
+            {
+                BackToMenu();
+            }
+        }
     }
 }

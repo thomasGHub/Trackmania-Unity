@@ -38,8 +38,20 @@ namespace MirrorBasics {
 
         public void ListenerUI()
         {
-            OnlineButton.onClick.AddListener(() => networkManager.networkAddress = serverIP) ;
-            LanButton.onClick.AddListener(() => networkManager.networkAddress = GetLocalIPv4());
+            OnlineButton.onClick.AddListener(() => {
+                PlayerPrefs.SetInt("Multi", 1);
+                networkManager.networkAddress = serverIP;
+            }) ;
+            LanButton.onClick.AddListener(() =>
+            {
+                PlayerPrefs.SetInt("Multi", 1);
+                networkManager.networkAddress = GetLocalIPv4();
+            });
+
+            SoloButton.onClick.AddListener(() =>
+            {
+                PlayerPrefs.SetInt("Multi", -1);
+            });
 
             OnlinePlay.onClick.AddListener(() => networkManager.StartClient());
             LanPlay.onClick.AddListener(() => StartConnect());

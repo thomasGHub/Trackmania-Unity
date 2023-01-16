@@ -12,18 +12,22 @@ public class MapSaver
     private static string _mapInfo = "/MapInfo.json";
     private static string _mapGhostInfo = "/MapGhostInfo.json";
     private static string _mapPersonalTimeInfo = "/MapPersonalTimeInfo.json";
+    private static string _mapLeaderBoardData = "/Leaderboard.json";
     private static string _mapToPlay = "/mapToPlay.json";
     private static string _local = "/Local";
     private static string _online = "/Online";
+    private static string _campaign = "/Campaign";
 
     public static string MapDataPath => _mapDataPath;
     public static string MapBlocks => _mapBlocks;
     public static string MapInfo => _mapInfo;
     public static string MapGhostInfo => _mapGhostInfo;
     public static string MapPersonalTimeInfo => _mapPersonalTimeInfo;
+    public static string MapLeaderBoardData => _mapLeaderBoardData;
     public static string MapToPlay => _mapToPlay;
     public static string Local => _local;
     public static string Online => _online;
+    public static string Campaign => _campaign;
 
     public static void CreateNewMap(ListJsonData listBlock, string mapName, int bronzeMedal, int silverMedal,int goldMedal,int authorMedal)
     {
@@ -79,9 +83,17 @@ public class MapSaver
         File.WriteAllText(path + _mapInfo, _json);
     }
 
-    public static void SaveMapInfo(MapInfo mapInfo)
+    public static void SaveMapInfo(MapInfo mapInfo, bool newMap)
     {
-        string path = GetMapDirectory(mapInfo.ID);
+        string path;
+        if (newMap)
+        {
+            path = MapSaver.MapDataPath + MapSaver.Online + "/" + mapInfo.ID;
+        }
+        else
+        {
+            path = GetMapDirectory(mapInfo.ID);
+        }
 
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
@@ -90,9 +102,17 @@ public class MapSaver
         File.WriteAllText(path + "/" + MapSaver.MapInfo, json);
     }
 
-    public static void SaveMapData(ListJsonData listJsonData)
+    public static void SaveMapData(ListJsonData listJsonData, bool newMap)
     {
-        string path = GetMapDirectory(listJsonData.ID);;
+        string path;
+        if (newMap)
+        {
+            path = MapSaver.MapDataPath + MapSaver.Online + "/" + listJsonData.ID;
+        }
+        else
+        {
+            path = GetMapDirectory(listJsonData.ID);
+        }
 
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
@@ -154,6 +174,9 @@ public class MapSaver
 
         if (!Directory.Exists(_mapDataPath + _online))
             Directory.CreateDirectory(_mapDataPath + _online);
+
+        if (!Directory.Exists(_mapDataPath + _campaign))
+            Directory.CreateDirectory(_mapDataPath + _campaign);
     }
 
     public static string GetMapDirectory(string mapID)
@@ -172,6 +195,25 @@ public class MapSaver
             return path;
         }
 
+        path = MapSaver.MapDataPath + MapSaver.Campaign + "/" + mapID;
+
+        if (Directory.Exists(path))
+        {
+            return path;
+        }
+
         return null;
+    }
+
+    public static bool IsCampaignMap(string mapID)
+    {
+        string path = MapSaver.MapDataPath + MapSaver.Campaign + "/" + mapID;
+
+        if (Directory.Exists(path))
+        {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -67,7 +67,7 @@ public class AudioManager : MonoBehaviour
     public void Start()
     {
 
-        Play("Theme");
+        //Play("Theme");
 
     }
 
@@ -99,6 +99,12 @@ public class AudioManager : MonoBehaviour
 
     public void Play(string name)
     {
+
+        if (Application.isBatchMode)
+        {
+            Debug.Log("isBatchMode___________");
+            return;
+        }
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null)
         {

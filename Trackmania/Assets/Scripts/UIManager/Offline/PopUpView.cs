@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InitRepo : MonoBehaviour
+public class PopUpView : View
 {
-    void Awake()
+    public override void Initialize()
     {
-        MapSaver.CheckMapFolder();
+
     }
 }

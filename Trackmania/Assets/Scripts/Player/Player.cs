@@ -2,7 +2,7 @@ using UnityEngine;
 using Car;
 using Cinemachine;
 using UnityEngine.InputSystem;
-using Mirror;
+using MirrorBasics;
 using System.Collections;
 
 public class Player : MonoBehaviour
@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     [SerializeField] private CarController _carController;
     [SerializeField] private SpeedoMeter _speedoMeter;
     [SerializeField] private GameObject _UI;
+    [SerializeField] private CountDown _countDownScript;
     public TimerCount _timerCount;
 
     [Header("Car Camera")]
@@ -17,7 +18,7 @@ public class Player : MonoBehaviour
 
     private PlayerMap _playerMap;
     private int _currentIndex;
-
+    private IEnumerator _countDown = null;
     public CarController PlayerCar => _carController;
 
     private void Awake()
@@ -27,12 +28,11 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        _allCameras[0].Priority = 1;
+        //_allCameras[0].Priority = 1;
 
         _playerMap.PlayerUX.CameraSwitch.performed += CameraSwitch;
         _playerMap.PlayerMovement.Respawn.performed += Respawn;
         _playerMap.PlayerMovement.Restart.performed += RaceRestart;
-
     }
 
     private void OnDisable()
@@ -40,16 +40,25 @@ public class Player : MonoBehaviour
         _playerMap.PlayerUX.CameraSwitch.Disable();
     }
 
+    private void OnDestroy()
+    {
+        _playerMap.PlayerMovement.Restart.Disable();
+    }
+
     public void RaceStart()
     {
-        //gameObject.GetComponent<NetworkTransformChild>().OnTeleport(GameManager.StartPosition.position, Quaternion.identity);
         _carController.RaceStart();
         _speedoMeter.Launch();
         _timerCount.Launch();
         _playerMap.PlayerUX.CameraSwitch.Enable();
         _playerMap.PlayerMovement.Respawn.Enable();
         _playerMap.PlayerMovement.Restart.Enable();
-        _UI.SetActive(true);
+
+        if (GameManager.GetInstance().isMulti)
+        {
+            if (PlayerNetwork.localPlayer.currentMatch.gameMode.type == GameModeType.Rounds)
+                _playerMap.PlayerMovement.Restart.Disable();
+        }
     }
 
     public void RaceStop()
@@ -59,7 +68,14 @@ public class Player : MonoBehaviour
         _timerCount.Stop();
         _playerMap.PlayerUX.CameraSwitch.Disable();
         _playerMap.PlayerMovement.Respawn.Disable();
-        //_playerMap.PlayerMovement.Restart.Disable();
+
+        if(GameManager.GetInstance().isMulti)
+        {
+            if (PlayerNetwork.localPlayer.currentMatch.gameMode.type == GameModeType.Rounds)
+                _playerMap.PlayerMovement.Restart.Disable();
+        }
+        
+            
     }
 
     public void RaceRestart()
@@ -69,12 +85,13 @@ public class Player : MonoBehaviour
         RaceStop();
 
         ResetVehicle(GameManager.StartPosition);
-
-        RaceStart();
     }
 
-    private void ResetVehicle(Transform destination)
+    public void ResetVehicle(Transform destination)
     {
+        if (destination == null)
+            destination = _carController.transform;
+
         _carController.Teleportation(destination);
     }
 
@@ -85,7 +102,7 @@ public class Player : MonoBehaviour
         if (cameraIndex < _allCameras.Length)
         {
             _allCameras[_currentIndex].Priority = -1;
-            _allCameras[cameraIndex].Priority = 1;
+            _allCameras[cameraIndex].Priority = 2;
 
             _currentIndex = cameraIndex;
         }
@@ -96,7 +113,19 @@ public class Player : MonoBehaviour
         Transform respawnPoint = GameManager.LastCheckPointPassed;
 
         if (respawnPoint == null)
+        {
+            if (GameManager.GetInstance().isMulti)
+            {
+                if (PlayerNetwork.localPlayer.currentMatch.gameMode.type == GameModeType.Rounds)
+                {
+                    ResetVehicle(GameManager.StartPosition);
+                    return;
+                }
+            }
+
             RaceRestart();
+        }
+            
 
         else
         {
@@ -124,10 +153,30 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void SetCamPriorityLocalPlayer()
+    {
+        _allCameras[0].Priority = 1;
+        _allCameras[1].Priority = 0;
+        _allCameras[2].Priority = 0;
+
+    }
+
     public void DisableNotLocalPlayerCar()
     {
         _carController.isLocalPlayer = false;
 
+    }
+
+    public void StartCountDown()
+    {
+        _UI.SetActive(true);
+        if(_countDown != null)
+        {
+            StopCoroutine(_countDown);
+        }
+
+        _countDown = _countDownScript.CountDownStart();
+        StartCoroutine(_countDown);
     }
 
  

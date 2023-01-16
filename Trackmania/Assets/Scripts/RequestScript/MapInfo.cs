@@ -89,16 +89,22 @@ public class SingleMapInfo
     public MapInfo MapInfo { get; set; }
 }
 
-public class MultipleElement
+public class MultipleMapInfo
 {
     [JsonProperty("documents")]
-    public MapInfo[] _allMapInfo { get; set; }
+    public MapInfo[] AllMapInfo { get; set; }
+}
+
+public class MultipleListJsonData
+{
+    [JsonProperty("documents")]
+    public ListJsonData[] AllListJsonData { get; set; }
 }
 
 public class PersonalMapTime
 {
-    public string ID { get; private set; }
-    public int Time { get; private set; }
+    public string ID { get;  set; }
+    public int Time { get;  set; }
 
     public PersonalMapTime(string iD, int time)
     {

@@ -111,6 +111,14 @@ using MirrorBasics;
 
             _playerMap.PlayerMovement.LeftRigth.performed += LeftRigth;
             _playerMap.PlayerMovement.LeftRigth.canceled += LeftRigth;
+
+        
+            if (Application.isBatchMode)
+            {
+                _skidSound.Stop();
+                _engineSoundLowPitched.Stop();
+                _engineSoundHighPitched.Stop();
+            }
         }
 
         private void OnDisable()
@@ -249,6 +257,13 @@ using MirrorBasics;
 
         private void AudioControl()
         {
+            if (Application.isBatchMode)
+            {
+                return;
+            }
+
+            Debug.Log("sound_________");
+
             if (_grounded && Mathf.Abs(_carVelocity.x) > _skidThreshold)
                 _skidSound.mute = false;
 

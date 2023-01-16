@@ -14,7 +14,7 @@ namespace Mirror
         public override void OnTeleport(Vector3 destination, Quaternion rotation)
         {
             base.OnTeleport(destination, rotation);
-            Debug.Log("Teleportation..."+ destination+ rotation);
+            //Debug.Log("Teleportation..."+ destination+ rotation);
         }
     }
 }

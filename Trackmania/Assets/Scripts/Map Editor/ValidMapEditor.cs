@@ -33,12 +33,12 @@ public class ValidMapEditor : MonoBehaviour
     void Start()
     {
         _playerMap = new PlayerMap();
+        _editorManager.isTesting = true;
+        _instance._roadToFunction.Add(_instance._roadData.CheckPoint.GetType(), _instance.CheckPointPassed);
+        _instance._roadToFunction.Add(_instance._roadData.Goal.GetType(), _instance.EndPointPassed);
     }
     public static void LanchRace()
     {
-        _instance._roadToFunction.Add(_instance._roadData.CheckPoint.GetType(), _instance.CheckPointPassed);
-        _instance._roadToFunction.Add(_instance._roadData.Goal.GetType(), _instance.EndPointPassed);
-
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
         foreach (GameObject go in allObjects)
         {
@@ -102,12 +102,32 @@ public class ValidMapEditor : MonoBehaviour
         Temps temps = _player.RaceFinish();
         _playerMap.PlayerUX.StartRace.Disable();
 
+        RevertScale();
+
+        _editorManager.setInfo();
+    }
+
+    private void RevertScale()
+    {
         _instance._parentTransform.localScale = new Vector3(1, 1, 1);
 
         foreach (Road road in _roads)
         {
             road.transform.SetParent(null);
         }
-        _editorManager.setInfo();
+    }
+
+    private void Reset()
+    {
+        
+    }
+
+    public static void StopTest()
+    {
+        Destroy(_instance._player.gameObject);
+
+        _instance.RevertScale();
+
+        _instance.Reset();
     }
 }

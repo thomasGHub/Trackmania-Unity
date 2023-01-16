@@ -15,8 +15,8 @@ public class LocalMapUIBlock : MapUiBlock
     [SerializeField] private TextMeshProUGUI _publishText;
     [SerializeField] private string _alreadyPublishText = "No Modification";
 
-    private string _mapInfoPath;
-    private string _mapBlocksPath;
+    protected string _mapInfoPath;
+    protected string _mapBlocksPath;
 
     public override void Init(MapInfo mapInfo)
     {
@@ -35,7 +35,7 @@ public class LocalMapUIBlock : MapUiBlock
         _publishButton.onClick.AddListener(PublishMap);
     }
 
-    private void Published()
+    protected void Published()
     {
         _publishButton.interactable = false;
         _publishText.text = _alreadyPublishText;
@@ -46,7 +46,7 @@ public class LocalMapUIBlock : MapUiBlock
         LoadMap.SwitchSceneAsync(_mapInfo);
     }
 
-    private void PublishMap()
+    protected virtual void PublishMap()
     {
         bool alreadyPublished = _mapInfo.IsPublished;
 
@@ -63,7 +63,7 @@ public class LocalMapUIBlock : MapUiBlock
         StartCoroutine(UploadingMap(listBlock, alreadyPublished));
     }
 
-    private IEnumerator UploadingMap(ListJsonData listBlock, bool alreadyPublished)
+    protected virtual IEnumerator UploadingMap(ListJsonData listBlock, bool alreadyPublished)
     {
         RequestData requestDataInfoMap;
         RequestData requestDataBlocksMap;
@@ -89,6 +89,8 @@ public class LocalMapUIBlock : MapUiBlock
 
         yield return first;
         yield return second;
+
+        MapSaver.SaveOnlineMap(listBlock, _mapInfo);
 
         Published();
     }

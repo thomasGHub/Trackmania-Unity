@@ -1236,6 +1236,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: PopUpUpload
       objectReference: {fileID: 0}
+    - target: {fileID: 2915051684046642570, guid: d5fa26bcd7c6e314781e0657798311ef, type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2915051684046642570, guid: d5fa26bcd7c6e314781e0657798311ef, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0036322b5b88b4794b6e86458a3c81ce, type: 3}
+    - target: {fileID: 2915051684046642570, guid: d5fa26bcd7c6e314781e0657798311ef, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2915051684046642570, guid: d5fa26bcd7c6e314781e0657798311ef, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2915051684046642570, guid: d5fa26bcd7c6e314781e0657798311ef, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5fa26bcd7c6e314781e0657798311ef, type: 3}
 --- !u!1 &696497280 stripped
@@ -1613,7 +1633,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _parentTransform: {fileID: 511568432}
   _mapDataPrefab: {fileID: 1929483657321550128, guid: aef1b09a541e2d3458d70f176fba2e36, type: 3}
-  _spaceBetweenBlock: 50
 --- !u!1 &1766205643
 GameObject:
   m_ObjectHideFlags: 0

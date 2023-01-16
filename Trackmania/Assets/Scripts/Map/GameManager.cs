@@ -7,6 +7,7 @@ using MirrorBasics;
 using Mirror;
 using System.Collections;
 using Newtonsoft.Json;
+using System.IO;
 
 public struct RoadPoints
 {
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
     [Header("Start")]
     //[SerializeField] private GameObject _playerPrefab;
     [SerializeField] private Vector3 _scaleMap;
+    [SerializeField] private GameObject _soloPlayerPrefab;
 
     [Header("LoadMap")]
     [SerializeField] private Transform _parentTransform;
@@ -40,8 +42,12 @@ public class GameManager : MonoBehaviour
     public static Transform LastCheckPointPassed => _instance._lastCheckPointPassed;
     public static Transform StartPosition => _instance._roadPoints.Start.transform;
 
-    private Temps localBestTemps = new Temps(0,0,0);
+    public GameMode gameMode { get; internal set; }
+    public bool isMulti { get { return PlayerPrefs.GetInt("Multi") == 1; } }
+
+    private Temps localBestTemps = new Temps(0, 0, 0);
     private Temps _currentTemps;
+
 
 
     #region Ghost
@@ -55,12 +61,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if( _instance != null )
+        if (_instance != null)
         {
             Destroy(this);
             return;
         }
-            
+
         _instance = this;
 
         _playerMap = new PlayerMap();
@@ -85,37 +91,70 @@ public class GameManager : MonoBehaviour
 
         Transform startPoint = _roadPoints.Start.transform;
 
-        _player = PlayerNetwork.localPlayer.gameObject.GetComponent<Player>();//_playerCar.GetComponent<Player>();
-        _player.gameObject.GetComponent<NetworkTransformChild>().OnTeleport(startPoint.position, startPoint.rotation);
+        if (isMulti)
+        {
+            _player = PlayerNetwork.localPlayer.gameObject.GetComponent<Player>();//_playerCar.GetComponent<Player>();
+            _player.gameObject.GetComponent<NetworkTransformChild>().OnTeleport(startPoint.position, startPoint.rotation);
+        }
+        else
+        {
+            GameObject go = Instantiate(_soloPlayerPrefab, startPoint.position, startPoint.rotation);
+            _player = go.GetComponent<Player>();
+            _instance._ghost = new Ghost(_instance._player.PlayerCar.transform, _instance._mapLoader.MapInfo.ID);
+        }
 
         _roadToFunction.Add(_roadData.CheckPoint.GetType(), CheckPointPassed);
         _roadToFunction.Add(_roadData.Goal.GetType(), EndPointPassed);
 
-        _ghost = new Ghost(_player.PlayerCar.transform, _mapLoader.MapInfo.ID);
     }
 
-    public static void LanchRace()
+    public static void LaunchRace()
     {
-        foreach(Road checkPoint in _instance._roadPoints.CheckPoints)
+        foreach (Road checkPoint in _instance._roadPoints.CheckPoints)
         {
             _instance._checkPointPassed[checkPoint] = false;
         }
 
-        List<GhostData> ghostData = _instance._ghost.loadGhost();
-
-        if (ghostData != null)
+        if (!_instance.isMulti)
         {
-            Transform startPoint = _instance._roadPoints.Start.transform;
-            GameObject gameObject = Instantiate(_instance._ghostPrefab, startPoint.position, startPoint.rotation);
-            _instance._ghostController = gameObject.GetComponent<GhostController>();
-            _instance._ghostController.Init(ghostData);
+            List<GhostData> ghostData = _instance._ghost.loadGhost();
+
+            if (ghostData != null)
+            {
+                Transform startPoint = _instance._roadPoints.Start.transform;
+                GameObject gameObject = Instantiate(_instance._ghostPrefab, startPoint.position, startPoint.rotation);
+                _instance._ghostController = gameObject.GetComponent<GhostController>();
+                _instance._ghostController.Init(ghostData);
+            }
         }
 
-        _instance._ghost._isInRace = true;
-        if (_instance._ghostSaveCoroutine == null)
+        _instance._player.StartCountDown();
+    }
+
+    public static void RaceStart()
+    {
+        if (!_instance.isMulti)
         {
-            _instance._ghostSaveCoroutine = _instance._ghost.GetData();
-            _instance.StartCoroutine(_instance._ghostSaveCoroutine);
+            if (_instance._ghostController != null)
+            {
+                _instance._ghostController.StartRace();
+            }
+
+            _instance._ghost._isInRace = true;
+
+            if (_instance._ghostSaveCoroutine == null)
+            {
+                _instance._ghostSaveCoroutine = _instance._ghost.GetData();
+                _instance.StartCoroutine(_instance._ghostSaveCoroutine);
+            }
+            else
+            {
+                _instance.StopCoroutine(_instance._ghostSaveCoroutine);
+
+                _instance._ghost.RestartData();
+                _instance._ghostSaveCoroutine = _instance._ghost.GetData();
+                _instance.StartCoroutine(_instance._ghostSaveCoroutine);
+            }
         }
 
         _instance._player.RaceStart();
@@ -123,16 +162,38 @@ public class GameManager : MonoBehaviour
 
     public static void RaceRestart()
     {
+        if (!_instance.isMulti)
+        {
+
+
+            List<GhostData> ghostData = _instance._ghost.loadGhost();
+
+            if (ghostData != null)
+            {
+                if (_instance._ghostController == null)
+                {
+                    Transform startPoint = _instance._roadPoints.Start.transform;
+                    GameObject gameObject = Instantiate(_instance._ghostPrefab, startPoint.position, startPoint.rotation);
+                    _instance._ghostController = gameObject.GetComponent<GhostController>();
+                }
+                _instance._ghostController.Init(ghostData);
+            }
+        }
+
+        _instance._lastCheckPointPassed = null;
+
         foreach (Road checkPoint in _instance._roadPoints.CheckPoints)
         {
             _instance._checkPointPassed[checkPoint] = false;
         }
 
-        _instance._ghost.RestartData();
-        if(_instance._ghostSaveCoroutine != null)
+
+
+        if (_instance._ghostController != null)
             _instance._ghostController.Restart(StartPosition);
 
-        _instance._player.RaceStart();
+        _instance._player.StartCountDown();
+        //_instance._player.RaceStart();
     }
 
     public static void VehiclePassPoint(Road roadScript)
@@ -160,20 +221,67 @@ public class GameManager : MonoBehaviour
 
         _currentTemps = _player.RaceFinish();
 
+        if (_instance.isMulti)
+            PlayerNetwork.localPlayer.CmdHasFinished(PlayerNetwork.localPlayer.playerIndex);
+
         if (Temps.IsNewTempsBest(_currentTemps, localBestTemps))
         {
             localBestTemps = _currentTemps;
-            PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, _currentTemps, PlayerNetwork.localPlayer.playerName);
+            if (_instance.isMulti)
+                PlayerNetwork.localPlayer.CmdSendScore(PlayerNetwork.localPlayer.playerIndex, _currentTemps, PlayerNetwork.localPlayer.playerName);
         }
 
-        SavePersonalTime();
+        if (!isMulti)
+        {
+            if (SavePersonalTime(Temps.TempsToInt(_currentTemps)))
+            {
+                _ghost.sendGhostData();
+                if (MapSaver.IsCampaignMap(_mapLoader.MapInfo.ID))
+                {
+                    LeaderboardManager.instance.SendLeaderboard(_mapLoader.MapInfo.ID, Temps.TempsToInt(_currentTemps));
+                }
+                else
+                {
+                    SaveWordlRecord();
+                }
+            }
 
-        _ghost._isInRace = false;
+
+            _ghost._isInRace = false;
+        }
     }
 
-    private void SavePersonalTime()
+    private bool SavePersonalTime(int score)
     {
-        if(MapSaver.SavePersonalTime(_mapLoader.MapInfo, Temps.TempsToInt(_currentTemps)))
+        string path = MapSaver.GetMapDirectory(_mapLoader.MapInfo.ID) + MapSaver.MapPersonalTimeInfo;
+        string json;
+        PersonalMapTime personalMapTime;
+
+        if (File.Exists(path))
+        {
+            json = File.ReadAllText(path);
+            personalMapTime = JsonConvert.DeserializeObject<PersonalMapTime>(json);
+        }
+        else
+        {
+            personalMapTime = new PersonalMapTime(_mapLoader.MapInfo.ID, int.MaxValue);
+        }
+
+
+        if (score < personalMapTime.Time)
+        {
+            personalMapTime.Time = score;
+            json = JsonConvert.SerializeObject(personalMapTime);
+            File.WriteAllText(path, json);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void SaveWordlRecord()
+    {
+        if (MapSaver.SavePersonalTime(_mapLoader.MapInfo, Temps.TempsToInt(_currentTemps)))
         {
             StartCoroutine(SaveWorldRecord());
         }
@@ -192,29 +300,53 @@ public class GameManager : MonoBehaviour
     {
         SingleWorldRecord mapWorldRecord = JsonConvert.DeserializeObject<SingleWorldRecord>(data);
 
-        if(mapWorldRecord.WorldRecord == null) //Map not publish
+        if (mapWorldRecord.WorldRecord == null) //Map not publish
         {
             return;
         }
 
-        if(Temps.TempsToInt(_currentTemps) < mapWorldRecord.WorldRecord.Time || mapWorldRecord.WorldRecord.Time == -1)
+        if (Temps.TempsToInt(_currentTemps) < mapWorldRecord.WorldRecord.Time || mapWorldRecord.WorldRecord.Time == -1)
         {
             MapWorldRecord personalWorldRecord = new MapWorldRecord(PlayerPrefs.GetString("UserName"), Temps.TempsToInt(_currentTemps));
             UpdatingData updatingData = new UpdatingData(Database.Trackmania, Source.TrackmaniaDB, Collection.MapInfo, new WorldRecordData(personalWorldRecord), new FilterID(_mapLoader.MapInfo.ID));
             StartCoroutine(RequestManager.UpdatingdData(updatingData));
             MapInfo mapInfo = _mapLoader.MapInfo;
             mapInfo.WorldRecord = personalWorldRecord;
-            MapSaver.SaveMapInfo(mapInfo);
+            MapSaver.SaveMapInfo(mapInfo, false);
         }
     }
 
-    public static void SetPlayerReference(Player __player )
+    public static void SetPlayerReference(Player __player)
     {
         _instance._player = __player;
     }
 
 
 
+    public static GameManager GetInstance()
+    {
+        return _instance;
+    }
+
+    public void LaunchEndRound()
+    {
+        StartCoroutine(EndRound());
+    }
+
+    public IEnumerator EndRound()
+    {
+        yield return new WaitForSeconds(5f);
+        _player.RaceStop();
+    }
+    public void LaunchNewRound()
+    {
+        _player.RaceRestart();
+
+    }
+    public static void DestroyPlayer()
+    {
+        Destroy(_instance._player.gameObject);
+    }
 
 
 }

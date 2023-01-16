@@ -73,6 +73,7 @@ PrefabInstance:
     - {fileID: 4688855242874371236, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
     - {fileID: 5546543913532606650, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
     - {fileID: 3329236082012203202, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
+    - {fileID: 8354811172136483198, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fc893357eb0a18f42bea2ab12393625e, type: 3}
 --- !u!1 &4459051319959435873 stripped
 GameObject:
@@ -258,23 +259,6 @@ MonoBehaviour:
   - {fileID: 7309901711920149579}
   - {fileID: 7417863035240902981}
   - {fileID: 4351037737860169155}
---- !u!114 &5971550909778413300
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4459051319959435873}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  serverOnly: 0
-  visible: 0
-  m_AssetId: d955b4c7165223542b512bea1afbd24c
-  hasSpawned: 0
 --- !u!114 &3527037554346837552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,9 +296,9 @@ MonoBehaviour:
   _centerOfMass: {fileID: 6328121786138823046}
   _frictionPoint: {fileID: 6328121786510075167}
   _speed: 2000
-  _turn: 3000
-  _friction: 6000
-  _dragAmount: 5
+  _turn: 1500
+  _friction: 3000
+  _dragAmount: 15
   _groundRayPoint: {fileID: 6328121787112007007}
   _maxRayLenght: 0.25
   _inputThreshold: 0.1
